@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "ancientwarfare",
+  "version": "${version}",
+  "name": "AncientWarfare",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "assets/ancientwarfare/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "io.github.steaf23.ancientwarfare.client.datagen.AncientWarfareDataGenerator"
+    ],
+    "client": [
+      "io.github.steaf23.ancientwarfare.client.core.AncientWarfareClient"
+    ],
+    "main": [
+      "io.github.steaf23.ancientwarfare.core.AncientWarfare",
+      "io.github.steaf23.ancientwarfare.structure.template.ConverterTestMod"
+    ]
+  },
+  "mixins": [
+    "ancientwarfare.mixins.json",
+    {
+      "config": "ancientwarfare.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

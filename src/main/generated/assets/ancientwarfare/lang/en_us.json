@@ -1,0 +1,10 @@
+{
+  "block.ancientwarfare.advanced_spawner": "Advanced Spawner",
+  "block.ancientwarfare.animal_farm": "Animal Farm",
+  "block.ancientwarfare.town_hall": "Town Hall",
+  "entity.ancientwarfare.player_owned_npc": "Player Owned Npc",
+  "item.ancientwarfare.npc_spawner": "Npc Spawner",
+  "item.ancientwarfare.steel_ingot": "Steel Ingot",
+  "item.ancientwarfare.wooden_command_baton": "Wooden Command Baton",
+  "itemGroup.ancient_warfare": "Ancient Warfare"
+}

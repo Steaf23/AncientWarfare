@@ -1,0 +1,52 @@
+package io.github.steaf23.ancientwarfare.core.registry;
+
+import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteBlock;
+import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalFarmBlockEntity;
+import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
+import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+
+import java.util.function.Function;
+
+public class AWBlocks {
+
+	public static final Block ADVANCED_SPAWNER = AWBlocks.register("advanced_spawner", AdvancedSpawnerBlock::new, BlockBehaviour.Properties
+			.of()
+			.noOcclusion(), true);
+
+	public static final Block TOWN_HALL = register("town_hall", TownHallBlock::new, BlockBehaviour.Properties.of(), true);
+
+	public static final Block ANIMAL_FARM = register("animal_farm", properties -> new WorksiteBlock(properties, AnimalFarmBlockEntity::new), BlockBehaviour.Properties.of(), true);
+
+	public static Block register(String name, BlockBehaviour.Properties settings, boolean withItem) {
+		return register(name, Block::new, settings, withItem);
+	}
+
+	public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties settings, boolean withItem) {
+		ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, AncientWarfare.id(name));
+		settings = settings.setId(key);
+		Block block = factory.apply(settings);
+
+		if (withItem) {
+			ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, AncientWarfare.id(name));
+			BlockItem item = new BlockItem(block, new Item.Properties().overrideDescription(block.getDescriptionId()).setId(itemKey));
+			Registry.register(BuiltInRegistries.ITEM, itemKey, item);
+			CreativeModeTabEvents.modifyOutputEvent(AWItems.ITEM_GROUP_KEY)
+					.register((group) -> group.accept(item));
+		}
+		return Registry.register(BuiltInRegistries.BLOCK, key, block);
+	}
+
+	public static void initialize() {
+
+	}
+}
