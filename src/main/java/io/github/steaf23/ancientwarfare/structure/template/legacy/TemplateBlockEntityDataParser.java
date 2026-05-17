@@ -1,14 +1,12 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-import java.beans.Beans;
 import java.util.Optional;
 import java.util.UUID;
 

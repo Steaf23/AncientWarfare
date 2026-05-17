@@ -18,12 +18,10 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.HugeMushroomBlock;
 import net.minecraft.world.level.block.LeavesBlock;
-import net.minecraft.world.level.block.MushroomBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
-import net.minecraft.world.level.block.TallFlowerBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -259,7 +257,11 @@ public class TemplateRuleBlock extends TemplateRule {
 
 					if (originalId.getPath().contains("double_stone_slab")) {
 						if (stateProperties.getStringOr("seamless", "false").equals("true")) {
-							blockId = Identifier.withDefaultNamespace("smooth_" + stateProperties.getStringOr("variant", "stone"));
+							String smoothVariant = stateProperties.getStringOr("variant", "stone");
+
+							if (!smoothVariant.equals("nether_brick") && !smoothVariant.equals("stone_brick")) {
+								blockId = Identifier.withDefaultNamespace("smooth_" + stateProperties.getStringOr("variant", "stone"));
+							}
 						}
 					}
 				}

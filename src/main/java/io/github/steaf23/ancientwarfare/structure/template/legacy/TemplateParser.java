@@ -9,10 +9,10 @@ import com.google.gson.stream.JsonReader;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.JsonOps;
 import io.github.steaf23.ancientwarfare.structure.template.StructureVersion;
+import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateParsingException.TemplateRuleParsingException;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.fixer.FixResult;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
-import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateParsingException.TemplateRuleParsingException;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -409,7 +409,13 @@ public class TemplateParser {
 		}
 
 		Dynamic<JsonElement> d = new Dynamic<>(JsonOps.INSTANCE, jsonElement);
-		Dynamic<Tag> nbtD = d.convert(NbtOps.INSTANCE);
-		return nbtD.cast(NbtOps.INSTANCE).asCompound().orElse(new CompoundTag());
+		try {
+			Dynamic<Tag> nbtD = d.convert(NbtOps.INSTANCE);
+			return nbtD.cast(NbtOps.INSTANCE).asCompound().orElse(new CompoundTag());
+		} catch (NullPointerException exception) {
+			System.out.println("not valid json: " + input);
+		}
+
+		return new CompoundTag();
 	}
 }

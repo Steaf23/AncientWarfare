@@ -1,8 +1,8 @@
 package io.github.steaf23.ancientwarfare.npc.block.entity;
 
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
-import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
+import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpc;
 import io.github.steaf23.ancientwarfare.npc.menu.TownHallContainerMenu;

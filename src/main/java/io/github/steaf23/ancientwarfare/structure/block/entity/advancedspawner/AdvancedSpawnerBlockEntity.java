@@ -1,7 +1,7 @@
 package io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner;
 
-import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
+import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;

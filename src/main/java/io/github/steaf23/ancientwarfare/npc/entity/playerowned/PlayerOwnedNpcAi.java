@@ -7,7 +7,6 @@ import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.behavior.NpcTaskUpkeep;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.ActivityData;
-import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.behavior.AcquirePoi;
 import net.minecraft.world.entity.ai.behavior.DoNothing;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;

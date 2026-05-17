@@ -34,8 +34,8 @@ public class TemplateRuleItem {
 					}
 				});
 				case "fish" -> newId = Identifier.withDefaultNamespace(switch (meta) {
-					case 0 -> "raw_cod";
-					case 1 -> "raw_salmon";
+					case 0 -> "cod";
+					case 1 -> "salmon";
 					case 2 -> "tropical_fish";
 					case 3 -> "pufferfish";
 					default -> {
@@ -102,7 +102,19 @@ public class TemplateRuleItem {
 						System.out.println("Converted item to air! (" + oldId.toString() + "), " + meta);
 						yield "";
 					}
-				} + "_log");
+				});
+				case "double_plant" -> newId = Identifier.withDefaultNamespace(switch (meta) {
+					case 0 -> "sunflower";
+					case 1 -> "lilac";
+					case 2 -> "tall_grass";
+					case 3 -> "large_fern";
+					case 4 -> "rose_bush";
+					case 5 -> "peony";
+					default -> {
+						System.out.println("Converted item to air! (" + oldId.toString() + "), " + meta);
+						yield "";
+					}
+				});
 				case "wool" -> newId = Identifier.withDefaultNamespace(colorNameFromMeta(meta) + "_wool");
 				case "red_flower" -> newId = Identifier.withDefaultNamespace(redFlowerNameFromMeta(meta));
 				case "sapling" -> newId = Identifier.withDefaultNamespace(saplingNameFromMeta(meta));
@@ -111,6 +123,7 @@ public class TemplateRuleItem {
 				case "golden_rail" -> newId = Identifier.withDefaultNamespace("powered_rail");
 				case "yellow_flower" -> newId = Identifier.withDefaultNamespace("dandelion");
 				case "reeds" -> newId = Identifier.withDefaultNamespace("sugar_cane");
+				case "web" -> newId = Identifier.withDefaultNamespace("cobweb");
 			}
 			if (oldId.getPath().contains("record_")) {
 				newId = Identifier.withDefaultNamespace(oldId.getPath().replace("record_", "music_disc_"));
