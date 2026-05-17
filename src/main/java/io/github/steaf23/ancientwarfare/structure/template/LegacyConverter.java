@@ -45,7 +45,17 @@ public class LegacyConverter {
 					posList.add(x);
 					posList.add(y);
 					posList.add(z);
-					//TODO: add block entity nbt data to this
+
+					TemplateRuleBlock rule = structure.getBlockRules().get((int)blockNr);
+					if (rule == null) {
+						continue;
+					}
+
+					if (!rule.hasBlockEntityData()) {
+						continue;
+					}
+
+					rule.writeBlockEntityData(blockEntry.child("nbt"));
 				}
 			}
 		}

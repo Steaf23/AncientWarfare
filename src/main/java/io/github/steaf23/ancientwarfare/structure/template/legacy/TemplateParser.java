@@ -207,7 +207,7 @@ public class TemplateParser {
 	}
 
 	/*
-	 * should parse layer and insert direcly into templateData
+	 * should parse layer and insert directly into templateData
 	 */
 	private void parseLayer(List<String> templateLines, Vec3i size, short[] templateData) {
 		int minLayer = 0;

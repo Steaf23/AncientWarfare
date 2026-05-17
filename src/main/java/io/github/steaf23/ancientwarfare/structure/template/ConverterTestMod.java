@@ -43,9 +43,9 @@ public class ConverterTestMod implements ModInitializer {
 					StructureEntry entry = new LegacyConverter().convertToTemplate(BuiltInRegistries.BLOCK, structure.get().getData(), path.toLowerCase().substring(0, path.length() - 4));
 					i++;
 
-					if (i == 10) {
-						return;
-					}
+//					if (i == 10) {
+//						return;
+//					}
 				}
 			} catch (TemplateParsingException e) {
 				throw new RuntimeException(e);
