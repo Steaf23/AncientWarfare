@@ -152,9 +152,9 @@ public class TemplateRuleBlock extends TemplateRule {
 						blockId = Identifier.withDefaultNamespace("jack_o_lantern");
 				case "magma" -> blockId = Identifier.withDefaultNamespace("magma_block");
 				case "fence" -> blockId = Identifier.withDefaultNamespace("oak_fence");
-				case "fence_gate" ->
-						blockId = Identifier.withDefaultNamespace("oak_fence_gate");
+				case "fence_gate" -> blockId = Identifier.withDefaultNamespace("oak_fence_gate");
 				case "noteblock" -> blockId = Identifier.withDefaultNamespace("note_block");
+				case "golden_rail" -> blockId = Identifier.withDefaultNamespace("powered_rail");
 				case "stonebrick" -> {
 					String variant = stateProperties.getStringOr("variant", "");
 					blockId = switch (variant) {
@@ -603,7 +603,7 @@ public class TemplateRuleBlock extends TemplateRule {
 			case "red_flower" -> TemplateRuleItem.redFlowerNameFromMeta(itemMeta);
 			case "yellow_flower" -> "dandelion";
 			case "deadbush" -> "dead_bush";
-			case "tallgrass" -> "short_grass";
+			case "tallgrass" -> "fern";
 			default -> id.getPath();
 		};
 	}
@@ -613,6 +613,6 @@ public class TemplateRuleBlock extends TemplateRule {
 	}
 
 	public boolean hasBlockEntityData() {
-		return nbt != null;
+		return !nbt.keySet().isEmpty();
 	}
 }

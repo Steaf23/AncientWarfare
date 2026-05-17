@@ -115,6 +115,27 @@ public class TemplateRuleItem {
 						yield "";
 					}
 				});
+				case "skull" -> newId = Identifier.withDefaultNamespace(switch (meta) {
+					case 0 -> "skeleton_skull";
+					case 1 -> "wither_skeleton_skull";
+					case 2 -> "zombie_head";
+					case 3 -> "player_head";
+					case 4 -> "creeper_head";
+					case 5 -> "dragon_head";
+					default -> {
+						System.out.println("Converted item to air! (" + oldId.toString() + "), " + meta);
+						yield "";
+					}
+				});
+				case "tallgrass" -> newId = Identifier.withDefaultNamespace(switch (meta) {
+					case 0 -> "shrub"; // non-existent in modern MC 26.
+					case 1 -> "short_grass";
+					case 2 -> "fern";
+					default -> {
+						System.out.println("Converted item to air! (" + oldId.toString() + "), " + meta);
+						yield "";
+					}
+				});
 				case "wool" -> newId = Identifier.withDefaultNamespace(colorNameFromMeta(meta) + "_wool");
 				case "red_flower" -> newId = Identifier.withDefaultNamespace(redFlowerNameFromMeta(meta));
 				case "sapling" -> newId = Identifier.withDefaultNamespace(saplingNameFromMeta(meta));
@@ -124,6 +145,9 @@ public class TemplateRuleItem {
 				case "yellow_flower" -> newId = Identifier.withDefaultNamespace("dandelion");
 				case "reeds" -> newId = Identifier.withDefaultNamespace("sugar_cane");
 				case "web" -> newId = Identifier.withDefaultNamespace("cobweb");
+				case "fireworks" -> newId = Identifier.withDefaultNamespace("firework_rocket");
+				case "firework_charge" -> newId = Identifier.withDefaultNamespace("firework_star");
+				case "fence" -> newId = Identifier.withDefaultNamespace("oak_fence");
 			}
 			if (oldId.getPath().contains("record_")) {
 				newId = Identifier.withDefaultNamespace(oldId.getPath().replace("record_", "music_disc_"));

@@ -31,6 +31,7 @@ public class ConverterTestMod implements ModInitializer {
 				int i = 0;
 				List<String> allPaths = readLines("/assets/ancientwarfare/template/all_structures.txt");
 				for (String path : allPaths) {
+					path = path.replace(" ", "_").replace(".", "_").replace("&", "and");
 					TemplateParser parser = new TemplateParser(server.registryAccess());
 					System.out.println("Structure #" + i + ": " + path);
 
@@ -43,9 +44,9 @@ public class ConverterTestMod implements ModInitializer {
 					StructureEntry entry = new LegacyConverter().convertToTemplate(BuiltInRegistries.BLOCK, structure.get().getData(), path.toLowerCase().substring(0, path.length() - 4));
 					i++;
 
-//					if (i == 10) {
-//						return;
-//					}
+					if (i == 10) {
+						return;
+					}
 				}
 			} catch (TemplateParsingException e) {
 				throw new RuntimeException(e);
