@@ -15,9 +15,6 @@ public class TemplateBlockEntityDataParser {
 	public static void convert(Identifier oldId, ValueInput input, ValueOutput output) {
 		output.putString("id", oldId.toString());
 		String oldName = oldId.getPath();
-		if (oldName.equals("advanced_loot_chest")) {
-			oldName = "chest";
-		}
 		switch (oldName) {
 			case "skull" -> { // Convert Owner:{Properties:{textures:[{Value:<texture>}]}}
 				Optional<ValueInput> owner = input.child("Owner");
@@ -33,20 +30,38 @@ public class TemplateBlockEntityDataParser {
 				});
 			}
 			case "chest", "trapped_chest", "furnace", "brewing_stand", "dropper", "shulker_box", "hopper", "dispenser" -> {
+				writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
+			}
+			case "advanced_loot_chest" -> {
 				ValueOutput.TypedOutputList<ItemStackWithSlot> items = output.list("Items", ItemStackWithSlot.CODEC);
 
-				for (ValueInput slot : input.childrenListOrEmpty("Items")) {
-					int amount = Integer.parseInt(slot.getStringOr("Count", "0b").replace("b", ""));
-					int slotNr = Integer.parseInt(slot.getStringOr("Slot", "0b").replace("b", ""));
-					Identifier type = Identifier.parse(slot.getStringOr("id", ""));
-					assert(!type.getPath().isEmpty());
-					int meta = Integer.parseInt(slot.getStringOr("Damage", "0s").replace("s", ""));
-					ItemStack stack = TemplateRuleItem.fromOldId(type, meta);
-					stack.setCount(amount);
+				input.child("lootSettings").ifPresentOrElse(settings -> {
+					if (settings.getByteOr("hasLoot", (byte)0) != 0) {
+						output.putString("LootTable", settings.getStringOr("lootTableName", ""));
+					} else {
+						writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
+					}
+				}, () -> {
+					writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
+				});
 
-					items.add(new ItemStackWithSlot(slotNr, stack));
-				}
 			}
+		}
+	}
+
+	public static void writeItemsToTileEntity(ValueInput.ValueInputList items, ValueOutput output) {
+		ValueOutput.TypedOutputList<ItemStackWithSlot> itemsOut = output.list("Items", ItemStackWithSlot.CODEC);
+
+		for (ValueInput slot : items) {
+			int amount = Integer.parseInt(slot.getStringOr("Count", "0b").replace("b", ""));
+			int slotNr = Integer.parseInt(slot.getStringOr("Slot", "0b").replace("b", ""));
+			Identifier type = Identifier.parse(slot.getStringOr("id", ""));
+			assert(!type.getPath().isEmpty());
+			int meta = Integer.parseInt(slot.getStringOr("Damage", "0s").replace("s", ""));
+			ItemStack stack = TemplateRuleItem.fromOldId(type, meta);
+			stack.setCount(amount);
+
+			itemsOut.add(new ItemStackWithSlot(slotNr, stack));
 		}
 	}
 }
