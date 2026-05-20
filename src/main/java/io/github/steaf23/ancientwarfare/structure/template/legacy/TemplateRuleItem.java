@@ -1,14 +1,19 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
+import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
+import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 
 public class TemplateRuleItem {
 
-	public static ItemStack fromOldId(Identifier oldId, int meta) {
+	public static ItemStackTemplate fromOldId(Identifier oldId, int meta, int count, CompoundTag tag) {
+		Identifier newId = oldId;
 		if (oldId.getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) {
-			Identifier newId = oldId;
 			switch (oldId.getPath()) {
 				case "speckled_melon" -> newId = Identifier.withDefaultNamespace("glistering_melon_slice");
 				case "dye" -> newId = Identifier.withDefaultNamespace(switch (meta) {
@@ -155,9 +160,23 @@ public class TemplateRuleItem {
 			if (!BuiltInRegistries.ITEM.containsKey(newId)) {
 				System.out.println("Unknown item with id: " + newId + " (meta: " + meta + ")");
 			}
-			return new ItemStack(BuiltInRegistries.ITEM.getValue(newId));
+			return new ItemStackTemplate(BuiltInRegistries.ITEM.getValue(newId), count);
 		} else {
-			return new ItemStack(BuiltInRegistries.ITEM.getValue(oldId));
+			DataComponentPatch.Builder components = DataComponentPatch.builder();
+			switch (oldId.toString()) {
+				case "ancientwarfarenpc:coin" -> {
+					components.set(AWComponents.COIN_METAL, CoinMetal.fromName(tag.getStringOr("metal", "gold")));
+					newId = BuiltInRegistries.ITEM.getKey(AWItems.COIN);
+				}
+				default -> {
+					if (!BuiltInRegistries.ITEM.containsKey(oldId)) {
+						System.out.println("cannot load item with id: " + oldId);
+						return null;
+					}
+				}
+			}
+
+			return new ItemStackTemplate(BuiltInRegistries.ITEM.getValue(newId), count);
 		}
 	}
 

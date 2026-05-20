@@ -2,6 +2,7 @@ package io.github.steaf23.ancientwarfare.core.registry;
 
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import net.minecraft.core.Registry;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -16,6 +17,12 @@ public class AWComponents {
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			AncientWarfare.id("selected_entities"),
 			DataComponentType.<List<UUID>>builder().persistent(Codec.list(UUIDUtil.CODEC)).build()
+	);
+
+	public static final DataComponentType<CoinMetal> COIN_METAL = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			AncientWarfare.id("coin_metal"),
+			DataComponentType.<CoinMetal>builder().persistent(CoinMetal.CODEC).build()
 	);
 
 	public static void initialize() {

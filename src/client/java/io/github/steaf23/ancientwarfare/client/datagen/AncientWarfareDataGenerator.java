@@ -11,6 +11,6 @@ public class AncientWarfareDataGenerator implements DataGeneratorEntrypoint {
 
 		pack.addProvider(AWModelProvider::new);
 		pack.addProvider(AWLanguageProvider::new);
-		pack.addProvider(AWStructureProvider::new);
+		pack.addProvider(AWStructureConversionProvider::new);
 	}
 }

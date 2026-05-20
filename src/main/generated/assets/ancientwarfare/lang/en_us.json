@@ -3,8 +3,13 @@
   "block.ancientwarfare.animal_farm": "Animal Farm",
   "block.ancientwarfare.town_hall": "Town Hall",
   "entity.ancientwarfare.player_owned_npc": "Player Owned Npc",
+  "item.ancientwarfare.coin": "%s Coin",
   "item.ancientwarfare.npc_spawner": "Npc Spawner",
   "item.ancientwarfare.steel_ingot": "Steel Ingot",
   "item.ancientwarfare.wooden_command_baton": "Wooden Command Baton",
-  "itemGroup.ancient_warfare": "Ancient Warfare"
+  "itemGroup.ancient_warfare": "Ancient Warfare",
+  "metal.ancientwarfare.ancient": "Ancient",
+  "metal.ancientwarfare.copper": "Copper",
+  "metal.ancientwarfare.gold": "Gold",
+  "metal.ancientwarfare.silver": "Silver"
 }

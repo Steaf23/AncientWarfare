@@ -20,7 +20,10 @@ import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 
+import java.io.IOException;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -41,9 +44,10 @@ public class TemplateParser {
 		this.lookupProvider = lookupProvider;
 	}
 
-	public Optional<FixResult<ParsedStructure>> parseTemplateLines(String fileName, List<String> lines) throws TemplateParsingException {
+	public Optional<FixResult<ParsedStructure>> parseTemplateLines(Path filePath) throws TemplateParsingException, IOException {
 
-		Iterator<String> it = lines.iterator();
+		String fileName = filePath.getFileName().toString();
+		Iterator<String> it = Files.readAllLines(filePath).iterator();
 		String line;
 
 		StructureValidator validation = null;

@@ -1,9 +1,9 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
-import io.github.steaf23.ancientwarfare.client.util.ConventionText;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.tag.FabricTagKey;
@@ -36,7 +36,13 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				AWEntities.BASE_NPC
 		).forCreativeTabs().auto(
 				AWItems.ITEM_GROUP_KEY
-		);
+		)
+				.custom(AWItems.COIN.getDescriptionId(), "%s Coin")
+				.custom("metal.ancientwarfare." + CoinMetal.SILVER.name(), "Silver")
+				.custom("metal.ancientwarfare." + CoinMetal.COPPER.name(), "Copper")
+				.custom("metal.ancientwarfare." + CoinMetal.GOLD.name(), "Gold")
+				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.name(), "Ancient")
+		;
 	}
 
 	static class AWTranslationBuilder {

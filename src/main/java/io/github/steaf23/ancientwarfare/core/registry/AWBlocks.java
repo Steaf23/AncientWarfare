@@ -5,6 +5,7 @@ import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalF
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,6 +27,8 @@ public class AWBlocks {
 	public static final Block TOWN_HALL = register("town_hall", TownHallBlock::new, BlockBehaviour.Properties.of(), true);
 
 	public static final Block ANIMAL_FARM = register("animal_farm", properties -> new WorksiteBlock(properties, AnimalFarmBlockEntity::new), BlockBehaviour.Properties.of(), true);
+
+	public static final Block WARDED_BLOCK = register("warded_block", WardedBlock::new, BlockBehaviour.Properties.of(), false);
 
 	public static Block register(String name, BlockBehaviour.Properties settings, boolean withItem) {
 		return register(name, Block::new, settings, withItem);

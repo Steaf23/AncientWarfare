@@ -1,9 +1,10 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.ItemStackWithSlot;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -32,6 +33,7 @@ public class TemplateBlockEntityDataParser {
 			case "chest", "trapped_chest", "furnace", "brewing_stand", "dropper", "shulker_box", "hopper", "dispenser" -> {
 				writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
 			}
+			// TODO: update to be warded blocks
 			case "advanced_loot_chest" -> {
 				ValueOutput.TypedOutputList<ItemStackWithSlot> items = output.list("Items", ItemStackWithSlot.CODEC);
 
@@ -58,10 +60,10 @@ public class TemplateBlockEntityDataParser {
 			Identifier type = Identifier.parse(slot.getStringOr("id", ""));
 			assert(!type.getPath().isEmpty());
 			int meta = Integer.parseInt(slot.getStringOr("Damage", "0s").replace("s", ""));
-			ItemStack stack = TemplateRuleItem.fromOldId(type, meta);
-			stack.setCount(amount);
+			CompoundTag tag = slot.read("tag", CompoundTag.CODEC).orElse(new CompoundTag());
+			ItemStackTemplate stack = TemplateRuleItem.fromOldId(type, meta, amount, tag);
 
-			itemsOut.add(new ItemStackWithSlot(slotNr, stack));
+//			itemsOut.add(new ItemStackWithSlot(slotNr, stack));
 		}
 	}
 }

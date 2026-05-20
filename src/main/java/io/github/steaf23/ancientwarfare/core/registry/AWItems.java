@@ -3,6 +3,8 @@ package io.github.steaf23.ancientwarfare.core.registry;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.item.UnobtainableItem;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
+import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
@@ -28,12 +30,14 @@ public class AWItems {
 			.build();
 
 	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
+	public static final Item COIN = registerItem("coin", CoinItem::new, new Item.Properties()
+			.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
-	public static CommandBaton WOODEN_COMMAND_BATON = AWItems.registerItem("wooden_command_baton", CommandBaton::new,
+	public static final CommandBaton WOODEN_COMMAND_BATON = AWItems.registerItem("wooden_command_baton", CommandBaton::new,
 			new Item.Properties()
 					.component(AWComponents.SELECTED_ENTITIES, List.of()));
 
-	public static SpawnEggItem NPC_SPAWNER = AWItems.registerItem("npc_spawner", SpawnEggItem::new,
+	public static final SpawnEggItem NPC_SPAWNER = AWItems.registerItem("npc_spawner", SpawnEggItem::new,
 			new Item.Properties()
 					.spawnEgg(AWEntities.BASE_NPC));
 

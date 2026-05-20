@@ -5,12 +5,15 @@ import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
+import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
@@ -18,17 +21,21 @@ import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.trialspawner.TrialSpawnerState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 public class AWModelProvider extends FabricModelProvider {
 
 	public AWModelProvider(FabricPackOutput output) {
 		super(output);
+
+		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
 	}
 
 	@Override
@@ -46,6 +53,7 @@ public class AWModelProvider extends FabricModelProvider {
 		itemModels.generateFlatItem(AWItems.STEEL_INGOT, ModelTemplates.FLAT_ITEM);
 		itemModels.generateFlatItem(AWItems.WOODEN_COMMAND_BATON, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.TOWN_HALL_KEY_DUMMY, ModelTemplates.FLAT_HANDHELD_ITEM);
+		itemModels.generateTintedItem(AWItems.COIN, new CoinMetalTintSource());
 
 		itemModels.generateNpcSpawnerItem("miner");
 	}
@@ -134,6 +142,13 @@ public class AWModelProvider extends FabricModelProvider {
 					this.modelOutput);
 
 			itemModelOutput.accept(AWItems.NPC_SPAWNER, ItemModelUtils.plainModel(loc));
+		}
+
+		public void generateTintedItem(Item item, ItemTintSource source) {
+			Material layer = TextureMapping.getItemTexture(item);
+			Identifier model = ModelLocationUtils.getModelLocation(item);
+			ModelTemplates.FLAT_ITEM.create(model, TextureMapping.layer0(layer), this.modelOutput);
+			this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, source));
 		}
 	}
 }
