@@ -54,8 +54,8 @@ public class AWStructureConversionProvider implements DataProvider {
 					break;
 				}
 
-				String outputPathStr = path.replace(" ", "_").replace(".", "_").replace("&", "and");
-				outputPathStr = outputPathStr.toLowerCase().substring(0, path.length() - 4);
+				String outputPathStr = "ancientwarfare/structure/" + path.replace(" ", "_").replace(".", "_").replace("&", "and");
+				outputPathStr = outputPathStr.toLowerCase().substring(0, outputPathStr.length() - 4);
 				Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
 				StructureEntry entry = new LegacyConverter().convertToTemplate(BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
 
