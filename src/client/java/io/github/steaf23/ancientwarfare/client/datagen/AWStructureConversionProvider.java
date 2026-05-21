@@ -62,9 +62,9 @@ public class AWStructureConversionProvider implements DataProvider {
 				Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
 				StructureEntry entry = new LegacyConverter().convertToTemplate(BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
 
-//				if (i == 10) {
-//					break;
-//				}
+				if (i == 10) {
+					break;
+				}
 
 				i++;
 			}

@@ -37,7 +37,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 		).forCreativeTabs().auto(
 				AWItems.ITEM_GROUP_KEY
 		)
-				.custom(AWItems.COIN.getDescriptionId(), "%s Coin")
+				.custom(AWItems.COINS.getDescriptionId(), "%s Coins")
 				.custom("metal.ancientwarfare." + CoinMetal.SILVER.name(), "Silver")
 				.custom("metal.ancientwarfare." + CoinMetal.COPPER.name(), "Copper")
 				.custom("metal.ancientwarfare." + CoinMetal.GOLD.name(), "Gold")

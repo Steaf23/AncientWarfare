@@ -21,7 +21,7 @@
               "components": {"ancientwarfare:coin_metal":"silver"}
             }
           ],
-          "name": "ancientwarfare:coin",
+          "name": "ancientwarfare:coins",
           "weight": 15
         },
         {
@@ -37,7 +37,7 @@
               "function": "minecraft:set_count"
             }
           ],
-          "name": "ancientwarfare:coin",
+          "name": "ancientwarfare:coins",
           "weight": 15
         },
         {

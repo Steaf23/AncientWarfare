@@ -53,7 +53,7 @@ public class AWModelProvider extends FabricModelProvider {
 		itemModels.generateFlatItem(AWItems.STEEL_INGOT, ModelTemplates.FLAT_ITEM);
 		itemModels.generateFlatItem(AWItems.WOODEN_COMMAND_BATON, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.TOWN_HALL_KEY_DUMMY, ModelTemplates.FLAT_HANDHELD_ITEM);
-		itemModels.generateTintedItem(AWItems.COIN, new CoinMetalTintSource());
+		itemModels.generateTintedItem(AWItems.COINS, new CoinMetalTintSource());
 
 		itemModels.generateNpcSpawnerItem("miner");
 	}

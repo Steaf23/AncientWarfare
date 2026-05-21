@@ -31,7 +31,7 @@ public class AWItems {
 			.build();
 
 	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
-	public static final Item COIN = registerItemNoCreativeTab("coin", CoinItem::new, new Item.Properties()
+	public static final Item COINS = registerItemNoCreativeTab("coins", CoinItem::new, new Item.Properties()
 			.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
 	public static final CommandBaton WOODEN_COMMAND_BATON = AWItems.registerItem("wooden_command_baton", CommandBaton::new,
@@ -53,13 +53,16 @@ public class AWItems {
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ITEM_GROUP_KEY, ITEM_GROUP);
 
 		CreativeModeTabEvents.modifyOutputEvent(AWItems.ITEM_GROUP_KEY).register(group -> {
-			ItemStack stack = new ItemStack(COIN);
+			ItemStack stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.GOLD);
 			group.accept(stack);
+			stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.SILVER);
 			group.accept(stack);
+			stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.COPPER);
 			group.accept(stack);
+			stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
 			group.accept(stack);
 		});

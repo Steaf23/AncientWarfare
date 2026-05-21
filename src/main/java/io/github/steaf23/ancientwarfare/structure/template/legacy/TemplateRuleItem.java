@@ -167,7 +167,7 @@ public class TemplateRuleItem {
 			switch (oldId.toString()) {
 				case "ancientwarfarenpc:coin" -> {
 					components.set(AWComponents.COIN_METAL, CoinMetal.fromName(tag.getStringOr("metal", "gold")));
-					newId = BuiltInRegistries.ITEM.getKey(AWItems.COIN);
+					newId = BuiltInRegistries.ITEM.getKey(AWItems.COINS);
 				}
 				default -> {
 					if (!BuiltInRegistries.ITEM.containsKey(oldId)) {
