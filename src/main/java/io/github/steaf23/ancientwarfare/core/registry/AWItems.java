@@ -6,6 +6,7 @@ import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
+import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
@@ -31,7 +32,7 @@ public class AWItems {
 			.build();
 
 	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
-	public static final Item COINS = registerItemNoCreativeTab("coins", CoinItem::new, new Item.Properties()
+	public static final CoinItem COINS = registerItemNoCreativeTab("coins", CoinItem::new, new Item.Properties()
 			.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
 	public static final CommandBaton WOODEN_COMMAND_BATON = AWItems.registerItem("wooden_command_baton", CommandBaton::new,
@@ -41,6 +42,8 @@ public class AWItems {
 	public static final SpawnEggItem NPC_SPAWNER = AWItems.registerItem("npc_spawner", SpawnEggItem::new,
 			new Item.Properties()
 					.spawnEgg(AWEntities.BASE_NPC));
+
+	public static final WardSealItem WARD_SEAL = AWItems.registerItem("ward_seal", WardSealItem::new, new Item.Properties());
 
 	public static Item[] COMMAND_BATONS = {
 			WOODEN_COMMAND_BATON,

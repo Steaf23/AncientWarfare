@@ -4,11 +4,15 @@ import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.AbstractChestBlock;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -29,6 +33,16 @@ public class WardedBlock extends BaseEntityBlock {
 	@Override
 	public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState) {
 		return new WardedBlockEntity(worldPosition, blockState);
+	}
+
+	@Override
+	protected RenderShape getRenderShape(BlockState state) {
+		return RenderShape.INVISIBLE;
+	}
+
+	@Override
+	protected boolean useShapeForLightOcclusion(BlockState state) {
+		return true;
 	}
 
 	@Override
@@ -53,11 +67,23 @@ public class WardedBlock extends BaseEntityBlock {
 	}
 
 	public static void place(ServerLevel level, BlockPos pos) {
+		BlockState currentState = level.getBlockState(pos);
+		if (currentState.getBlock() == AWBlocks.WARDED_BLOCK) {
+			return; // cannot place ward if one is already placed.
+		}
+
+		CompoundTag tag = new CompoundTag();
+		BlockEntity be = level.getBlockEntity(pos);
+		if (be != null) {
+			tag = be.saveWithFullMetadata(level.registryAccess());
+		}
+		level.removeBlockEntity(pos);
+
 		level.setBlock(pos, AWBlocks.WARDED_BLOCK.defaultBlockState(), WardedBlock.UPDATE_ALL);
 
-		WardedBlockEntity be = (WardedBlockEntity) level.getBlockEntity(pos);
-		if (be != null) {
-			be.setup(pos);
+		WardedBlockEntity wardedBe = (WardedBlockEntity) level.getBlockEntity(pos);
+		if (wardedBe != null) {
+			wardedBe.setBlockToRestore(currentState, tag);
 		}
 	}
 }

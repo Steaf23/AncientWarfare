@@ -1,13 +1,18 @@
 package io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock;
 
+import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -16,24 +21,26 @@ import org.jetbrains.annotations.Nullable;
 
 public class WardedBlockEntity extends BlockEntity {
 
-	public record CapturedBlock(BlockState state, CompoundTag capturedBlockEntityData) {}
+	public record CapturedBlock(BlockState state, CompoundTag capturedBlockEntityData) {
+		public boolean isBlockEntity() {
+			return !capturedBlockEntityData.isEmpty();
+		}
+	}
 
 	public record WardedBlockData(@Nullable EntityType<?> entityToSpawn, @Nullable MobEffectInstance effect) {}
 
-	private CapturedBlock blockToRestore = null;
-	private WardedBlockData wardingData;
+	private CapturedBlock blockToRestore = new CapturedBlock(Blocks.AIR.defaultBlockState(), new CompoundTag());
+	private WardedBlockData wardingData = new WardedBlockData(null, null);
 
 	public WardedBlockEntity(BlockPos worldPosition, BlockState blockState) {
 		super(AWBlockEntities.WARDED_BLOCK, worldPosition, blockState);
 	}
 
-	public void setup(BlockPos pos) {
-		BlockState state = level.getBlockState(pos);
-		BlockEntity be = level.getBlockEntity(pos);
-
-		CompoundTag nbt = be == null ? null : be.saveWithFullMetadata(level.registryAccess());
-
-		setBlockToRestore(new CapturedBlock(state, nbt));
+	public void setBlockToRestore(BlockState state, CompoundTag tag) {
+		this.blockToRestore = new CapturedBlock(state, tag);
+		if (level != null) {
+			level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS);
+		}
 	}
 
 	public void setBlockToRestore(CapturedBlock block) {
@@ -62,17 +69,17 @@ public class WardedBlockEntity extends BlockEntity {
 	}
 
 	public void activate() {
-//		if (wardingData.entityToSpawn()) {
-//
-//		}
-		System.out.println("Spawning Entity: " + wardingData.entityToSpawn().getDescriptionId());
+		if (wardingData.entityToSpawn() != null) {
+			System.out.println("Spawning Entity: " + wardingData.entityToSpawn().getDescriptionId());
+		}
+
 
 		if (level == null || blockToRestore == null) return;
 
 		level.setBlock(getBlockPos(), blockToRestore.state(), Block.UPDATE_ALL);
 		HolderLookup.Provider provider = level.registryAccess();
 
-		if (blockToRestore.capturedBlockEntityData() != null) {
+		if (!blockToRestore.capturedBlockEntityData().isEmpty()) {
 			BlockEntity be = BlockEntity.loadStatic(getBlockPos(), blockToRestore.state(), blockToRestore.capturedBlockEntityData(), provider);
 			level.setBlockEntity(be);
 		}
@@ -83,8 +90,8 @@ public class WardedBlockEntity extends BlockEntity {
 		super.loadAdditional(input);
 
 		ValueInput capture = input.childOrEmpty("block_capture");
-		BlockState state = capture.read("state", BlockState.CODEC).orElse(null);
-		CompoundTag tag = capture.read("tag", CompoundTag.CODEC).orElse(null);
+		BlockState state = capture.read("state", BlockState.CODEC).orElse(Blocks.AIR.defaultBlockState());
+		CompoundTag tag = capture.read("nbt", CompoundTag.CODEC).orElse(new CompoundTag());
 		blockToRestore = new CapturedBlock(state, tag);
 	}
 
@@ -95,5 +102,15 @@ public class WardedBlockEntity extends BlockEntity {
 		ValueOutput capture = output.child("block_capture");
 		capture.store("state", BlockState.CODEC, blockToRestore.state());
 		capture.store("nbt", CompoundTag.CODEC, blockToRestore.capturedBlockEntityData());
+	}
+
+	@Override
+	public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+		return saveWithoutMetadata(registries);
+	}
+
+	@Override
+	public @org.jspecify.annotations.Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
 	}
 }

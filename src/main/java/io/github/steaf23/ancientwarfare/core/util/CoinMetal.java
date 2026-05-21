@@ -8,9 +8,9 @@ import java.util.List;
 // TODO: make registry?
 public record CoinMetal(String name, int color) {
 	public static final CoinMetal ANCIENT = new CoinMetal("ancient", 0xff567d63);
-	public static final CoinMetal GOLD = new CoinMetal("gold", 0xfff6ea69);
-	public static final CoinMetal SILVER = new CoinMetal("silver", 0xffffffff);
-	public static final CoinMetal COPPER = new CoinMetal("copper", 0xffff864f);
+	public static final CoinMetal GOLD = new CoinMetal("gold", 0xfff8d854);
+	public static final CoinMetal SILVER = new CoinMetal("silver", 0xffd0f4ff);
+	public static final CoinMetal COPPER = new CoinMetal("copper", 0xffff7a4d);
 
 	public static final List<CoinMetal> ALL = List.of(
 			ANCIENT,
