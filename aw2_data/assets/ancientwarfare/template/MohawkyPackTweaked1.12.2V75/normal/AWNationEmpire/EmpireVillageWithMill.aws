@@ -2982,7 +2982,7 @@ rule:
 plugin=vanillaSign
 number=210
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Smithy§r",signContents1:"Jobbing§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Smithy%&%r",signContents1:"Jobbing%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -2990,7 +2990,7 @@ rule:
 plugin=vanillaSign
 number=211
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Smithy§r",signContents1:"Jobbing§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Smithy%&%r",signContents1:"Jobbing%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3014,7 +3014,7 @@ rule:
 plugin=vanillaSign
 number=214
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Mill§r",signContents1:"Tootlings§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Mill%&%r",signContents1:"Tootlings%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3078,7 +3078,7 @@ rule:
 plugin=vanillaSign
 number=222
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Mill§r",signContents1:"New Fangled§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Mill%&%r",signContents1:"New Fangled%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3350,7 +3350,7 @@ rule:
 plugin=vanillaSign
 number=256
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"House§r",signContents1:"Merchants§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"House%&%r",signContents1:"Merchants%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3438,7 +3438,7 @@ rule:
 plugin=vanillaSign
 number=267
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Gate§r",signContents1:"Toll§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Gate%&%r",signContents1:"Toll%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3718,7 +3718,7 @@ rule:
 plugin=vanillaSign
 number=302
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Gate§r",signContents1:"Toll§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Gate%&%r",signContents1:"Toll%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3726,7 +3726,7 @@ rule:
 plugin=vanillaSign
 number=303
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Stables§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Stables%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3854,7 +3854,7 @@ rule:
 plugin=vanillaSign
 number=319
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Fancys§r",signContents1:"Herbertios§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Fancys%&%r",signContents1:"Herbertios%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3878,7 +3878,7 @@ rule:
 plugin=vanillaSign
 number=322
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Charlie§r",signContents1:"Chickin§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Charlie%&%r",signContents1:"Chickin%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -3886,7 +3886,7 @@ rule:
 plugin=vanillaSign
 number=323
 data:
-JSON:{signContents0:"Rumpys§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Cut§r",signContents1:"Fine§r",signContents3:"Meats§r",rotation:0}
+JSON:{signContents0:"Rumpys%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Cut%&%r",signContents1:"Fine%&%r",signContents3:"Meats%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -4110,7 +4110,7 @@ rule:
 plugin=vanillaSign
 number=351
 data:
-JSON:{signContents0:"Holy§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"of the§r",signContents1:"Church§r",signContents3:"Empire§r",rotation:0}
+JSON:{signContents0:"Holy%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"of the%&%r",signContents1:"Church%&%r",signContents3:"Empire%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -4118,7 +4118,7 @@ rule:
 plugin=vanillaSign
 number=352
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4134,7 +4134,7 @@ rule:
 plugin=vanillaSign
 number=354
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4142,7 +4142,7 @@ rule:
 plugin=vanillaSign
 number=355
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4166,7 +4166,7 @@ rule:
 plugin=vanillaSign
 number=358
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4182,7 +4182,7 @@ rule:
 plugin=vanillaSign
 number=360
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4190,7 +4190,7 @@ rule:
 plugin=vanillaSign
 number=361
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Merchant§r",signContents1:"",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Merchant%&%r",signContents1:"",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4206,7 +4206,7 @@ rule:
 plugin=vanillaSign
 number=363
 data:
-JSON:{signContents0:"The§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Dragon§r",signContents1:"Green§r",signContents3:"Inn§r",rotation:0}
+JSON:{signContents0:"The%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Dragon%&%r",signContents1:"Green%&%r",signContents3:"Inn%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -4222,7 +4222,7 @@ rule:
 plugin=vanillaSign
 number=365
 data:
-JSON:{signContents0:"The§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Dragon§r",signContents1:"Green§r",signContents3:"Inn§r",rotation:0}
+JSON:{signContents0:"The%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Dragon%&%r",signContents1:"Green%&%r",signContents3:"Inn%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -4230,7 +4230,7 @@ rule:
 plugin=vanillaSign
 number=366
 data:
-JSON:{signContents0:"The§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Dragon§r",signContents1:"Green§r",signContents3:"Inn§r",rotation:0}
+JSON:{signContents0:"The%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Dragon%&%r",signContents1:"Green%&%r",signContents3:"Inn%&%r",rotation:0}
 :enddata
 :endrule
 

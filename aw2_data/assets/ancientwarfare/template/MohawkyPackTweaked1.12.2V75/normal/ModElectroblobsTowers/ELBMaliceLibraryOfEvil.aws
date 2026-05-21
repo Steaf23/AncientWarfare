@@ -4622,7 +4622,7 @@ rule:
 plugin=vanillaSign
 number=205
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Elixir of Life§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Elixir of Life%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4630,7 +4630,7 @@ rule:
 plugin=vanillaSign
 number=206
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Spider Venom§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Spider Venom%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4638,7 +4638,7 @@ rule:
 plugin=vanillaSign
 number=207
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Mana Elixir§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Mana Elixir%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4646,7 +4646,7 @@ rule:
 plugin=vanillaSign
 number=208
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"handle with care!§r",signContents1:"DEADLY POISON§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"handle with care!%&%r",signContents1:"DEADLY POISON%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -4654,7 +4654,7 @@ rule:
 plugin=vanillaSign
 number=209
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"of Speed§r",signContents1:"Everlasting Elixir §r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"of Speed%&%r",signContents1:"Everlasting Elixir %&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

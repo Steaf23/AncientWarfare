@@ -382,7 +382,7 @@ rule:
 plugin=vanillaSign
 number=24
 data:
-JSON:{signContents0:"Proudly§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"...er§r§r§r",signContents1:"Established§r§r§r",signContents3:"a long time ago§r§r§r",rotation:0}
+JSON:{signContents0:"Proudly%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"...er%&%r%&%r%&%r",signContents1:"Established%&%r%&%r%&%r",signContents3:"a long time ago%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -390,7 +390,7 @@ rule:
 plugin=vanillaSign
 number=25
 data:
-JSON:{signContents0:"Orc Trader§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Only§r§r§r",signContents1:"Clans§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Orc Trader%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Only%&%r%&%r%&%r",signContents1:"Clans%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

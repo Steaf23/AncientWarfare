@@ -415,7 +415,7 @@ rule:
 plugin=vanillaSign
 number=27
 data:
-JSON:{signContents0:"The§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"of§r§r§r§r",signContents1:"Mausoleum§r§r§r§r",signContents3:"Misery§r§r§r§r",rotation:0}
+JSON:{signContents0:"The%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"of%&%r%&%r%&%r%&%r",signContents1:"Mausoleum%&%r%&%r%&%r%&%r",signContents3:"Misery%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -439,7 +439,7 @@ rule:
 plugin=vanillaSign
 number=30
 data:
-JSON:{signContents0:"Abandon all§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"who enter§r§r§r§r",signContents1:"hope ye§r§r§r§r",signContents3:"here§r§r§r§r",rotation:0}
+JSON:{signContents0:"Abandon all%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"who enter%&%r%&%r%&%r%&%r",signContents1:"hope ye%&%r%&%r%&%r%&%r",signContents3:"here%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -583,7 +583,7 @@ rule:
 plugin=vanillaSign
 number=48
 data:
-JSON:{signContents0:"and with§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"even death§r§r§r§r",signContents1:"strange aeons§r§r§r§r",signContents3:"may die§r§r§r§r",rotation:0}
+JSON:{signContents0:"and with%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"even death%&%r%&%r%&%r%&%r",signContents1:"strange aeons%&%r%&%r%&%r%&%r",signContents3:"may die%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -591,7 +591,7 @@ rule:
 plugin=vanillaSign
 number=49
 data:
-JSON:{signContents0:"That is not§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"which can§r§r§r§r",signContents1:"dead§r§r§r§r",signContents3:"eternal lie§r§r§r§r",rotation:0}
+JSON:{signContents0:"That is not%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"which can%&%r%&%r%&%r%&%r",signContents1:"dead%&%r%&%r%&%r%&%r",signContents3:"eternal lie%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

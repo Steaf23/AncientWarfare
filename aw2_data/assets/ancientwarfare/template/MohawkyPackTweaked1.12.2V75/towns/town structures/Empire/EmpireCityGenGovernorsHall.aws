@@ -2649,7 +2649,7 @@ rule:
 plugin=vanillaSign
 number=171
 data:
-JSON:{signContents0:"Empire§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Council§r",signContents1:"City§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Empire%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Council%&%r",signContents1:"City%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

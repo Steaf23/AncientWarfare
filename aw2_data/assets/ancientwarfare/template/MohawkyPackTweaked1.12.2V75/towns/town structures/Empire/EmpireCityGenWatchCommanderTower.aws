@@ -605,7 +605,7 @@ rule:
 plugin=vanillaSign
 number=18
 data:
-JSON:{signContents0:"Empire§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Watch§r",signContents1:"District§r",signContents3:"Commander§r",rotation:0}
+JSON:{signContents0:"Empire%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Watch%&%r",signContents1:"District%&%r",signContents3:"Commander%&%r",rotation:0}
 :enddata
 :endrule
 

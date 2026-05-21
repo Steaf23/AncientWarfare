@@ -607,7 +607,7 @@ rule:
 plugin=vanillaSign
 number=53
 data:
-JSON:{signContents0:"Fharts-Snidely§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Crypt§r§r§r§r",signContents1:"Family§r§r§r§r",signContents3:"Beware the Gas§r§r§r§r",rotation:0}
+JSON:{signContents0:"Fharts-Snidely%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Crypt%&%r%&%r%&%r%&%r",signContents1:"Family%&%r%&%r%&%r%&%r",signContents3:"Beware the Gas%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

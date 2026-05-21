@@ -1200,7 +1200,7 @@ rule:
 plugin=vanillaSign
 number=26
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"Exorcism!§r",signContents1:"Awaiting§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"Exorcism!%&%r",signContents1:"Awaiting%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -1208,7 +1208,7 @@ rule:
 plugin=vanillaSign
 number=27
 data:
-JSON:{signContents0:"Haunted§r",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"KEEP§r",signContents1:"House§r",signContents3:"OUT!§r",rotation:0}
+JSON:{signContents0:"Haunted%&%r",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"KEEP%&%r",signContents1:"House%&%r",signContents3:"OUT!%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1216,7 +1216,7 @@ rule:
 plugin=vanillaSign
 number=28
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"",signContents1:"DANGER!§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"8"}},signContents2:"",signContents1:"DANGER!%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

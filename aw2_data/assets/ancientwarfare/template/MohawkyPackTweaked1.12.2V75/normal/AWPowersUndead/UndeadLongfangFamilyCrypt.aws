@@ -711,7 +711,7 @@ rule:
 plugin=vanillaSign
 number=60
 data:
-JSON:{signContents0:"Longfang§r§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Crypt§r§r§r§r",signContents1:"Family§r§r§r§r",signContents3:"Beware the Rat§r§r§r§r",rotation:0}
+JSON:{signContents0:"Longfang%&%r%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Crypt%&%r%&%r%&%r%&%r",signContents1:"Family%&%r%&%r%&%r%&%r",signContents3:"Beware the Rat%&%r%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

@@ -209,7 +209,7 @@ rule:
 plugin=vanillaSign
 number=5
 data:
-JSON:{signContents0:"and§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"bless thee!§r",signContents1:"they shalt§r",signContents3:"",rotation:0}
+JSON:{signContents0:"and%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"bless thee!%&%r",signContents1:"they shalt%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -353,7 +353,7 @@ rule:
 plugin=vanillaSign
 number=23
 data:
-JSON:{signContents0:"Molestest§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the§r",signContents1:"Not§r",signContents3:"Holy Chickens§r",rotation:0}
+JSON:{signContents0:"Molestest%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the%&%r",signContents1:"Not%&%r",signContents3:"Holy Chickens%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -361,7 +361,7 @@ rule:
 plugin=vanillaSign
 number=24
 data:
-JSON:{signContents0:"Give thy§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"to the holy§r",signContents1:"grain offering§r",signContents3:"chickens§r",rotation:0}
+JSON:{signContents0:"Give thy%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"to the holy%&%r",signContents1:"grain offering%&%r",signContents3:"chickens%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -385,7 +385,7 @@ rule:
 plugin=vanillaSign
 number=27
 data:
-JSON:{signContents0:"Welcome to the§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the Holy§r",signContents1:"Temple of§r",signContents3:"Chickens§r",rotation:0}
+JSON:{signContents0:"Welcome to the%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the Holy%&%r",signContents1:"Temple of%&%r",signContents3:"Chickens%&%r",rotation:0}
 :enddata
 :endrule
 

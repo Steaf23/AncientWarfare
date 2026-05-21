@@ -6267,7 +6267,7 @@ rule:
 plugin=vanillaSign
 number=350
 data:
-JSON:{signContents0:"The frothing§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"nuggets of wealth§r§r",signContents1:"beast is fed§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"The frothing%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"nuggets of wealth%&%r%&%r",signContents1:"beast is fed%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -7467,7 +7467,7 @@ rule:
 plugin=vanillaSign
 number=500
 data:
-JSON:{signContents0:"HELP WANTED:§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"TAVERN BOUNCER§r",signContents3:"",rotation:0}
+JSON:{signContents0:"HELP WANTED:%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"TAVERN BOUNCER%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -8091,7 +8091,7 @@ rule:
 plugin=vanillaSign
 number=578
 data:
-JSON:{signContents0:"WANTED:§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"(cider smuggler)§r",signContents1:"Frank Sigmar§r",signContents3:"5K denier or§r",rotation:0}
+JSON:{signContents0:"WANTED:%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"(cider smuggler)%&%r",signContents1:"Frank Sigmar%&%r",signContents3:"5K denier or%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -8755,7 +8755,7 @@ rule:
 plugin=vanillaSign
 number=661
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Infirmary§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"",signContents1:"Infirmary%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -8763,7 +8763,7 @@ rule:
 plugin=vanillaSign
 number=662
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"LIBRARY§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"LIBRARY%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

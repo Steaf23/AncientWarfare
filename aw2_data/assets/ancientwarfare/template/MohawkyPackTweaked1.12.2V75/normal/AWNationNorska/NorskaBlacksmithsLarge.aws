@@ -973,7 +973,7 @@ rule:
 plugin=vanillaSign
 number=87
 data:
-JSON:{signContents0:"Norska§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"",signContents1:"Blacksmith§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Norska%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"",signContents1:"Blacksmith%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

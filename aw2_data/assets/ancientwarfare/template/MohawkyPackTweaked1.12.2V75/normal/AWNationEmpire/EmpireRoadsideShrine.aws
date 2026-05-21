@@ -333,7 +333,7 @@ rule:
 plugin=vanillaSign
 number=29
 data:
-JSON:{signContents0:"Holy§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of the§r",signContents1:"Shrine§r",signContents3:"Empire§r",rotation:0}
+JSON:{signContents0:"Holy%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of the%&%r",signContents1:"Shrine%&%r",signContents3:"Empire%&%r",rotation:0}
 :enddata
 :endrule
 

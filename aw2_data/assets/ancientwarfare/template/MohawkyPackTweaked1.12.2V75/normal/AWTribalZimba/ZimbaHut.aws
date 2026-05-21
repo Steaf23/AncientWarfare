@@ -314,7 +314,7 @@ rule:
 plugin=vanillaSign
 number=21
 data:
-JSON:{signContents0:"ZIMBA§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"WELCOME§r",signContents1:"TRADER§r",signContents3:"ALL§r",rotation:0}
+JSON:{signContents0:"ZIMBA%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"WELCOME%&%r",signContents1:"TRADER%&%r",signContents3:"ALL%&%r",rotation:0}
 :enddata
 :endrule
 

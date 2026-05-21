@@ -926,7 +926,7 @@ rule:
 plugin=vanillaSign
 number=52
 data:
-JSON:{signContents0:"Empire§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Gate§r",signContents1:"Toll§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Empire%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Gate%&%r",signContents1:"Toll%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -1406,7 +1406,7 @@ rule:
 plugin=vanillaSign
 number=112
 data:
-JSON:{signContents0:"Empire§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Gate§r",signContents1:"Toll§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Empire%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Gate%&%r",signContents1:"Toll%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

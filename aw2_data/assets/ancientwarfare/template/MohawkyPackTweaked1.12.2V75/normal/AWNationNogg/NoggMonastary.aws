@@ -2584,7 +2584,7 @@ rule:
 plugin=vanillaSign
 number=160
 data:
-JSON:{signContents0:"Song by§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Ainsanova§r",signContents1:"Yana§r",signContents3:"A Tribute§r",rotation:0}
+JSON:{signContents0:"Song by%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Ainsanova%&%r",signContents1:"Yana%&%r",signContents3:"A Tribute%&%r",rotation:0}
 :enddata
 :endrule
 

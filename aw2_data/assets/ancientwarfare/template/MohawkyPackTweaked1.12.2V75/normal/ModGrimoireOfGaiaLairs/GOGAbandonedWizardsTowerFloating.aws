@@ -1639,7 +1639,7 @@ rule:
 plugin=vanillaSign
 number=34
 data:
-JSON:{signContents0:"The holy block§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"",signContents1:"of gods§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"The holy block%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"",signContents1:"of gods%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -1703,7 +1703,7 @@ rule:
 plugin=vanillaSign
 number=42
 data:
-JSON:{signContents0:"Thanks for§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"exporing!§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Thanks for%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"exporing!%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -1719,7 +1719,7 @@ rule:
 plugin=vanillaSign
 number=44
 data:
-JSON:{signContents0:"Island made by§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"Reppeti§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Island made by%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"",signContents1:"Reppeti%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

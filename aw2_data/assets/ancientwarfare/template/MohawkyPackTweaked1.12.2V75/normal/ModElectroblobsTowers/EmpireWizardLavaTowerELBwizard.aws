@@ -2736,7 +2736,7 @@ rule:
 plugin=vanillaSign
 number=34
 data:
-JSON:{signContents0:"Empire§r§r§r",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"0"}},signContents2:"Tower§r§r§r",signContents1:"Wizards§r§r§r",signContents3:"",rotation:8}
+JSON:{signContents0:"Empire%&%r%&%r%&%r",blockState:{blockName:"minecraft:standing_sign",properties:{rotation:"0"}},signContents2:"Tower%&%r%&%r%&%r",signContents1:"Wizards%&%r%&%r%&%r",signContents3:"",rotation:8}
 :enddata
 :endrule
 

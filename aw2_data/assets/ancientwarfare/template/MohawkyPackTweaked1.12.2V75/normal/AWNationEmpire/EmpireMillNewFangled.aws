@@ -594,7 +594,7 @@ rule:
 plugin=vanillaSign
 number=33
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Mill§r",signContents1:"New Fangled§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Mill%&%r",signContents1:"New Fangled%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -626,7 +626,7 @@ rule:
 plugin=vanillaSign
 number=37
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Mill§r",signContents1:"New Fangled§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Mill%&%r",signContents1:"New Fangled%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

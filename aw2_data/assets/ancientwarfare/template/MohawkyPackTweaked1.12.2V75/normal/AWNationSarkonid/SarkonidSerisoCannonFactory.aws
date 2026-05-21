@@ -1270,7 +1270,7 @@ rule:
 plugin=vanillaSign
 number=86
 data:
-JSON:{signContents0:"Sarkonid§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"and Cannon§r",signContents1:"Seriso Gunpowder§r",signContents3:"factory§r",rotation:0}
+JSON:{signContents0:"Sarkonid%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"and Cannon%&%r",signContents1:"Seriso Gunpowder%&%r",signContents3:"factory%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1278,7 +1278,7 @@ rule:
 plugin=vanillaSign
 number=87
 data:
-JSON:{signContents0:"Sarkonid§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"and Cannon§r",signContents1:"Seriso Gunpowder§r",signContents3:"factory§r",rotation:0}
+JSON:{signContents0:"Sarkonid%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"and Cannon%&%r",signContents1:"Seriso Gunpowder%&%r",signContents3:"factory%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1286,7 +1286,7 @@ rule:
 plugin=vanillaSign
 number=88
 data:
-JSON:{signContents0:"Sarkonid§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"and Cannon§r",signContents1:"Seriso Gunpowder§r",signContents3:"factory§r",rotation:0}
+JSON:{signContents0:"Sarkonid%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"and Cannon%&%r",signContents1:"Seriso Gunpowder%&%r",signContents3:"factory%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1342,7 +1342,7 @@ rule:
 plugin=vanillaSign
 number=95
 data:
-JSON:{signContents0:"Sarkonid§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"and Cannon§r",signContents1:"Seriso Gunpowder§r",signContents3:"factory§r",rotation:0}
+JSON:{signContents0:"Sarkonid%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"and Cannon%&%r",signContents1:"Seriso Gunpowder%&%r",signContents3:"factory%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1350,7 +1350,7 @@ rule:
 plugin=vanillaSign
 number=96
 data:
-JSON:{signContents0:"Sarkonid§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"and Cannon§r",signContents1:"Seriso Gunpowder§r",signContents3:"factory§r",rotation:0}
+JSON:{signContents0:"Sarkonid%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"and Cannon%&%r",signContents1:"Seriso Gunpowder%&%r",signContents3:"factory%&%r",rotation:0}
 :enddata
 :endrule
 

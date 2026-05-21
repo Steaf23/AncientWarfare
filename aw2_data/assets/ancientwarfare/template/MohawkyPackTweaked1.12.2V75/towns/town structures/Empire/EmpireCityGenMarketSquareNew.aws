@@ -790,7 +790,7 @@ rule:
 plugin=vanillaSign
 number=66
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Curiosities§r§r",signContents1:"Cyrils§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Curiosities%&%r%&%r",signContents1:"Cyrils%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -798,7 +798,7 @@ rule:
 plugin=vanillaSign
 number=67
 data:
-JSON:{signContents0:"Esmereldas§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Gypsy§r§r",signContents1:"Seductive§r§r",signContents3:"Rugs§r§r",rotation:0}
+JSON:{signContents0:"Esmereldas%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Gypsy%&%r%&%r",signContents1:"Seductive%&%r%&%r",signContents3:"Rugs%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -806,7 +806,7 @@ rule:
 plugin=vanillaSign
 number=68
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Tools§r§r",signContents1:"Teddy's§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Tools%&%r%&%r",signContents1:"Teddy's%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -814,7 +814,7 @@ rule:
 plugin=vanillaSign
 number=69
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Veg§r§r",signContents1:"Wonky§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Veg%&%r%&%r",signContents1:"Wonky%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -822,7 +822,7 @@ rule:
 plugin=vanillaSign
 number=70
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Scribe§r§r",signContents1:"Scribblefax§r§r",signContents3:"Supplies§r§r",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Scribe%&%r%&%r",signContents1:"Scribblefax%&%r%&%r",signContents3:"Supplies%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -830,7 +830,7 @@ rule:
 plugin=vanillaSign
 number=71
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Foods§r§r",signContents1:"Fredas§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Foods%&%r%&%r",signContents1:"Fredas%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -838,7 +838,7 @@ rule:
 plugin=vanillaSign
 number=72
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Stones§r§r",signContents1:"Stanleys§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Stones%&%r%&%r",signContents1:"Stanleys%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -846,7 +846,7 @@ rule:
 plugin=vanillaSign
 number=73
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Wood§r§r",signContents1:"Willy§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Wood%&%r%&%r",signContents1:"Willy%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -854,7 +854,7 @@ rule:
 plugin=vanillaSign
 number=74
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Fish§r§r",signContents1:"Filberts§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Fish%&%r%&%r",signContents1:"Filberts%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

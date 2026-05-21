@@ -2726,7 +2726,7 @@ rule:
 plugin=vanillaSign
 number=94
 data:
-JSON:{signContents0:"Prison§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Askyerdad§r§r§r",signContents1:"of§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Prison%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Askyerdad%&%r%&%r%&%r",signContents1:"of%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

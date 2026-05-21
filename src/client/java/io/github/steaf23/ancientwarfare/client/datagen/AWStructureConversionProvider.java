@@ -14,6 +14,8 @@ import net.minecraft.data.PackOutput;import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.MalformedInputException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -40,9 +42,10 @@ public class AWStructureConversionProvider implements DataProvider {
 		Path structureList = Paths.get("../../aw2_data/assets/ancientwarfare/template/all_structures.txt");
 		Path base = structureList.getParent();
 
-
 		try {
-			List<String> paths = Files.readAllLines(structureList);
+			List<String> paths;
+			paths = Files.readAllLines(structureList);
+
 			int i = 0;
 			for (String path : paths) {
 				Path inputPath = base.resolve(path.trim()).normalize();
@@ -59,9 +62,10 @@ public class AWStructureConversionProvider implements DataProvider {
 				Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
 				StructureEntry entry = new LegacyConverter().convertToTemplate(BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
 
-				if (i == 10) {
-					break;
-				}
+//				if (i == 10) {
+//					break;
+//				}
+
 				i++;
 			}
 		} catch (IOException exc) {

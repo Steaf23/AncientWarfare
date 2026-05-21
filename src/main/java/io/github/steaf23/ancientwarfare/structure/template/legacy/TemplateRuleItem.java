@@ -153,6 +153,7 @@ public class TemplateRuleItem {
 				case "fireworks" -> newId = Identifier.withDefaultNamespace("firework_rocket");
 				case "firework_charge" -> newId = Identifier.withDefaultNamespace("firework_star");
 				case "fence" -> newId = Identifier.withDefaultNamespace("oak_fence");
+				case "sign" -> newId = Identifier.withDefaultNamespace("oak_sign");
 			}
 			if (oldId.getPath().contains("record_")) {
 				newId = Identifier.withDefaultNamespace(oldId.getPath().replace("record_", "music_disc_"));

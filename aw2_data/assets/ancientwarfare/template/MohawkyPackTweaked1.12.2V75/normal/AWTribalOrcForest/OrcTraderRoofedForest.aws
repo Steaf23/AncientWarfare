@@ -361,7 +361,7 @@ rule:
 plugin=vanillaSign
 number=17
 data:
-JSON:{signContents0:"Or§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"or§r§r§r",signContents1:"Dwarves§r§r§r",signContents3:"Hobbits!§r§r§r",rotation:0}
+JSON:{signContents0:"Or%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"or%&%r%&%r%&%r",signContents1:"Dwarves%&%r%&%r%&%r",signContents3:"Hobbits!%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -377,7 +377,7 @@ rule:
 plugin=vanillaSign
 number=19
 data:
-JSON:{signContents0:"Orc Trader§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Well, almost all§r§r§r",signContents1:"All Welcome!§r§r§r",signContents3:"No Bloody Elfs!§r§r§r",rotation:0}
+JSON:{signContents0:"Orc Trader%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Well, almost all%&%r%&%r%&%r",signContents1:"All Welcome!%&%r%&%r%&%r",signContents3:"No Bloody Elfs!%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

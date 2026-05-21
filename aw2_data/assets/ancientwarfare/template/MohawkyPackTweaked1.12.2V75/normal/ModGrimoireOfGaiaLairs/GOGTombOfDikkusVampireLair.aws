@@ -492,7 +492,7 @@ rule:
 plugin=vanillaSign
 number=22
 data:
-JSON:{signContents0:"the world§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"see his§r§r§r",signContents1:"shall not§r§r§r",signContents3:"like again§r§r§r",rotation:0}
+JSON:{signContents0:"the world%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"see his%&%r%&%r%&%r",signContents1:"shall not%&%r%&%r%&%r",signContents3:"like again%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -500,7 +500,7 @@ rule:
 plugin=vanillaSign
 number=23
 data:
-JSON:{signContents0:"The§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"common§r§r§r",signContents1:"Envy of§r§r§r",signContents3:"men§r§r§r",rotation:0}
+JSON:{signContents0:"The%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"common%&%r%&%r%&%r",signContents1:"Envy of%&%r%&%r%&%r",signContents3:"men%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -548,7 +548,7 @@ rule:
 plugin=vanillaSign
 number=29
 data:
-JSON:{signContents0:"whom he§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"generously§r§r§r",signContents1:"always§r§r§r",signContents3:"served§r§r§r",rotation:0}
+JSON:{signContents0:"whom he%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"generously%&%r%&%r%&%r",signContents1:"always%&%r%&%r%&%r",signContents3:"served%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -556,7 +556,7 @@ rule:
 plugin=vanillaSign
 number=30
 data:
-JSON:{signContents0:"The§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Centurion§r§r§r",signContents1:"outstanding§r§r§r",signContents3:"Biggus Dikkus§r§r§r",rotation:0}
+JSON:{signContents0:"The%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Centurion%&%r%&%r%&%r",signContents1:"outstanding%&%r%&%r%&%r",signContents3:"Biggus Dikkus%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -564,7 +564,7 @@ rule:
 plugin=vanillaSign
 number=31
 data:
-JSON:{signContents0:"Wot did§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"ever do§r§r§r",signContents1:"the Romans§r§r§r",signContents3:"for us!? Eh?§r§r§r",rotation:0}
+JSON:{signContents0:"Wot did%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"ever do%&%r%&%r%&%r",signContents1:"the Romans%&%r%&%r%&%r",signContents3:"for us!? Eh?%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -588,7 +588,7 @@ rule:
 plugin=vanillaSign
 number=34
 data:
-JSON:{signContents0:"Sadly§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"by§r§r§r",signContents1:"Lamented§r§r§r",signContents3:"the Ladies§r§r§r",rotation:0}
+JSON:{signContents0:"Sadly%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"by%&%r%&%r%&%r",signContents1:"Lamented%&%r%&%r%&%r",signContents3:"the Ladies%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -620,7 +620,7 @@ rule:
 plugin=vanillaSign
 number=38
 data:
-JSON:{signContents0:"Here§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the§r§r§r",signContents1:"lies§r§r§r",signContents3:"famous Roman§r§r§r",rotation:0}
+JSON:{signContents0:"Here%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the%&%r%&%r%&%r",signContents1:"lies%&%r%&%r%&%r",signContents3:"famous Roman%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -724,7 +724,7 @@ rule:
 plugin=vanillaSign
 number=51
 data:
-JSON:{signContents0:"Fwee§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Down wif§r§r§r",signContents1:"Bwian!§r§r§r",signContents3:"Wome!§r§r§r",rotation:0}
+JSON:{signContents0:"Fwee%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Down wif%&%r%&%r%&%r",signContents1:"Bwian!%&%r%&%r%&%r",signContents3:"Wome!%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

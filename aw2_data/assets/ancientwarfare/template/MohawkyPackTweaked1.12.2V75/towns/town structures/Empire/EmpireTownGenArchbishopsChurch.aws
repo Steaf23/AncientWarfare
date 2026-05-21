@@ -1311,7 +1311,7 @@ rule:
 plugin=vanillaSign
 number=67
 data:
-JSON:{signContents0:"Alms§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"the§r§r§r",signContents1:"for§r§r§r",signContents3:"Poor§r§r§r",rotation:0}
+JSON:{signContents0:"Alms%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"the%&%r%&%r%&%r",signContents1:"for%&%r%&%r%&%r",signContents3:"Poor%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1991,7 +1991,7 @@ rule:
 plugin=vanillaSign
 number=152
 data:
-JSON:{signContents0:"Holy§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of the§r§r§r",signContents1:"Church§r§r§r",signContents3:"Empire§r§r§r",rotation:0}
+JSON:{signContents0:"Holy%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of the%&%r%&%r%&%r",signContents1:"Church%&%r%&%r%&%r",signContents3:"Empire%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1999,7 +1999,7 @@ rule:
 plugin=vanillaSign
 number=153
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Church§r§r§r",signContents1:"Archbishops§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Church%&%r%&%r%&%r",signContents1:"Archbishops%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -2007,7 +2007,7 @@ rule:
 plugin=vanillaSign
 number=154
 data:
-JSON:{signContents0:"Holy§r§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"of§r§r§r",signContents1:"Shrine§r§r§r",signContents3:"Witchbane§r§r§r",rotation:0}
+JSON:{signContents0:"Holy%&%r%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"of%&%r%&%r%&%r",signContents1:"Shrine%&%r%&%r%&%r",signContents3:"Witchbane%&%r%&%r%&%r",rotation:0}
 :enddata
 :endrule
 

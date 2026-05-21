@@ -1052,7 +1052,7 @@ rule:
 plugin=vanillaSign
 number=78
 data:
-JSON:{signContents0:"Glassmaker§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Buying: Sand§r",signContents1:"",signContents3:"Selling: Glass§r",rotation:0}
+JSON:{signContents0:"Glassmaker%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Buying: Sand%&%r",signContents1:"",signContents3:"Selling: Glass%&%r",rotation:0}
 :enddata
 :endrule
 

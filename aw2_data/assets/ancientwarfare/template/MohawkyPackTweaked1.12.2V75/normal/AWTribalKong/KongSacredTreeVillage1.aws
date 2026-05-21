@@ -3803,7 +3803,7 @@ rule:
 plugin=vanillaSign
 number=101
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Larder§r§r§r§r§r",signContents1:"Village§r§r§r§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Larder%&%r%&%r%&%r%&%r%&%r",signContents1:"Village%&%r%&%r%&%r%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

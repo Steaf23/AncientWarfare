@@ -1102,7 +1102,7 @@ rule:
 plugin=vanillaSign
 number=97
 data:
-JSON:{signContents0:"Longjohn's§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"& Fancies§r",signContents1:"Mercantile§r",signContents3:"Importer§r",rotation:0}
+JSON:{signContents0:"Longjohn's%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"& Fancies%&%r",signContents1:"Mercantile%&%r",signContents3:"Importer%&%r",rotation:0}
 :enddata
 :endrule
 
@@ -1110,7 +1110,7 @@ rule:
 plugin=vanillaSign
 number=98
 data:
-JSON:{signContents0:"Longjohn's§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"& Fancies§r",signContents1:"Mercantile§r",signContents3:"Importers§r",rotation:0}
+JSON:{signContents0:"Longjohn's%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"& Fancies%&%r",signContents1:"Mercantile%&%r",signContents3:"Importers%&%r",rotation:0}
 :enddata
 :endrule
 

@@ -741,7 +741,7 @@ rule:
 plugin=vanillaSign
 number=54
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the Golem§r",signContents1:"Beware of§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"the Golem%&%r",signContents1:"Beware of%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -749,7 +749,7 @@ rule:
 plugin=vanillaSign
 number=55
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Haggling§r",signContents1:"No§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Haggling%&%r",signContents1:"No%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -845,7 +845,7 @@ rule:
 plugin=vanillaSign
 number=67
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Smithy§r",signContents1:"Master§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Smithy%&%r",signContents1:"Master%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -853,7 +853,7 @@ rule:
 plugin=vanillaSign
 number=68
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Smithy§r",signContents1:"Master§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Smithy%&%r",signContents1:"Master%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -885,7 +885,7 @@ rule:
 plugin=vanillaSign
 number=72
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Smithy§r",signContents1:"Master§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Smithy%&%r",signContents1:"Master%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

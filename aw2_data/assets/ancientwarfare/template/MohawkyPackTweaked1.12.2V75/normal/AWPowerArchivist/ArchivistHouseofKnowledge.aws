@@ -2369,7 +2369,7 @@ rule:
 plugin=vanillaSign
 number=187
 data:
-JSON:{signContents0:"Let no one§r§r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of wisdom enter§r§r",signContents1:"without the gift§r§r",signContents3:"",rotation:0}
+JSON:{signContents0:"Let no one%&%r%&%r",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"of wisdom enter%&%r%&%r",signContents1:"without the gift%&%r%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 

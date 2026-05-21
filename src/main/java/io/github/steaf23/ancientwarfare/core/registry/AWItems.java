@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 
@@ -30,7 +31,7 @@ public class AWItems {
 			.build();
 
 	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
-	public static final Item COIN = registerItem("coin", CoinItem::new, new Item.Properties()
+	public static final Item COIN = registerItemNoCreativeTab("coin", CoinItem::new, new Item.Properties()
 			.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
 	public static final CommandBaton WOODEN_COMMAND_BATON = AWItems.registerItem("wooden_command_baton", CommandBaton::new,
@@ -50,6 +51,18 @@ public class AWItems {
 
 	public static void initialize() {
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ITEM_GROUP_KEY, ITEM_GROUP);
+
+		CreativeModeTabEvents.modifyOutputEvent(AWItems.ITEM_GROUP_KEY).register(group -> {
+			ItemStack stack = new ItemStack(COIN);
+			stack.set(AWComponents.COIN_METAL, CoinMetal.GOLD);
+			group.accept(stack);
+			stack.set(AWComponents.COIN_METAL, CoinMetal.SILVER);
+			group.accept(stack);
+			stack.set(AWComponents.COIN_METAL, CoinMetal.COPPER);
+			group.accept(stack);
+			stack.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
+			group.accept(stack);
+		});
 	}
 
 	public static Item registerItem(String name, Item.Properties settings) {
@@ -66,6 +79,17 @@ public class AWItems {
 		Registry.register(BuiltInRegistries.ITEM, registryKey, item);
 		CreativeModeTabEvents.modifyOutputEvent(tab)
 				.register((group) -> group.accept(item));
+		return item;
+	}
+
+	public static Item registerItemNoCreativeTab(String name, Item.Properties settings) {
+		return registerItemNoCreativeTab(name, Item::new, settings);
+	}
+
+	public static <T extends Item> T registerItemNoCreativeTab(String name, Function<Item.Properties, T> factory, Item.Properties settings) {
+		final ResourceKey<Item> registryKey = ResourceKey.create(Registries.ITEM, AncientWarfare.id(name));
+		T item = factory.apply(settings.setId(registryKey));
+		Registry.register(BuiltInRegistries.ITEM, registryKey, item);
 		return item;
 	}
 

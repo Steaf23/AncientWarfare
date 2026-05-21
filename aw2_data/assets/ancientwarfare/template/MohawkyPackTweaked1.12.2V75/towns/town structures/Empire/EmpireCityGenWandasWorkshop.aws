@@ -604,7 +604,7 @@ rule:
 plugin=vanillaSign
 number=42
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Workshop§r",signContents1:"Wandas§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Workshop%&%r",signContents1:"Wandas%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -676,7 +676,7 @@ rule:
 plugin=vanillaSign
 number=51
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Workshop§r",signContents1:"Wandas§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"north"}},signContents2:"Workshop%&%r",signContents1:"Wandas%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -684,7 +684,7 @@ rule:
 plugin=vanillaSign
 number=52
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Workshop§r",signContents1:"Wandas§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"west"}},signContents2:"Workshop%&%r",signContents1:"Wandas%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -700,7 +700,7 @@ rule:
 plugin=vanillaSign
 number=54
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Workshop§r",signContents1:"Wandas§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"east"}},signContents2:"Workshop%&%r",signContents1:"Wandas%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
@@ -708,7 +708,7 @@ rule:
 plugin=vanillaSign
 number=55
 data:
-JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Workshop§r",signContents1:"Wandas§r",signContents3:"",rotation:0}
+JSON:{signContents0:"",blockState:{blockName:"minecraft:wall_sign",properties:{facing:"south"}},signContents2:"Workshop%&%r",signContents1:"Wandas%&%r",signContents3:"",rotation:0}
 :enddata
 :endrule
 
