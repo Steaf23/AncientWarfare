@@ -1,10 +1,19 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
+import io.github.steaf23.ancientwarfare.structure.component.CapturedBlock;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.item.ItemStackTemplate;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
@@ -13,7 +22,13 @@ import java.util.UUID;
 
 public class TemplateBlockEntityDataParser {
 
-	public static void convert(Identifier oldId, ValueInput input, ValueOutput output) {
+	public record TileEntityConversionContext(Identifier oldId, BlockState newState, ValueInput input, HolderLookup.Provider registries) {}
+
+	public static void convert(TileEntityConversionContext context, ValueOutput output) {
+		Identifier oldId = context.oldId;
+
+		ValueInput input = context.input;
+
 		output.putString("id", oldId.toString());
 		String oldName = oldId.getPath();
 		switch (oldName) {
@@ -33,20 +48,24 @@ public class TemplateBlockEntityDataParser {
 			case "chest", "trapped_chest", "furnace", "brewing_stand", "dropper", "shulker_box", "hopper", "dispenser" -> {
 				writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
 			}
-			// TODO: update to be warded blocks
-			case "advanced_loot_chest" -> {
-				ValueOutput.TypedOutputList<ItemStackWithSlot> items = output.list("Items", ItemStackWithSlot.CODEC);
+			case "advanced_loot_chest", "loot_basket" -> {
+				output.putString("id", "ancientwarfare:warded_block");
+				TagValueOutput chestOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
+				chestOutput.putString("id", "minecraft:chest");
 
 				input.child("lootSettings").ifPresentOrElse(settings -> {
-					if (settings.getByteOr("hasLoot", (byte)0) != 0) {
-						output.putString("LootTable", settings.getStringOr("lootTableName", ""));
+					if (settings.getStringOr("hasLoot", "0b").equals("1b")) {
+						chestOutput.putString("LootTable", settings.getStringOr("lootTableName", ""));
 					} else {
-						writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
+						writeItemsToTileEntity(input.childrenListOrEmpty("Items"), chestOutput);
 					}
 				}, () -> {
-					writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
+					writeItemsToTileEntity(input.childrenListOrEmpty("Items"), chestOutput);
 				});
 
+				//TODO: FIX FACING
+				String facing = context.newState.getValue(BlockStateProperties.FACING).getName();
+				output.store("block_capture", CapturedBlock.CODEC, new CapturedBlock(Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.byName(facing)), chestOutput.buildResult()));
 			}
 		}
 	}
@@ -62,7 +81,6 @@ public class TemplateBlockEntityDataParser {
 			int meta = Integer.parseInt(slot.getStringOr("Damage", "0s").replace("s", ""));
 			CompoundTag tag = slot.read("tag", CompoundTag.CODEC).orElse(new CompoundTag());
 			ItemStackTemplate stack = TemplateRuleItem.fromOldId(type, meta, amount, tag);
-
 //			itemsOut.add(new ItemStackWithSlot(slotNr, stack));
 		}
 	}

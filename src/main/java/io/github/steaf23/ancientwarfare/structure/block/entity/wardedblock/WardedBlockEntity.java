@@ -1,7 +1,8 @@
 package io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock;
 
-import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
+import io.github.steaf23.ancientwarfare.structure.block.WardedBlockData;
+import io.github.steaf23.ancientwarfare.structure.component.CapturedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -9,28 +10,17 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 public class WardedBlockEntity extends BlockEntity {
 
-	public record CapturedBlock(BlockState state, CompoundTag capturedBlockEntityData) {
-		public boolean isBlockEntity() {
-			return !capturedBlockEntityData.isEmpty();
-		}
-	}
-
-	public record WardedBlockData(@Nullable EntityType<?> entityToSpawn, @Nullable MobEffectInstance effect) {}
-
-	private CapturedBlock blockToRestore = new CapturedBlock(Blocks.AIR.defaultBlockState(), new CompoundTag());
-	private WardedBlockData wardingData = new WardedBlockData(null, null);
+	private CapturedBlock blockToRestore = CapturedBlock.EMPTY;
+	private @NotNull WardedBlockData wardingData = new WardedBlockData(null, null);
 
 	public WardedBlockEntity(BlockPos worldPosition, BlockState blockState) {
 		super(AWBlockEntities.WARDED_BLOCK, worldPosition, blockState);
@@ -68,12 +58,19 @@ public class WardedBlockEntity extends BlockEntity {
 		return blockToRestore;
 	}
 
+	public WardedBlockData getWard() {
+		return wardingData;
+	}
+
 	public void activate() {
 		if (wardingData.entityToSpawn() != null) {
 			System.out.println("Spawning Entity: " + wardingData.entityToSpawn().getDescriptionId());
 		}
 
+		restore();
+	}
 
+	public void restore() {
 		if (level == null || blockToRestore == null) return;
 
 		level.setBlock(getBlockPos(), blockToRestore.state(), Block.UPDATE_ALL);
@@ -89,19 +86,14 @@ public class WardedBlockEntity extends BlockEntity {
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
 
-		ValueInput capture = input.childOrEmpty("block_capture");
-		BlockState state = capture.read("state", BlockState.CODEC).orElse(Blocks.AIR.defaultBlockState());
-		CompoundTag tag = capture.read("nbt", CompoundTag.CODEC).orElse(new CompoundTag());
-		blockToRestore = new CapturedBlock(state, tag);
+		blockToRestore = input.read("block_capture", CapturedBlock.CODEC).orElse(CapturedBlock.EMPTY);
 	}
 
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
 
-		ValueOutput capture = output.child("block_capture");
-		capture.store("state", BlockState.CODEC, blockToRestore.state());
-		capture.store("nbt", CompoundTag.CODEC, blockToRestore.capturedBlockEntityData());
+		output.store("block_capture", CapturedBlock.CODEC, blockToRestore);
 	}
 
 	@Override

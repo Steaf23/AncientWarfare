@@ -1,9 +1,13 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 
+import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -26,10 +30,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,38 +44,16 @@ import java.util.Optional;
 public class TemplateRuleBlock extends TemplateRule {
 	protected BlockState state = Blocks.AIR.defaultBlockState();
 	private Identifier legacyId;
-	private ItemStack cachedStack = null;
+	private CompoundTag jsonRule = null;
 	private boolean placeInSurvival = false;
-	private ValueInput nbt = null;
+	private CompoundTag nbt = null;
 
 	public TemplateRuleBlock() {
 	}
 
 	@Override
 	public List<ItemStack> getResources() {
-		if (state.getBlock() == Blocks.AIR) {
-			return Collections.emptyList();
-		}
-
-		ItemStack stack = getCachedStack();
-		if (!stack.isEmpty()) {
-			return Collections.singletonList(stack);
-		}
-
-		return Collections.emptyList();
-	}
-
-	private ItemStack getCachedStack() {
-		cacheStack();
-		return cachedStack;
-	}
-
-	private void cacheStack() {
-		if (cachedStack == null) {
-//			Optional<ItemStack> stack = getStack();
-//			placeInSurvival = stack.isPresent();
-//			cachedStack = stack.orElse(ItemStack.EMPTY);
-		}
+		return List.of();
 	}
 
 	@Override
@@ -81,7 +63,7 @@ public class TemplateRuleBlock extends TemplateRule {
 
 	@Override
 	public boolean placeInSurvival() {
-		cacheStack();
+
 		return state.getBlock() != Blocks.AIR && placeInSurvival;
 	}
 
@@ -95,7 +77,7 @@ public class TemplateRuleBlock extends TemplateRule {
 		try {
 			legacyId = Identifier.parse(tag.childOrEmpty("blockState").getStringOr("blockName", "minecraft:air"));
 			state = readBlockState(tag);
-			this.nbt = tag.childOrEmpty("teData");
+			this.nbt = tag.read("teData", CompoundTag.CODEC).orElse(new CompoundTag());
 		}
 		catch (MissingResourceException e) {
 //			AncientWarfareStructure.LOG.warn("Unable to find blockstate while parsing structure template thus replacing it with air - {}.", e.getMessage());
@@ -111,8 +93,16 @@ public class TemplateRuleBlock extends TemplateRule {
 		return state;
 	}
 
-	public void writeBlockEntityData(ValueOutput output) {
-		TemplateBlockEntityDataParser.convert(legacyId, nbt, output);
+	public void writeBlockEntityData(HolderLookup.Provider registries, ValueOutput output) {
+		ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, registries, nbt);
+
+		TemplateBlockEntityDataParser.TileEntityConversionContext context = new TemplateBlockEntityDataParser.TileEntityConversionContext(
+				legacyId,
+				state,
+				input,
+				registries
+		);
+		TemplateBlockEntityDataParser.convert(context, output);
 	}
 //
 //	@Nullable
@@ -375,7 +365,7 @@ public class TemplateRuleBlock extends TemplateRule {
 		} else if (blockId.getNamespace().equals("ancientwarfarestructure")) {
 			switch (blockId.getPath()) {
 				case "fire_pit" -> blockId = Identifier.withDefaultNamespace("campfire");
-				case "advanced_loot_chest" -> blockId = Identifier.withDefaultNamespace("chest");
+				case "advanced_loot_chest", "loot_basket" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.WARDED_BLOCK);
 			}
 		}
 
@@ -481,6 +471,8 @@ public class TemplateRuleBlock extends TemplateRule {
 			}
 		}
 
+
+
 		for (String propName : stateProperties.keySet()) {
 			// TODO: check which one of these to check for item types
 			if (switch (propName) {
@@ -495,7 +487,9 @@ public class TemplateRuleBlock extends TemplateRule {
 					 "seamless",
 					 "nodrop",
 					 "check_decay",
-					 "legacy_data" -> true;
+					 "legacy_data",
+					 "visible",
+					 "double" -> true;
 				default -> false;
 			}) {
 				continue;
@@ -503,7 +497,15 @@ public class TemplateRuleBlock extends TemplateRule {
 
 			Property<?> property = switch (propName) {
 				case "snowy" -> BlockStateProperties.SNOWY;
-				case "facing" -> BlockStateProperties.HORIZONTAL_FACING;
+				case "facing" -> {
+					if (block.getStateDefinition().getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
+						yield BlockStateProperties.HORIZONTAL_FACING;
+					} else if (block.getStateDefinition().getProperties().contains(BlockStateProperties.FACING_HOPPER)) {
+						yield BlockStateProperties.FACING_HOPPER;
+					} else {
+						yield BlockStateProperties.FACING;
+					}
+				}
 				case "shape" -> {
 					if (blockId.toString().contains("stairs")) {
 						yield BlockStateProperties.STAIRS_SHAPE;
@@ -613,6 +615,6 @@ public class TemplateRuleBlock extends TemplateRule {
 	}
 
 	public boolean hasBlockEntityData() {
-		return !nbt.keySet().isEmpty();
+		return !nbt.isEmpty();
 	}
 }

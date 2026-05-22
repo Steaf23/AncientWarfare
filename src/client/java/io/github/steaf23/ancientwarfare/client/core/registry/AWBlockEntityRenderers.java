@@ -4,7 +4,6 @@ import io.github.steaf23.ancientwarfare.client.automation.render.block.WorksiteB
 import io.github.steaf23.ancientwarfare.client.npc.render.block.TownHallBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.WardedBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
-import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class AWBlockEntityRenderers {

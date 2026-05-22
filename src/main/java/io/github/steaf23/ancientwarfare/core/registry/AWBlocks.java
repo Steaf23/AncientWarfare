@@ -14,6 +14,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.function.Function;
@@ -28,7 +29,11 @@ public class AWBlocks {
 	public static final Block ANIMAL_FARM = register("animal_farm", properties -> new WorksiteBlock(properties, AnimalFarmBlockEntity::new), BlockBehaviour.Properties.of(), true);
 
 	public static final Block WARDED_BLOCK = register("warded_block", WardedBlock::new, BlockBehaviour.Properties.of()
-			.noOcclusion(), false);
+			.noOcclusion()
+			.strength(-1.0f, 3600000.0f)
+			.noLootTable()
+			.isValidSpawn(Blocks::never)
+			.noTerrainParticles(), false);
 
 	public static Block register(String name, BlockBehaviour.Properties settings, boolean withItem) {
 		return register(name, Block::new, settings, withItem);

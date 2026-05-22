@@ -12,7 +12,9 @@ import io.github.steaf23.ancientwarfare.core.registry.AWWorksiteUpgrades;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWMemories;
+import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.resources.Identifier;
@@ -46,6 +48,16 @@ public class AncientWarfare implements ModInitializer {
 					extendedHandler.applyClientUpdate(context.player(), payload.update());
 				}
 			});
+		});
+
+		PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, be) -> {
+			if (!level.isClientSide() && player.isCreative()) {
+				if (be instanceof WardedBlockEntity wardedBlockEntity) {
+					wardedBlockEntity.restore();
+					return false;
+				}
+			}
+			return true;
 		});
 	}
 

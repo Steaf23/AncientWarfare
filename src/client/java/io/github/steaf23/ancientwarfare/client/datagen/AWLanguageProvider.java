@@ -31,7 +31,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 		builder.forBlocks().auto(
 				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM
 		).forItems().auto(
-				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER
+				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.WARD_SEAL
 		).forEntityTypes().auto(
 				AWEntities.BASE_NPC
 		).forCreativeTabs().auto(

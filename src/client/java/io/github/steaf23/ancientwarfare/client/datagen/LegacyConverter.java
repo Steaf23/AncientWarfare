@@ -5,6 +5,7 @@ import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateRuleBlock;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.ProblemReporter;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class LegacyConverter {
-	public StructureEntry convertToTemplate(HolderGetter<Block> blockLookup, ParsedStructure structure, Path filePath) {
+	public StructureEntry convertToTemplate(HolderLookup.Provider registries, HolderGetter<Block> blockLookup, ParsedStructure structure, Path filePath) {
 
 		TagValueOutput writer = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
 
@@ -56,7 +57,7 @@ public class LegacyConverter {
 						continue;
 					}
 
-					rule.writeBlockEntityData(blockEntry.child("nbt"));
+					rule.writeBlockEntityData(registries, blockEntry.child("nbt"));
 				}
 			}
 		}
