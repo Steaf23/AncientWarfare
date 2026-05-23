@@ -3,7 +3,7 @@ package io.github.steaf23.ancientwarfare.structure.block;
 import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
-import io.github.steaf23.ancientwarfare.structure.component.CapturedBlock;
+import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -52,7 +52,7 @@ public class WardedBlock extends BaseEntityBlock {
 			return super.getShape(state, level, pos, context);
 		}
 
-		CapturedBlock captureInfo = be.getBlockToRestore();
+		CapturedBlockInfo captureInfo = be.getBlockToRestore();
 		if (captureInfo == null || captureInfo.state() == null || captureInfo.state().isAir()) {
 			return super.getShape(state, level, pos, context);
 		}
@@ -83,26 +83,7 @@ public class WardedBlock extends BaseEntityBlock {
 		return InteractionResult.SUCCESS;
 	}
 
-	@Override
-	public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
-		if (!level.isClientSide()) {
-
-			BlockEntity be = level.getBlockEntity(pos);
-
-			if (be instanceof WardedBlockEntity warded) {
-
-				warded.restore();
-
-				return warded.getBlockToRestore().state();
-			}
-		}
-
-		return super.playerWillDestroy(level, pos, state, player);
-	}
-
-
 	public void activate(BlockState state, ServerLevel world, BlockPos pos, Player player, BlockHitResult hit) {
-		// TODO: spawn stuff
 		if (world.getBlockEntity(pos) instanceof WardedBlockEntity wardedBe) {
 			wardedBe.activate();
 		}

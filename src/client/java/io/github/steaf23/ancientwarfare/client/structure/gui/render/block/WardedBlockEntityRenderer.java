@@ -40,8 +40,8 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 	public void extractRenderState(WardedBlockEntity blockEntity, WardedBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
 		context.blockModelResolver().update(state.blockModel, blockEntity.getBlockToRestore().state(), BLOCK_DISPLAY_CONTEXT);
-		state.capturedBlock = blockEntity.getBlockToRestore();
-		state.wardData = blockEntity.getWard();
+		state.capturedBlockInfo = blockEntity.getBlockToRestore();
+		state.wardInfo = blockEntity.getWard();
 		state.showDebugLabel = Minecraft.getInstance().player.isCreative();
 	}
 
@@ -52,14 +52,14 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 		if (state.showDebugLabel) {
 			List<Component> text = new ArrayList<>();
 			text.add(Component.literal("[Warded Block]").withStyle(ChatFormatting.BOLD, ChatFormatting.AQUA));
-			text.add(Component.literal("Captured Block: ").append(state.capturedBlock.state().getBlock().getName().withStyle(ChatFormatting.GOLD)));
+			text.add(Component.literal("Captured Block: ").append(state.capturedBlockInfo.state().getBlock().getName().withStyle(ChatFormatting.GOLD)));
 
-			if (state.wardData.entityToSpawn() != null) {
-				text.add(Component.literal("Guarded by entity: ").append(Component.empty().append(state.wardData.entityToSpawn().getDescription()).withStyle(ChatFormatting.GOLD)));
+			if (state.wardInfo.entityToSpawn() != null) {
+				text.add(Component.literal("Guarded by entity: ").append(Component.empty().append(state.wardInfo.entityToSpawn().getDescription()).withStyle(ChatFormatting.GOLD)));
 			}
 
-			if (state.wardData.effect() != null) {
-				text.add(Component.literal("Guarded by effect: ").append(Component.translatable(state.wardData.effect().getDescriptionId()).withStyle(ChatFormatting.GOLD)));
+			if (state.wardInfo.effect() != null) {
+				text.add(Component.literal("Guarded by effect: ").append(Component.translatable(state.wardInfo.effect().getDescriptionId()).withStyle(ChatFormatting.GOLD)));
 			}
 
 			renderLabelAboveBlock(text, state.blockPos, poseStack, submitNodeCollector, camera, state.lightCoords);

@@ -3,7 +3,7 @@ package io.github.steaf23.ancientwarfare.core.registry;
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
-import io.github.steaf23.ancientwarfare.structure.component.CapturedBlock;
+import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -26,10 +26,10 @@ public class AWComponents {
 			DataComponentType.<CoinMetal>builder().persistent(CoinMetal.CODEC).build()
 	);
 
-	public static final DataComponentType<CapturedBlock> BLOCK_CAPTURE = Registry.register(
+	public static final DataComponentType<CapturedBlockInfo> BLOCK_CAPTURE = Registry.register(
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			AncientWarfare.id("block_capture"),
-			DataComponentType.<CapturedBlock>builder().persistent(CapturedBlock.CODEC).build()
+			DataComponentType.<CapturedBlockInfo>builder().persistent(CapturedBlockInfo.CODEC).build()
 	);
 
 	public static void initialize() {

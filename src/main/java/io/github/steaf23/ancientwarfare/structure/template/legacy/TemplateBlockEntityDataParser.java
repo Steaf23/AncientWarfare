@@ -1,13 +1,17 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
-import io.github.steaf23.ancientwarfare.structure.component.CapturedBlock;
+import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardInfo;
+import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
@@ -50,10 +54,31 @@ public class TemplateBlockEntityDataParser {
 			}
 			case "advanced_loot_chest", "loot_basket" -> {
 				output.putString("id", "ancientwarfare:warded_block");
+
 				TagValueOutput chestOutput = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
 				chestOutput.putString("id", "minecraft:chest");
 
 				input.child("lootSettings").ifPresentOrElse(settings -> {
+					String entity = settings.getStringOr("entity", "");
+					EntityType<?> entityType = null;
+					if (!entity.isEmpty() && !entity.equals("minecraft:")) {
+						Identifier entityId = TemplateEntityDataParser.updateId(Identifier.parse(entity));
+						entityType = BuiltInRegistries.ENTITY_TYPE.getValue(entityId);
+					}
+					MobEffectInstance effectInstance = null;
+					var effectList = settings.childrenListOrEmpty("effects");
+					var maybeEffect = effectList.stream().findAny();
+					if (maybeEffect.isPresent()) {
+						ValueInput effect = maybeEffect.orElseThrow();
+						Identifier effectId = Identifier.parse(effect.getStringOr("RegistryName", ""));
+						int durationTicks = effect.getIntOr("Duration", 10);
+						int amplifier = Integer.parseInt(effect.getStringOr("Amplifier", "1b").replace("b", ""));
+						effectInstance = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.getValue(effectId)), durationTicks, amplifier);
+					}
+
+					WardInfo info = new WardInfo(entityType, effectInstance);
+					output.store("ward_info", WardInfo.CODEC, info);
+
 					if (settings.getStringOr("hasLoot", "0b").equals("1b")) {
 						chestOutput.putString("LootTable", settings.getStringOr("lootTableName", ""));
 					} else {
@@ -65,7 +90,7 @@ public class TemplateBlockEntityDataParser {
 
 				//TODO: FIX FACING
 				String facing = context.newState.getValue(BlockStateProperties.FACING).getName();
-				output.store("block_capture", CapturedBlock.CODEC, new CapturedBlock(Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.byName(facing)), chestOutput.buildResult()));
+				output.store("block_capture", CapturedBlockInfo.CODEC, new CapturedBlockInfo(Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.byName(facing)), chestOutput.buildResult()));
 			}
 		}
 	}
