@@ -10,8 +10,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ItemStackWithSlot;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
@@ -52,6 +54,63 @@ public class TemplateBlockEntityDataParser {
 			case "chest", "trapped_chest", "furnace", "brewing_stand", "dropper", "shulker_box", "hopper", "dispenser" -> {
 				writeItemsToTileEntity(input.childrenListOrEmpty("Items"), output);
 			}
+			case "wall_banner", "standing_banner" -> {
+				output.putString("id", Identifier.withDefaultNamespace("banner").toString());
+				ValueOutput.ValueOutputList patternsOut = output.childrenList("patterns");
+				ValueInput.ValueInputList patterns = input.childrenListOrEmpty("Patterns");
+				for (ValueInput pattern : patterns) {
+					String patternName = pattern.getStringOr("Pattern", "");
+					patternName = switch(patternName) {
+						case "bs" -> "stripe_bottom";
+						case "ts" -> "stripe_top";
+						case "ls" -> "stripe_left";
+						case "rs" -> "stripe_right";
+						case "cs" -> "stripe_center";
+						case "ms" -> "stripe_middle";
+						case "drs" -> "stripe_downright";
+						case "dls" -> "stripe_downleft";
+						case "ss" -> "small_stripes";
+						case "cr" -> "cross";
+						case "sc" -> "straight_cross";
+						case "bt" -> "triangle_bottom";
+						case "tt" -> "triangle_top";
+						case "bts" -> "triangles_bottom";
+						case "tts" -> "triangles_top";
+						case "ld" -> "diagonal_up_right";
+						case "rd" -> "diagonal_up_left";
+						case "lud" -> "diagonal_right";
+						case "rud" -> "diagonal_left";
+						case "mc" -> "circle";
+						case "mr" -> "rhombus";
+						case "vh" -> "half_vertical";
+						case "hh" -> "half_horizontal";
+						case "vhr" -> "half_vertical_right";
+						case "hhb" -> "half_horizontal_bottom";
+						case "bo" -> "border";
+						case "cbo" -> "curly_border";
+						case "gra" -> "gradient";
+						case "gru" -> "gradient_up";
+						case "bri" -> "bricks";
+						case "cre" -> "creeper";
+						case "sku" -> "skull";
+						case "flo" -> "flower";
+						case "moj" -> "mojang";
+						case "glb" -> "globe";
+						case "pig" -> "piglin";
+						case "flw" -> "flow";
+						case "gus" -> "guster";
+						default -> {
+							System.out.println("Cannot load banner pattern with name: " + patternName);
+							yield "";
+						}
+					};
+
+					DyeColor color = DyeColor.byId(15 - pattern.getIntOr("Color", 0));
+					ValueOutput out = patternsOut.addChild();
+					out.putString("pattern", patternName);
+					out.putString("color", color.getSerializedName());
+				}
+			}
 			case "advanced_loot_chest", "loot_basket" -> {
 				output.putString("id", "ancientwarfare:warded_block");
 
@@ -63,6 +122,9 @@ public class TemplateBlockEntityDataParser {
 					EntityType<?> entityType = null;
 					if (!entity.isEmpty() && !entity.equals("minecraft:")) {
 						Identifier entityId = TemplateEntityDataParser.updateId(Identifier.parse(entity));
+						if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityId)) {
+							System.out.println("Cannot load entity with id: " + entityId + ", converting to pig!");
+						}
 						entityType = BuiltInRegistries.ENTITY_TYPE.getValue(entityId);
 					}
 					MobEffectInstance effectInstance = null;
@@ -73,7 +135,12 @@ public class TemplateBlockEntityDataParser {
 						Identifier effectId = Identifier.parse(effect.getStringOr("RegistryName", ""));
 						int durationTicks = effect.getIntOr("Duration", 10);
 						int amplifier = Integer.parseInt(effect.getStringOr("Amplifier", "1b").replace("b", ""));
-						effectInstance = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.getValue(effectId)), durationTicks, amplifier);
+						if (BuiltInRegistries.MOB_EFFECT.containsKey(effectId)) {
+							MobEffect mobEffect = BuiltInRegistries.MOB_EFFECT.getValue(effectId);
+							effectInstance = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(mobEffect), durationTicks, amplifier);
+						} else {
+							System.out.println("Cannot load mob effect with id: " + effectId);
+						}
 					}
 
 					WardInfo info = new WardInfo(entityType, effectInstance);

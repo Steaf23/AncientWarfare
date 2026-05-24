@@ -229,12 +229,17 @@ public class TemplateRuleBlock extends TemplateRule {
 				case "sapling" -> {
 					blockId = Identifier.withDefaultNamespace(stateProperties.getStringOr("type", blockId.getPath()) + "_sapling");
 				}
-				case "stained_glass", "stained_glass_pane", "wool", "carpet", "concrete", "concrete_powder",
-				     "wall_banner" -> {
+				case "stained_glass", "stained_glass_pane", "wool", "carpet", "concrete", "concrete_powder" -> {
 					blockId = Identifier.withDefaultNamespace(getColorString(blockStateData) + "_" + blockId.getPath());
 				}
+				case "wall_banner" -> {
+					// banner color ids are somehow inverted compared to normal dye color ids
+					DyeColor bannerColor = DyeColor.byId(15 - data.childOrEmpty("teData").getIntOr("Base", 0));
+					blockId = Identifier.withDefaultNamespace(bannerColor.getSerializedName() + "_wall_banner");
+				}
 				case "standing_banner" -> {
-					blockId = Identifier.withDefaultNamespace(getColorString(blockStateData) + "_banner");
+					DyeColor bannerColor = DyeColor.byId(15 - data.childOrEmpty("teData").getIntOr("Base", 0));
+					blockId = Identifier.withDefaultNamespace(bannerColor.getSerializedName() + "_banner");
 				}
 				case "sandstone", "red_sandstone" -> {
 					blockId = Identifier.withDefaultNamespace(stateProperties.getStringOr("type", blockId.getPath()));
@@ -366,13 +371,23 @@ public class TemplateRuleBlock extends TemplateRule {
 			switch (blockId.getPath()) {
 				case "fire_pit" -> blockId = Identifier.withDefaultNamespace("campfire");
 				case "advanced_loot_chest", "loot_basket" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.WARDED_BLOCK);
+				case "advanced_spawner" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.ADVANCED_SPAWNER);
+				case "urn" -> blockId = Identifier.withDefaultNamespace("decorated_pot");
 			}
+		}
+
+		// The future is now!
+		if (blockId.getNamespace().equals("minecraftfuture")) {
+			blockId = Identifier.withDefaultNamespace(blockId.getPath());
 		}
 
 		var opt = BuiltInRegistries.BLOCK.get(blockId);
 		if (opt.isEmpty()) {
 			if (blockId.getNamespace().equals("minecraft")) {
 				System.out.println("block with id " + blockId + " not registered");
+			}
+			else {
+				System.out.println("modded block with id " + blockId + " not registered");
 			}
 			return Blocks.AIR.defaultBlockState();
 		}
@@ -489,7 +504,8 @@ public class TemplateRuleBlock extends TemplateRule {
 					 "check_decay",
 					 "legacy_data",
 					 "visible",
-					 "double" -> true;
+					 "double",
+					 "transparent" -> true;
 				default -> false;
 			}) {
 				continue;
