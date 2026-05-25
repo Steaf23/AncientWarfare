@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -23,6 +24,7 @@ import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.HugeMushroomBlock;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SkullBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
@@ -260,6 +262,13 @@ public class TemplateRuleBlock extends TemplateRule {
 						}
 					}
 				}
+				case "quartz_block" -> {
+					switch (stateProperties.getStringOr("variant", "default")) {
+						case "chiseled" -> blockId = Identifier.withDefaultNamespace("chiseled_quartz_block");
+						case "lines_x", "lines_y", "lines_z" -> blockId = Identifier.withDefaultNamespace("quartz_pillar");
+						default -> blockId = Identifier.withDefaultNamespace("quartz_block");
+					}
+				}
 				case "prismarine" -> {
 					blockId = Identifier.withDefaultNamespace(stateProperties.getStringOr("variant", blockId.getPath()));
 				}
@@ -485,7 +494,10 @@ public class TemplateRuleBlock extends TemplateRule {
 				}
 			}
 		}
-
+		if (blockId.getPath().equals("quartz_pillar")) {
+			String variant = stateProperties.getStringOr("variant", "lines_y");
+			propertyMap.put(RotatedPillarBlock.AXIS, Direction.Axis.byName(variant.replace("lines_", "")));
+		}
 
 
 		for (String propName : stateProperties.keySet()) {

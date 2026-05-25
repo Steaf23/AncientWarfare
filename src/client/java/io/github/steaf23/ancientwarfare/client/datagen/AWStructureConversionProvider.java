@@ -1,6 +1,7 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
+import io.github.steaf23.ancientwarfare.structure.template.legacy.MinifyStructuresTask;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateParser;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateParsingException;
@@ -43,29 +44,22 @@ public class AWStructureConversionProvider implements DataProvider {
 		try {
 			List<String> paths;
 			paths = Files.readAllLines(structureList);
+			String path = "portal_test_5.aws";
+			Path input = base.resolve(path.trim()).normalize();
 
-			int i = 0;
-			for (String path : paths) {
-				Path inputPath = base.resolve(path.trim()).normalize();
-				System.out.println("Converting structure #" + i + ": " + path);
-				TemplateParser parser = new TemplateParser(lookup);
-
-				Optional<FixResult<ParsedStructure>> structure = parser.parseTemplateLines(inputPath);
-				if (structure.isEmpty()) {
-					break;
-				}
-
-				String outputPathStr = "ancientwarfare/structure/" + path.replace(" ", "_").replace(".", "_").replace("&", "and");
-				outputPathStr = outputPathStr.toLowerCase().substring(0, outputPathStr.length() - 4);
-				Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
-				StructureEntry entry = new LegacyConverter().convertToTemplate(lookup, BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
-
-//				if (i == 10) {
-//					break;
-//				}
-
-				i++;
-			}
+			new MinifyStructuresTask().minifyTemplate(input);
+			convert(lookup, base, path);
+//			int i = 0;
+//			for (String path : paths) {
+//				Path inputPath = base.resolve(path.trim()).normalize();
+//				System.out.println("Converting structure #" + i + ": " + path);
+//				convert(lookup, base, path);
+////				if (i == 10) {
+////					break;
+////				}
+//
+//				i++;
+//			}
 		} catch (IOException exc) {
 			log.error("e: ", exc);
 		} catch (TemplateParsingException templateExc) {
@@ -78,5 +72,23 @@ public class AWStructureConversionProvider implements DataProvider {
 	@Override
 	public String getName() {
 		return "Ancient Warfare Structure (.aws) Conversions";
+	}
+
+	public void convert(HolderLookup.Provider lookup, Path baseDir, String path) throws TemplateParsingException, IOException {
+		Path input = baseDir.resolve(path.trim()).normalize();
+
+		TemplateParser parser = new TemplateParser(lookup);
+
+		Optional<FixResult<ParsedStructure>> structure = parser.parseTemplateLines(input);
+		if (structure.isEmpty()) {
+			return;
+		}
+
+		String outputPathStr = "ancientwarfare/structure/" + path.replace(" ", "_").replace(".", "_").replace("&", "and");
+		outputPathStr = outputPathStr.toLowerCase().substring(0, outputPathStr.length() - 4);
+		Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
+
+		StructureEntry entry = new LegacyConverter().convertToTemplate(lookup, BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
+
 	}
 }
