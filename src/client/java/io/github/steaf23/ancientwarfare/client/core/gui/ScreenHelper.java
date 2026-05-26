@@ -1,12 +1,16 @@
 package io.github.steaf23.ancientwarfare.client.core.gui;
 
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.layouts.Layout;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import org.joml.Matrix3x2f;
+//? if <=1.21.11
+//import net.minecraft.client.gui.render.state.GuiTextRenderState;
 
 public class ScreenHelper {
 
@@ -32,6 +36,21 @@ public class ScreenHelper {
 	public static void centerLayout(Layout layout, int screenWidth, int screenHeight) {
 		layout.setX(screenWidth / 2 - layout.getWidth() / 2);
 		layout.setY(screenHeight / 2 - layout.getHeight() / 2);
+	}
+
+	public static void drawText(Font font, GuiGraphicsExtractor graphics, Component text, int xStart, int yStart, int color, boolean dropShadow) {
+		//? if <=1.21.11 {
+		/*graphics.guiRenderState.submitText(new GuiTextRenderState(
+				font,
+				text.getVisualOrderText(),
+				new Matrix3x2f(graphics.pose()),
+				xStart, yStart,
+				color,
+				0, dropShadow,
+				false,
+				graphics.scissorStack.peek()));
+		*///?} else
+		graphics.text(font, text, xStart, yStart, color, dropShadow);
 	}
 
 	public static Component inventoryText(String text) {

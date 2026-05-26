@@ -17,6 +17,7 @@ public class AWRenderer {
 	public final static ModelLayerLocation NPC = createMainModelLayer("npc", () -> LayerDefinition.create(NpcEntityModel.getTexturedModelData(CubeDeformation.NONE, false), 64, 64));
 	public static final ArmorModelSet<ModelLayerLocation> NPC_EQUIPMENT = ModelLayers.PLAYER_ARMOR;
 
+	//~ if <=1.21.11 'TexturedLayerDefinitionProvider' -> 'TexturedModelDataProvider'
 	private static ModelLayerLocation createMainModelLayer(String name, ModelLayerRegistry.TexturedLayerDefinitionProvider modelDataProvider) {
 		ModelLayerLocation layer = new ModelLayerLocation(AncientWarfare.id(name), "main");
 		ModelLayerRegistry.registerModelLayer(layer, modelDataProvider);

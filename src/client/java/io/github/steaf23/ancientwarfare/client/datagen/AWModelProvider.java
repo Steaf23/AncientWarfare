@@ -16,6 +16,7 @@ import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
+//?if >1.21.11
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
@@ -88,6 +89,19 @@ public class AWModelProvider extends FabricModelProvider {
 			super(generators.itemModelOutput, generators.modelOutput);
 		}
 
+		//? if <=1.21.11 {
+		/*public void generateNpcSpawnerItem(String npcTypePrefix) {
+			Identifier loc = FOUR_LAYERED_ITEMS.create(AWItems.NPC_SPAWNER,
+					new TextureMapping()
+							.put(TextureSlot.LAYER0, AncientWarfare.id("item/npc/spawner_base"))
+							.put(TextureSlot.LAYER1, AncientWarfare.id("item/npc/spawner_overlay_bottom"))
+							.put(TextureSlot.LAYER2, AncientWarfare.id("item/npc/spawner_overlay_top"))
+							.put(LAYER3, AncientWarfare.id("item/npc/spawner_" + npcTypePrefix)),
+					this.modelOutput);
+
+			itemModelOutput.accept(AWItems.NPC_SPAWNER, ItemModelUtils.plainModel(loc));
+		}
+		*///?} else {
 		public void generateNpcSpawnerItem(String npcTypePrefix) {
 			Material base = new Material(AncientWarfare.id("item/npc/spawner_base"));
 			Material overlayBottom = new Material(AncientWarfare.id("item/npc/spawner_overlay_bottom"));
@@ -104,8 +118,10 @@ public class AWModelProvider extends FabricModelProvider {
 
 			itemModelOutput.accept(AWItems.NPC_SPAWNER, ItemModelUtils.plainModel(loc));
 		}
+		//?}
 
 		public void generateTintedItem(Item item, ItemTintSource source) {
+			//~ if <= 1.21.11 'Material' -> 'Identifier'
 			Material layer = TextureMapping.getItemTexture(item);
 			Identifier model = ModelLocationUtils.getModelLocation(item);
 			ModelTemplates.FLAT_ITEM.create(model, TextureMapping.layer0(layer), this.modelOutput);

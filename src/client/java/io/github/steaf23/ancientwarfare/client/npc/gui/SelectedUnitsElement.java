@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.npc.gui;
 
+import io.github.steaf23.ancientwarfare.client.core.gui.ScreenHelper;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.util.EntityHelper;
 import io.github.steaf23.ancientwarfare.core.util.MoreText;
@@ -26,6 +27,7 @@ import java.util.UUID;
 public class SelectedUnitsElement implements HudElement {
 
 	@Override
+	//~ if <= 1.21.11 'extractRenderState(' -> 'render('
 	public void extractRenderState(GuiGraphicsExtractor gui, DeltaTracker tickCounter) {
 		Player player = Minecraft.getInstance().player;
 
@@ -51,7 +53,7 @@ public class SelectedUnitsElement implements HudElement {
 		int xStart = 10;
 		int yStart = 10;
 
-		gui.text(font, "Commanding: ", xStart, yStart, CommonColors.SOFT_YELLOW, true);
+		ScreenHelper.drawText(font, gui, Component.literal("Commanding: "), xStart, yStart, CommonColors.SOFT_YELLOW, true);
 		int idx = 0;
 		for (UUID id : selectedUnits) {
 			Entity e = player.level().getEntity(id);
@@ -61,7 +63,7 @@ public class SelectedUnitsElement implements HudElement {
 
 			int lineSpacing = font.lineHeight + 2;
 
-			gui.text(font,
+			ScreenHelper.drawText(font, gui,
 					Component.empty()
 							.append(Component.literal(" - ").withStyle(ChatFormatting.GRAY))
 							.append(npc.getDisplayName()),
@@ -70,7 +72,7 @@ public class SelectedUnitsElement implements HudElement {
 		}
 	}
 
-	private static void extractCurrentTarget(GuiGraphicsExtractor context, Font textRenderer, Player player) {
+	private static void extractCurrentTarget(GuiGraphicsExtractor context, Font font, Player player) {
 		Component targetText = Component.empty();
 
 		HitResult lastResult = CommandBaton.getLastHitResult();
@@ -83,10 +85,10 @@ public class SelectedUnitsElement implements HudElement {
 		}
 
 		Component header = Component.literal("Target:");
-		int headerWidth = textRenderer.width(header);
-		int targetWidth = textRenderer.width(targetText);
+		int headerWidth = font.width(header);
+		int targetWidth = font.width(targetText);
 
-		context.text(textRenderer, header, context.guiWidth() - headerWidth - 10, 10, CommonColors.SOFT_YELLOW, true);
-		context.text(textRenderer, targetText, context.guiWidth() - targetWidth - 10, 10 + textRenderer.lineHeight + 2, CommonColors.WHITE, true);
+		ScreenHelper.drawText(font, context, header, context.guiWidth() - headerWidth - 10, 10, CommonColors.SOFT_YELLOW, true);
+		ScreenHelper.drawText(font, context, targetText,context.guiWidth() - targetWidth - 10, 10 + font.lineHeight + 2, CommonColors.WHITE, true);
 	}
 }

@@ -1,14 +1,14 @@
 package io.github.steaf23.ancientwarfare.client.automation.gui;
 
 import io.github.steaf23.ancientwarfare.automation.menu.AnimalFarmContainerMenu;
-import io.github.steaf23.ancientwarfare.client.core.ExtendedScreen;
+import io.github.steaf23.ancientwarfare.client.core.gui.ExtendedScreen;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import org.jspecify.annotations.NonNull;
+import org.jetbrains.annotations.NotNull;
 
 public class AnimalFarmScreen extends ExtendedScreen<AnimalFarmContainerMenu> {
 
@@ -24,8 +24,7 @@ public class AnimalFarmScreen extends ExtendedScreen<AnimalFarmContainerMenu> {
 	}
 
 	@Override
-	public void extractBackground(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
-		super.extractBackground(graphics, mouseX, mouseY, a);
+	public void drawBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, MENU, leftPos, topPos, 0, 0, 256, 256, 256, 256);
 	}
 }

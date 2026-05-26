@@ -500,6 +500,7 @@ public class TemplateRuleBlock extends TemplateRule {
 		}
 
 
+		//~ if <=1.21.11 'keySet' -> 'keys'
 		for (String propName : stateProperties.keySet()) {
 			// TODO: check which one of these to check for item types
 			if (switch (propName) {

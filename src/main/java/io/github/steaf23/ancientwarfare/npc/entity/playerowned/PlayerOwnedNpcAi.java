@@ -6,7 +6,11 @@ import io.github.steaf23.ancientwarfare.core.registry.entity.AWMemories;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.behavior.NpcTaskUpkeep;
 import net.minecraft.world.entity.EntityType;
+//? if <= 1.21.11 {
+/*import io.github.steaf23.ancientwarfare.core.versioned.backport.ActivityData;
+*///?} else {
 import net.minecraft.world.entity.ai.ActivityData;
+//?}
 import net.minecraft.world.entity.ai.behavior.AcquirePoi;
 import net.minecraft.world.entity.ai.behavior.DoNothing;
 import net.minecraft.world.entity.ai.behavior.EntityTracker;

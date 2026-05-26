@@ -14,7 +14,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,12 +40,12 @@ public class TemplateBlockEntityDataParser {
 			case "skull" -> { // Convert Owner:{Properties:{textures:[{Value:<texture>}]}}
 				Optional<ValueInput> owner = input.child("Owner");
 				owner.ifPresent(o -> {
-					ValueInput.ValueInputList textureList = o.childOrEmpty("Properties").childrenListOrEmpty("textures");
+					ValueInput.ValueInputList textureList = o.childOrEmpty("Properties").childrenListOrEmpty("assets/ancientwarfare/textures");
 					textureList.stream().findAny().ifPresent(texture -> {
 						ValueOutput profile = output.child("profile");
 						ValueOutput textureProp = profile.childrenList("properties").addChild();
 						profile.putIntArray("id", UUIDUtil.uuidToIntArray(UUID.fromString(o.getStringOr("Id", ""))));
-						textureProp.putString("name", "textures");
+						textureProp.putString("name", "assets/ancientwarfare/textures");
 						textureProp.putString("value", texture.getStringOr("Value", ""));
 					});
 				});
@@ -172,7 +171,7 @@ public class TemplateBlockEntityDataParser {
 			assert(!type.getPath().isEmpty());
 			int meta = Integer.parseInt(slot.getStringOr("Damage", "0s").replace("s", ""));
 			CompoundTag tag = slot.read("tag", CompoundTag.CODEC).orElse(new CompoundTag());
-			ItemStackTemplate stack = TemplateRuleItem.fromOldId(type, meta, amount, tag);
+//			ItemStackTemplate stack = TemplateRuleItem.fromOldId(type, meta, amount, tag);
 //			itemsOut.add(new ItemStackWithSlot(slotNr, stack));
 		}
 	}

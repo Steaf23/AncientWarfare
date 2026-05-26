@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class OptionList extends Screen {
+public class OptionList extends SubScreen {
 
 	LinearLayout mainLayout;
 	ScrollableLayout scrollable;
@@ -106,6 +106,7 @@ public class OptionList extends Screen {
 		scrollable = new ScrollableLayout(Minecraft.getInstance(), optionsLayout, 200);
 		mainLayout.addChild(scrollable, LayoutSettings.defaults().alignHorizontallyCenter().padding(5));
 		scrollable.setMaxHeight(175);
+		//? >1.21.11
 		scrollable.setMinHeight(175);
 		scrollable.setMinWidth(0);
 		mainLayout.arrangeElements();
@@ -113,11 +114,9 @@ public class OptionList extends Screen {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
-		super.extractBackground(guiGraphics, mouseX, mouseY, deltaTicks);
-
-		ScreenHelper.extractInventoryBackground(guiGraphics, mainLayout);
-		ScreenHelper.extractScrollAreaBackground(guiGraphics, scrollable);
+	public void drawBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+		ScreenHelper.extractInventoryBackground(graphics, mainLayout);
+		ScreenHelper.extractScrollAreaBackground(graphics, scrollable);
 	}
 
 	public record Option(Identifier id, Component text, Tooltip tooltip) {

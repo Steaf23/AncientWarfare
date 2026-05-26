@@ -4,32 +4,23 @@ import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.item.UnobtainableItem;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
+import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
-import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 
 import java.util.List;
 import java.util.function.Function;
 
 public class AWItems {
-
-	public static final ResourceKey<CreativeModeTab> ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare"));
-	public static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
-			.icon(Items.ENCHANTING_TABLE.asItem()::getDefaultInstance)
-			.title(Component.translatable("itemGroup.ancient_warfare"))
-			.build();
 
 	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
 	public static final CoinItem COINS = registerItemNoCreativeTab("coins", CoinItem::new, new Item.Properties()
@@ -53,38 +44,37 @@ public class AWItems {
 
 
 	public static void initialize() {
-		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ITEM_GROUP_KEY, ITEM_GROUP);
+		CreativeTabManager.initialize();
 
-		CreativeModeTabEvents.modifyOutputEvent(AWItems.ITEM_GROUP_KEY).register(group -> {
+		CreativeTabManager.addItemsToModTab(group -> {
 			ItemStack stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.GOLD);
-			group.accept(stack);
-			stack = new ItemStack(COINS);
-			stack.set(AWComponents.COIN_METAL, CoinMetal.SILVER);
-			group.accept(stack);
-			stack = new ItemStack(COINS);
-			stack.set(AWComponents.COIN_METAL, CoinMetal.COPPER);
-			group.accept(stack);
-			stack = new ItemStack(COINS);
-			stack.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
-			group.accept(stack);
+			group.addItem(stack);
+			ItemStack stack2 = new ItemStack(COINS);
+			stack2.set(AWComponents.COIN_METAL, CoinMetal.SILVER);
+			group.addItem(stack2);
+			ItemStack stack3 = new ItemStack(COINS);
+			stack3.set(AWComponents.COIN_METAL, CoinMetal.COPPER);
+			group.addItem(stack3);
+			ItemStack stack4 = new ItemStack(COINS);
+			stack4.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
+			group.addItem(stack4);
 		});
 	}
 
 	public static Item registerItem(String name, Item.Properties settings) {
-		return registerItem(name, Item::new, settings, AWItems.ITEM_GROUP_KEY);
+		return registerItem(name, Item::new, settings, CreativeTabManager.ITEM_GROUP_KEY);
 	}
 
 	public static <T extends Item> T registerItem(String name, Function<Item.Properties, T> factory, Item.Properties settings) {
-		return registerItem(name, factory, settings, AWItems.ITEM_GROUP_KEY);
+		return registerItem(name, factory, settings, CreativeTabManager.ITEM_GROUP_KEY);
 	}
 
 	public static <T extends Item> T registerItem(String name, Function<Item.Properties, T> factory, Item.Properties settings, ResourceKey<CreativeModeTab> tab) {
 		final ResourceKey<Item> registryKey = ResourceKey.create(Registries.ITEM, AncientWarfare.id(name));
 		T item = factory.apply(settings.setId(registryKey));
 		Registry.register(BuiltInRegistries.ITEM, registryKey, item);
-		CreativeModeTabEvents.modifyOutputEvent(tab)
-				.register((group) -> group.accept(item));
+		CreativeTabManager.addItemsToModTab((group) -> group.addItem(item));
 		return item;
 	}
 

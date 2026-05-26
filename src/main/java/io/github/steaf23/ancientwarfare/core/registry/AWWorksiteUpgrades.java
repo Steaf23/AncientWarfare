@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceKey;
 
 public class AWWorksiteUpgrades {
 
+	//~ if <=1.21.11 'create(' -> 'createSimple('
 	public static final Registry<WorksiteUpgrade> UPGRADE_REGISTRY = FabricRegistryBuilder.create(ResourceKey.<WorksiteUpgrade>createRegistryKey(AncientWarfare.id("worksite_upgrade")))
 			.attribute(RegistryAttribute.SYNCED)
 			.buildAndRegister();

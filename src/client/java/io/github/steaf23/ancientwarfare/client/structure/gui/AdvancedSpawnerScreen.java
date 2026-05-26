@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.client.structure.gui;
 import io.github.steaf23.ancientwarfare.client.core.gui.ScreenHelper;
 import io.github.steaf23.ancientwarfare.client.core.gui.components.OptionList;
 import io.github.steaf23.ancientwarfare.client.core.gui.components.SpinBoxWidget;
+import io.github.steaf23.ancientwarfare.client.core.gui.components.SubScreen;
 import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerSettings;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -32,7 +33,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class AdvancedSpawnerScreen extends Screen implements MenuAccess<AdvancedSpawnerContainerMenu> {
+public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<AdvancedSpawnerContainerMenu> {
 
 	final AdvancedSpawnerContainerMenu container;
 	AdvancedSpawnerSettings settings = null;
@@ -145,7 +146,9 @@ public class AdvancedSpawnerScreen extends Screen implements MenuAccess<Advanced
 		settingsLayout.addChild(numberInputs, LayoutSettings.defaults().paddingVertical(2));
 		scrollableSettingsLayout = new ScrollableLayout(minecraft, settingsLayout, 200);
 		scrollableSettingsLayout.setMaxHeight(80);
+		//? if > 1.21.11 {
 		scrollableSettingsLayout.setMinHeight(80);
+		//?}
 		mainLayout.addChild(scrollableSettingsLayout, LayoutSettings.defaults().padding(2).alignHorizontallyCenter());
 		mainLayout.addChild(new StringWidget(ScreenHelper.inventoryText("Spawn groups: "), font), LayoutSettings.defaults().padding(4));
 
@@ -176,7 +179,9 @@ public class AdvancedSpawnerScreen extends Screen implements MenuAccess<Advanced
 		scrollableLayout = new ScrollableLayout(minecraft, scrollContents, 200);
 		mainLayout.addChild(scrollableLayout, LayoutSettings.defaults().padding(2));
 		scrollableLayout.setMaxHeight(80);
+		//? if > 1.21.11 {
 		scrollableLayout.setMinHeight(80);
+		//?}
 		mainLayout.arrangeElements();
 		ScreenHelper.centerLayout(mainLayout, width, height);
 
@@ -249,17 +254,15 @@ public class AdvancedSpawnerScreen extends Screen implements MenuAccess<Advanced
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float deltaTicks) {
-		super.extractBackground(guiGraphics, mouseX, mouseY, deltaTicks);
-
-		ScreenHelper.extractInventoryBackground(guiGraphics, mainLayout);
-		ScreenHelper.extractScrollAreaBackground(guiGraphics, scrollableSettingsLayout);
-		ScreenHelper.extractScrollAreaBackground(guiGraphics, scrollableLayout);
-		guiGraphics.enableScissor(scrollableLayout.getX(), scrollableLayout.getY(), scrollableLayout.getX() + scrollableLayout.getWidth(), scrollableLayout.getY() + scrollableLayout.getHeight());
+	public void drawBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+		ScreenHelper.extractInventoryBackground(graphics, mainLayout);
+		ScreenHelper.extractScrollAreaBackground(graphics, scrollableSettingsLayout);
+		ScreenHelper.extractScrollAreaBackground(graphics, scrollableLayout);
+		graphics.enableScissor(scrollableLayout.getX(), scrollableLayout.getY(), scrollableLayout.getX() + scrollableLayout.getWidth(), scrollableLayout.getY() + scrollableLayout.getHeight());
 		for (Layout g : groupLayouts) {
-			ScreenHelper.extractInnerInventoryBackground(guiGraphics, g);
+			ScreenHelper.extractInnerInventoryBackground(graphics, g);
 		}
-		guiGraphics.disableScissor();
+		graphics.disableScissor();
 	}
 
 	@Override

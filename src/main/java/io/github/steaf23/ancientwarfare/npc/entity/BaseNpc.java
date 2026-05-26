@@ -1,6 +1,7 @@
 package io.github.steaf23.ancientwarfare.npc.entity;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.serialization.Dynamic;
 import io.github.steaf23.ancientwarfare.core.item.ItemConvertible;
 import io.github.steaf23.ancientwarfare.core.menu.EntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.EntityScreenProvider;
@@ -8,6 +9,7 @@ import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
 import io.github.steaf23.ancientwarfare.npc.menu.NpcContainerMenu;
 import io.netty.buffer.ByteBuf;
@@ -53,7 +55,10 @@ import java.util.List;
 public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvider, ItemConvertible {
 
 	public static int MIN_MOVE_RANGE_SQUARED = 9;
-	private static final Brain.Provider<BaseNpc> BRAIN_PROVIDER = Brain.provider(PlayerOwnedNpcAi.SENSORS, e -> PlayerOwnedNpcAi.getActivities());
+	private static final BrainFactory<BaseNpc> BRAIN_MAKER = new BrainFactory<>(
+			PlayerOwnedNpcAi.MEMORY_MODULES,
+			PlayerOwnedNpcAi.SENSORS,
+			npc -> PlayerOwnedNpcAi.getActivities());
 
 	private final NpcHome home;
 	private final NpcSkin skin; // FIXME: IMPLEMENT
@@ -76,8 +81,8 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 	}
 
 	@Override
-	protected @NotNull Brain<?> makeBrain(Brain.@NonNull Packed packed) {
-		return BRAIN_PROVIDER.makeBrain(this, packed);
+	protected Brain<?> makeBrain(Brain.@NonNull Packed packed) {
+		return BRAIN_MAKER.create(this, packed);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -94,8 +99,8 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 	}
 
 	@Override
-	protected @NotNull PathNavigation createNavigation(Level world) {
-		GroundPathNavigation navigation = new GroundPathNavigation(this, world);
+	protected @NotNull PathNavigation createNavigation(Level level) {
+		GroundPathNavigation navigation = new GroundPathNavigation(this, level);
 		navigation.setCanOpenDoors(true);
 		return navigation;
 	}
@@ -192,4 +197,13 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 		)).build());
 		return stack;
 	}
+
+	//? if <=1.21.11 {
+
+	/*@Override
+	protected Brain.Provider<?> brainProvider() {
+		return BRAIN_MAKER.provider();
+	}
+
+	*///?}
 }

@@ -3,10 +3,10 @@ package io.github.steaf23.ancientwarfare.core.registry;
 import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteBlock;
 import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalFarmBlockEntity;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
-import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -48,8 +48,7 @@ public class AWBlocks {
 			ResourceKey<Item> itemKey = ResourceKey.create(Registries.ITEM, AncientWarfare.id(name));
 			BlockItem item = new BlockItem(block, new Item.Properties().overrideDescription(block.getDescriptionId()).setId(itemKey));
 			Registry.register(BuiltInRegistries.ITEM, itemKey, item);
-			CreativeModeTabEvents.modifyOutputEvent(AWItems.ITEM_GROUP_KEY)
-					.register((group) -> group.accept(item));
+			CreativeTabManager.addItemsToModTab(group -> group.addItem(item));
 		}
 		return Registry.register(BuiltInRegistries.BLOCK, key, block);
 	}

@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.datagen;
+package io.github.steaf23.ancientwarfare.client.datagen.structure;
 
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.MinifyStructuresTask;
@@ -29,7 +29,7 @@ public class AWStructureConversionProvider implements DataProvider {
 	private final FabricPackOutput output;
 	private final CompletableFuture<HolderLookup.Provider> registries;
 
-	AWStructureConversionProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public AWStructureConversionProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
 	}

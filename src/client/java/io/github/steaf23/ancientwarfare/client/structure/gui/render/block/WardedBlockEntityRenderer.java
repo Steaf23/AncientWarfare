@@ -6,11 +6,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
+//? >1.21.11
 import net.minecraft.client.renderer.block.model.BlockDisplayContext;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state./*?if >1.21.11 {*/level./*?}*/CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -21,9 +22,11 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBlockEntity, WardedBlockRenderState> {
 
+	//? >1.21.11
 	public static final BlockDisplayContext BLOCK_DISPLAY_CONTEXT = BlockDisplayContext.create();
 	private final BlockEntityRendererProvider.Context context;
 
@@ -39,10 +42,19 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 	@Override
 	public void extractRenderState(WardedBlockEntity blockEntity, WardedBlockRenderState state, float partialTicks, Vec3 cameraPosition, ModelFeatureRenderer.@Nullable CrumblingOverlay breakProgress) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, partialTicks, cameraPosition, breakProgress);
-		context.blockModelResolver().update(state.blockModel, blockEntity.getBlockToRestore().state(), BLOCK_DISPLAY_CONTEXT);
 		state.capturedBlockInfo = blockEntity.getBlockToRestore();
 		state.wardInfo = blockEntity.getWard();
 		state.showDebugLabel = Minecraft.getInstance().player.isCreative();
+
+		//?if <=1.21.11 {
+		/*if (blockEntity.getBlockToRestore().state().isAir()) {
+			state.blockModel = Optional.empty();
+		} else {
+			state.blockModel = Optional.of(blockEntity.getBlockToRestore().state());
+		}
+		*///?} else {
+		context.blockModelResolver().update(state.blockModel, blockEntity.getBlockToRestore().state(), BLOCK_DISPLAY_CONTEXT);
+		//?}
 	}
 
 	@Override
@@ -66,7 +78,13 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 		}
 
 		// render block
+		//?if <=1.21.11 {
+		/*state.blockModel.ifPresent(blockState ->
+				submitNodeCollector.submitBlock(poseStack, blockState, state.lightCoords, OverlayTexture.NO_OVERLAY, 0));
+
+		*///?} else {
 		state.blockModel.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
+		//?}
 //
 //		// render BE
 //		BlockEntity fake = BlockEntity.loadStatic(state.blockPos, state.capturedBlock.state(), state.capturedBlock.capturedBlockEntityData(), level.registryAccess());

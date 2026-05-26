@@ -7,7 +7,11 @@ import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
+//? <=1.21.11 {
+/*import io.github.steaf23.ancientwarfare.core.versioned.backport.ItemStackTemplate;
+*///?} else {
 import net.minecraft.world.item.ItemStackTemplate;
+//?}
 
 public class TemplateRuleItem {
 

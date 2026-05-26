@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.npc.gui;
 
-import io.github.steaf23.ancientwarfare.client.core.ExtendedScreen;
+import io.github.steaf23.ancientwarfare.client.core.gui.ExtendedScreen;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpc;
 import io.github.steaf23.ancientwarfare.npc.menu.NpcContainerMenu;
@@ -15,13 +15,14 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerOwnedNpcScreen extends ExtendedScreen<NpcContainerMenu> {
 
-	public static final Identifier MENU = AncientWarfare.id("textures/gui/player_npc.png");
+	public static final Identifier MENU = AncientWarfare.id("assets/ancientwarfare/textures/gui/player_npc.png");
 	public static final Identifier SKIN_BUTTON = AncientWarfare.id("skin_button");
 	public static final Identifier TOGGLE_FOLLOW_BUTTON = AncientWarfare.id("toggle_follow_button");
 	public static final Identifier SET_HOME_BUTTON = AncientWarfare.id("set_home_button");
@@ -97,9 +98,12 @@ public class PlayerOwnedNpcScreen extends ExtendedScreen<NpcContainerMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
+	public void drawBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, MENU, leftPos, topPos, 0, 0, 256, 256, 256, 256);
 
+		//?if <=1.21.11 {
+		/*InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, leftPos + 69, topPos + 27, leftPos + 100, topPos + 73, 20, 0.0625f, mouseX, mouseY, menu.getNpc());
+		*///?} else
 		InventoryScreen.extractEntityInInventoryFollowsMouse(graphics, leftPos + 69, topPos + 27, leftPos + 100, topPos + 73, 20, 0.0625f, mouseX, mouseY, menu.getNpc());
 	}
 

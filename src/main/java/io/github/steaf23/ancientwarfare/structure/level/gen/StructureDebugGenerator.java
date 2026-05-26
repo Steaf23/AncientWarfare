@@ -1,8 +1,10 @@
 package io.github.steaf23.ancientwarfare.structure.level.gen;
 
 import com.mojang.serialization.MapCodec;
+//~ if <=1.21.11 'BuiltInResourceKeys' -> 'BuiltInRegistryKeys'
 import net.fabricmc.fabric.impl.biome.modification.BuiltInResourceKeys;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
@@ -25,6 +27,7 @@ public class StructureDebugGenerator extends ChunkGenerator {
 	public static final MapCodec<StructureDebugGenerator> CODEC = MapCodec.unit(new StructureDebugGenerator());
 
 	public StructureDebugGenerator() {
+		//~ if <= 1.21.11 'BuiltInResourceKeys.biomeHolderGetter()' -> 'BuiltInRegistryKeys.biomeRegistryWrapper()'
 		super(new FixedBiomeSource(BuiltInResourceKeys.biomeHolderGetter().getOrThrow(Biomes.PLAINS)));
 	}
 

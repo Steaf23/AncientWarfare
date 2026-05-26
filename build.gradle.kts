@@ -46,13 +46,13 @@ dependencies {
 
 loom {
     splitEnvironmentSourceSets()
-//
-//    mods {
-//        "ancientwarfare" {
-//            sourceSet sourceSets.main
-//                    sourceSet sourceSets.client
-//        }
-//    }
+
+    mods {
+        register("ancientwarfare") {
+            sourceSet(sourceSets.main.get())
+            sourceSet(sourceSets.getByName("client"))
+        }
+    }
 
     fabricModJsonPath = rootProject.file("src/main/resources/fabric.mod.json") // Useful for interface injection
 //    accessWidenerPath = sc.process(
@@ -68,6 +68,25 @@ loom {
         vmArgs("-Dmixin.debug.export=true") // Exports transformed classes for debugging
         runDir = "../../run" // Shares the run directory between versions
     }
+}
+
+sourceSets {
+    named("main") {
+        if (sc.current.parsed > "1.21.11") { // 26.1 and up
+            java.exclude("io/github/steaf23/ancientwarfare/core/versioned/backport")
+        } else { // 1.21.11 or below
+            java.exclude("io/github/steaf23/ancientwarfare/structure/template/legacy")
+        }
+    }
+
+    named("client") {
+        if (sc.current.parsed > "1.21.11") { // 26.1 and up
+
+        } else { // 1.21.11 or below
+            java.exclude("io/github/steaf23/ancientwarfare/client/datagen/structure")
+        }
+    }
+
 }
 
 java {
@@ -110,5 +129,17 @@ tasks {
         from(loomx.modJar.map { it.archiveFile }, loomx.modSourcesJar.map { it.archiveFile })
         into(rootProject.layout.buildDirectory.file("libs/${project.property("mod.version")}"))
         dependsOn("build")
+    }
+}
+
+stonecutter {
+    replacements.string(current.parsed <= "1.21.11") {
+        replace("FriendlyByteBufs", "PacketByteBufs")
+        replace("FabricPackOutput", "FabricDataOutput")
+        replace("GuiGraphicsExtractor", "GuiGraphics")
+        replace("FabricCreativeModeTab", "FabricItemGroup")
+        replace("ExtendedMenuType", "ExtendedScreenHandlerType")
+        replace("makeBrain(Brain.@NonNull Packed", "makeBrain(Dynamic<?>")
+        replace("ModelLayerRegistry", "EntityModelLayerRegistry")
     }
 }

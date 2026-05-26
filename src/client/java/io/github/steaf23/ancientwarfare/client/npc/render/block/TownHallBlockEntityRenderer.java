@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.renderer.state.level.CameraRenderState;
+import net.minecraft.client.renderer.state./*?if >1.21.11 {*/level./*?}*/CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -37,6 +37,7 @@ public class TownHallBlockEntityRenderer implements BlockEntityRenderer<TownHall
 	public void extractRenderState(TownHallBlockEntity blockEntity, TownHallRenderState state, float delta, Vec3 vec3, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay) {
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, delta, vec3, crumblingOverlay);
 		state.keyRotation = (blockEntity.keyRotationDegrees + delta) * 5.0f % 360.0f;
+		//~ if <= 1.21.11 'getLightCoords' -> 'getLightColor'
 		state.lightCoords = blockEntity.getLevel() != null ? LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 0xF000F0;
 		state.keyState = new ItemStackRenderState();
 

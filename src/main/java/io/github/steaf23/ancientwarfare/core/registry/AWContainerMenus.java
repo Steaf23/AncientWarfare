@@ -8,7 +8,11 @@ import io.github.steaf23.ancientwarfare.core.menu.ExtendedContainerMenu;
 import io.github.steaf23.ancientwarfare.npc.menu.NpcContainerMenu;
 import io.github.steaf23.ancientwarfare.npc.menu.TownHallContainerMenu;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
+//? if <= 1.21.11 {
+/*import net.fabricmc.fabric.api.screenhandler.v1.ExtendedMenuType;
+*///?} else {
 import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
+//?}
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Inventory;

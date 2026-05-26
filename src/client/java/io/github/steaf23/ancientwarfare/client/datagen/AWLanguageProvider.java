@@ -4,6 +4,7 @@ import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
+import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.fabricmc.fabric.api.tag.FabricTagKey;
@@ -35,7 +36,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 		).forEntityTypes().auto(
 				AWEntities.BASE_NPC
 		).forCreativeTabs().auto(
-				AWItems.ITEM_GROUP_KEY
+				CreativeTabManager.ITEM_GROUP_KEY
 		)
 				.custom(AWItems.COINS.getDescriptionId(), "%s Coins")
 				.custom("metal.ancientwarfare." + CoinMetal.SILVER.name(), "Silver")

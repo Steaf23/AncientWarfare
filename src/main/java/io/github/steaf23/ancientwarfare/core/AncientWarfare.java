@@ -39,8 +39,9 @@ public class AncientWarfare implements ModInitializer {
 		AWEntities.initialize();
 		AWGeneration.initialize();
 
+		//~ if <=1.21.11 'serverboundPlay' -> 'playC2S' {
 		PayloadTypeRegistry.serverboundPlay().register(ExtendedScreenUpdatePayload.ID, ExtendedScreenUpdatePayload.CODEC);
-
+		//~}
 		ServerPlayNetworking.registerGlobalReceiver(ExtendedScreenUpdatePayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				AbstractContainerMenu handler = context.player().containerMenu;

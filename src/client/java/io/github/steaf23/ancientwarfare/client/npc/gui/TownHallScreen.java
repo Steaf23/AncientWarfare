@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.npc.gui;
 
-import io.github.steaf23.ancientwarfare.client.core.ExtendedScreen;
+import io.github.steaf23.ancientwarfare.client.core.gui.ExtendedScreen;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.menu.TownHallContainerMenu;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class TownHallScreen extends ExtendedScreen<TownHallContainerMenu> {
 
@@ -20,10 +21,8 @@ public class TownHallScreen extends ExtendedScreen<TownHallContainerMenu> {
 	}
 
 	@Override
-	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-		super.extractBackground(graphics, mouseX, mouseY, deltaTicks);
+	public void drawBackground(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
 		graphics.blit(RenderPipelines.GUI_TEXTURED, MENU, leftPos, topPos, 0, 0, 256, 256, 256, 256);
-
 	}
 
 	@Override

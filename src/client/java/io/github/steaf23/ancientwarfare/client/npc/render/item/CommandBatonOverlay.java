@@ -6,7 +6,6 @@ import io.github.steaf23.ancientwarfare.client.core.render.RenderHelper;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.util.EntityHelper;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
-import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -27,8 +26,15 @@ import org.joml.Matrix4f;
 import java.util.List;
 import java.util.UUID;
 
+//? if <= 1.21.11 {
+/*import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
+*///?} else {
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+//?}
+
 public class CommandBatonOverlay {
 
+	//~ if <=1.21.11 'LevelRenderContext' -> 'WorldRenderContext'
 	public static void renderOutlineBoxes(LevelRenderContext context) {
 		if (Minecraft.getInstance() == null || Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) {
 			return;
@@ -42,11 +48,20 @@ public class CommandBatonOverlay {
 			return;
 		}
 
+		//? if <=1.21.11 {
+		/*PoseStack poses = context.matrices();
+		Vec3 camPos = context.worldState().cameraRenderState.pos;
+
+		VertexConsumer buffer = context.consumers().getBuffer(RenderTypes.debugQuads());
+		*///?} else {
 		PoseStack poses = context.poseStack();
 		Vec3 camPos = context.levelState().cameraRenderState.pos;
 
 		MultiBufferSource.BufferSource immediate = context.bufferSource();
 		VertexConsumer buffer = immediate.getBuffer(RenderTypes.debugQuads());
+		//?}
+
+
 
 		HitResult hoveringHit = CommandBaton.playerRaycast(player, 50, 1.0f, 0.5f, false);
 		switch (hoveringHit.getType()) {
@@ -74,7 +89,9 @@ public class CommandBatonOverlay {
 			renderEntityBoxOutline(entity, poses, buffer, camPos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), 0f, 1f, 0f, .5f);
 		}
 
+		//?if >1.21.11 {
 		immediate.endBatch();
+		//?}
 	}
 
 	private static void renderBlockBoxOutline(BlockPos pos, PoseStack poses, VertexConsumer buffer,

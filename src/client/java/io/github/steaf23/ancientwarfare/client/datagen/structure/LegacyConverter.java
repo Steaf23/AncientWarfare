@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.datagen;
+package io.github.steaf23.ancientwarfare.client.datagen.structure;
 
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
