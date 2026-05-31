@@ -15,7 +15,10 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentTable;
+import net.minecraft.world.entity.animal.equine.Horse;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.TypedEntityData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -175,7 +178,16 @@ public record FactionNpcData(
 		}
 
 		public Builder horseMount() {
-			this.mount = TypedEntityData.of(EntityType.HORSE, new CompoundTag());
+			CompoundTag tag = new CompoundTag();
+			CompoundTag saddleSlot = new CompoundTag();
+			CompoundTag saddle = new CompoundTag();
+			saddle.putInt("count", 1);
+			saddle.putString("id", BuiltInRegistries.ITEM.getKey(Items.SADDLE).toString());
+
+			tag.put("equipment", saddleSlot);
+			saddleSlot.put("saddle", saddle);
+
+			this.mount = TypedEntityData.of(EntityType.HORSE, tag);
 			return this;
 		}
 
