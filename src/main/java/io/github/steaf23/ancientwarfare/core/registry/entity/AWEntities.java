@@ -2,6 +2,7 @@ package io.github.steaf23.ancientwarfare.core.registry.entity;
 
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpc;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
@@ -15,9 +16,12 @@ import net.minecraft.world.entity.MobCategory;
 
 public class AWEntities {
 
-	public static final EntityType<PlayerOwnedNpc> BASE_NPC = register("player_owned_npc",
+	public static final EntityType<PlayerOwnedNpc> PLAYER_NPC = register("player_owned_npc",
 			EntityType.Builder.of(PlayerOwnedNpc::new, MobCategory.CREATURE)
 					.sized(0.6f, 1.8f));
+
+	public static final EntityType<FactionNpc> FACTION_NPC = register("faction_npc",
+			EntityType.Builder.of(FactionNpc::new, MobCategory.CREATURE));
 
 	public static final Identifier NPC_TYPE_COMBAT = AncientWarfare.id("combat");
 	public static final Identifier NPC_SUBTYPE_SOLDIER = AncientWarfare.id("soldier");
@@ -28,7 +32,8 @@ public class AWEntities {
 	public static final Identifier NPC_SUBTYPE_SPELLCASTER = AncientWarfare.id("spellcaster");
 
 	public static void initialize() {
-		FabricDefaultAttributeRegistry.register(BASE_NPC, BaseNpc.createNpcAttributes());
+		FabricDefaultAttributeRegistry.register(PLAYER_NPC, BaseNpc.createNpcAttributes());
+		FabricDefaultAttributeRegistry.register(FACTION_NPC, BaseNpc.createNpcAttributes());
 
 		registerNpcs();
 		registerFactions();

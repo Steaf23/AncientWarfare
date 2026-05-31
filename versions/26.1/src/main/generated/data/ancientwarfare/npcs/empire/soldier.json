@@ -1,0 +1,17 @@
+{
+  "id": "ancientwarfare:empire/soldier",
+  "faction": "ancientwarfare:empire",
+  "npc_type": "ancientwarfare:soldier",
+  "default_attributes": {},
+  "experience_dropped": 0,
+  "can_swim": false,
+  "can_break_boors": false,
+  "can_open_doors": false,
+  "equipment": {
+    "main_hand": "minecraft:iron_spear",
+    "type": "fixed"
+  },
+  "loot_table": "minecraft:empty",
+  "enabled": true,
+  "spells": []
+}

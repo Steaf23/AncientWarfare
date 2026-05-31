@@ -10,6 +10,7 @@ import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
 import io.github.steaf23.ancientwarfare.npc.menu.NpcContainerMenu;
 import io.netty.buffer.ByteBuf;
@@ -55,11 +56,8 @@ import java.util.List;
 public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvider, ItemConvertible {
 
 	public static int MIN_MOVE_RANGE_SQUARED = 9;
-	private static final BrainFactory<BaseNpc> BRAIN_MAKER = new BrainFactory<>(
-			PlayerOwnedNpcAi.MEMORY_MODULES,
-			PlayerOwnedNpcAi.SENSORS,
-			npc -> PlayerOwnedNpcAi.getActivities());
 
+	private BrainFactory<BaseNpc> brainMaker = null;
 	private final NpcHome home;
 	private final NpcSkin skin; // FIXME: IMPLEMENT
 
@@ -76,13 +74,22 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 		setCustomNameVisible(true);
 	}
 
+	public final BrainFactory<BaseNpc> brainMaker() {
+		if (brainMaker == null) {
+			brainMaker = initBrainMaker();
+		}
+		return brainMaker;
+	}
+
+	public abstract BrainFactory<BaseNpc> initBrainMaker();
+
 	public static AttributeSupplier.Builder createNpcAttributes() {
 		return PathfinderMob.createMobAttributes().add(Attributes.MOVEMENT_SPEED, 0.1D);
 	}
 
 	@Override
 	protected Brain<?> makeBrain(Brain.@NonNull Packed packed) {
-		return BRAIN_MAKER.create(this, packed);
+		return brainMaker().create(this, packed);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -107,17 +114,17 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 
 	@Override
 	protected @NotNull InteractionResult mobInteract(Player player, InteractionHand hand) {
-//		player.openMenu(this);
+		player.openMenu(this);
 
-		if (level() instanceof ServerLevel serverLevel) {
-			List<PoiRecord> records = serverLevel.getPoiManager()
-					.getInRange(p -> {
-						boolean val = p.is(PoiTypes.ARMORER);
-						return val;
-					}, blockPosition(), 48, PoiManager.Occupancy.ANY)
-					.toList();
-			boolean t = false;
-		}
+//		if (level() instanceof ServerLevel serverLevel) {
+//			List<PoiRecord> records = serverLevel.getPoiManager()
+//					.getInRange(p -> {
+//						boolean val = p.is(PoiTypes.ARMORER);
+//						return val;
+//					}, blockPosition(), 48, PoiManager.Occupancy.ANY)
+//					.toList();
+//			boolean t = false;
+//		}
 		return InteractionResult.SUCCESS;
 	}
 
@@ -187,22 +194,15 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 	}
 
 	@Override
-	public ItemStack item() {
-		TagValueOutput input = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level().registryAccess());
-		addAdditionalSaveData(input);
-
-		ItemStack stack = new ItemStack(AWItems.NPC_SPAWNER);
-		stack.applyComponents(DataComponentMap.builder().set(DataComponents.ENTITY_DATA, TypedEntityData.of(
-				AWEntities.BASE_NPC, input.buildResult()
-		)).build());
-		return stack;
+	public @Nullable ItemStack getPickResult() {
+		return item();
 	}
 
 	//? if <=1.21.11 {
 
 	/*@Override
 	protected Brain.Provider<?> brainProvider() {
-		return BRAIN_MAKER.provider();
+		return brainMaker().provider();
 	}
 
 	*///?}

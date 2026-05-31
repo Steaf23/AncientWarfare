@@ -1,0 +1,10 @@
+{
+  "id": "ancientwarfare:empire",
+  "color": -8388480,
+  "hostile_towards": [],
+  "default_reputation": 0,
+  "reputation_modifiers": {
+    "ancientwarfare:trade": 2,
+    "ancientwarfare:kill": -10
+  }
+}

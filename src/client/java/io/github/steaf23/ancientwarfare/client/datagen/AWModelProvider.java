@@ -5,7 +5,7 @@ import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.color.item.Constant;import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
@@ -30,6 +30,7 @@ public class AWModelProvider extends FabricModelProvider {
 		super(output);
 
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
+		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("faction"), FactionTintSource.CODEC);
 	}
 
 	@Override
@@ -51,7 +52,8 @@ public class AWModelProvider extends FabricModelProvider {
 		itemModels.generateFlatItem(AWItems.WARD_SEAL, ModelTemplates.FLAT_ITEM);
 		itemModels.generateTintedItem(AWItems.COINS, new CoinMetalTintSource());
 
-		itemModels.generateNpcSpawnerItem("miner");
+		itemModels.generateNpcSpawnerItem(true, "miner");
+		itemModels.generateNpcSpawnerItem(false, "soldier");
 	}
 
 	private static class AncientWarfareBlockModelGenerators extends BlockModelGenerators {
@@ -90,8 +92,9 @@ public class AWModelProvider extends FabricModelProvider {
 		}
 
 		//? if <=1.21.11 {
-		/*public void generateNpcSpawnerItem(String npcTypePrefix) {
-			Identifier loc = FOUR_LAYERED_ITEMS.create(AWItems.NPC_SPAWNER,
+		/*public void generateNpcSpawnerItem(boolean playerOwned, String npcTypePrefix) {
+			Item item = playerOwned ? AWItems.NPC_SPAWNER : AWItems.FACTION_NPC_SPAWNER;
+			Identifier loc = FOUR_LAYERED_ITEMS.create(item,
 					new TextureMapping()
 							.put(TextureSlot.LAYER0, AncientWarfare.id("item/npc/spawner_base"))
 							.put(TextureSlot.LAYER1, AncientWarfare.id("item/npc/spawner_overlay_bottom"))
@@ -99,16 +102,19 @@ public class AWModelProvider extends FabricModelProvider {
 							.put(LAYER3, AncientWarfare.id("item/npc/spawner_" + npcTypePrefix)),
 					this.modelOutput);
 
-			itemModelOutput.accept(AWItems.NPC_SPAWNER, ItemModelUtils.plainModel(loc));
+			itemModelOutput.accept(item, ItemModelUtils.plainModel(loc));
 		}
 		*///?} else {
-		public void generateNpcSpawnerItem(String npcTypePrefix) {
+		public void generateNpcSpawnerItem(boolean playerOwned, String npcTypePrefix) {
+			Item item = playerOwned ? AWItems.NPC_SPAWNER : AWItems.FACTION_NPC_SPAWNER;
 			Material base = new Material(AncientWarfare.id("item/npc/spawner_base"));
 			Material overlayBottom = new Material(AncientWarfare.id("item/npc/spawner_overlay_bottom"));
 			Material overlayTop = new Material(AncientWarfare.id("item/npc/spawner_overlay_top"));
 			Material npcType = new Material(AncientWarfare.id("item/npc/spawner_" + npcTypePrefix));
 
-			Identifier loc = FOUR_LAYERED_ITEMS.create(AWItems.NPC_SPAWNER,
+			int topColor = playerOwned ? 0xffffffff : 0xffed3832;
+
+			Identifier loc = FOUR_LAYERED_ITEMS.create(item,
 					new TextureMapping()
 							.put(TextureSlot.LAYER0, base)
 							.put(TextureSlot.LAYER1, overlayBottom)
@@ -116,7 +122,7 @@ public class AWModelProvider extends FabricModelProvider {
 							.put(LAYER3, npcType),
 					this.modelOutput);
 
-			itemModelOutput.accept(AWItems.NPC_SPAWNER, ItemModelUtils.plainModel(loc));
+			itemModelOutput.accept(item, ItemModelUtils.tintedModel(loc, new Constant(0xffffffff), new FactionTintSource(), new Constant(topColor)));
 		}
 		//?}
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PlayerOwnedNpcScreen extends ExtendedScreen<NpcContainerMenu> {
 
-	public static final Identifier MENU = AncientWarfare.id("assets/ancientwarfare/textures/gui/player_npc.png");
+	public static final Identifier MENU = AncientWarfare.id("textures/gui/player_npc.png");
 	public static final Identifier SKIN_BUTTON = AncientWarfare.id("skin_button");
 	public static final Identifier TOGGLE_FOLLOW_BUTTON = AncientWarfare.id("toggle_follow_button");
 	public static final Identifier SET_HOME_BUTTON = AncientWarfare.id("set_home_button");

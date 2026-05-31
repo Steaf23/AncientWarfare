@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.datagen.structure;
 
+import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.MinifyStructuresTask;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
@@ -38,7 +39,7 @@ public class AWStructureConversionProvider implements DataProvider {
 	public CompletableFuture<?> run(CachedOutput cache) {
 		HolderLookup.Provider lookup = this.registries.join();
 
-		Path structureList = Paths.get("../../aw2_data/assets/ancientwarfare/template/all_structures.txt");
+		Path structureList = Paths.get("../aw2_data/assets/ancientwarfare/template/all_structures.txt");
 		Path base = structureList.getParent();
 
 		try {

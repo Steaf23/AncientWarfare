@@ -1,0 +1,103 @@
+package io.github.steaf23.ancientwarfare.npc.entity.faction;
+
+import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import io.github.steaf23.ancientwarfare.core.registry.AWResources;
+import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
+import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
+import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
+import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
+import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
+import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentTable;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TypedEntityData;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+
+public class FactionNpc extends BaseNpc {
+
+	private FactionNpcData npcData;
+	private boolean equipped;
+
+	public FactionNpc(EntityType<? extends PathfinderMob> entityType, Level world) {
+		super(entityType, world);
+		this.npcData = FactionNpcData.DEFAULT;
+	}
+
+	@Override
+	public BrainFactory<BaseNpc> initBrainMaker() {
+		return new BrainFactory<>(
+				PlayerOwnedNpcAi.MEMORY_MODULES,
+				PlayerOwnedNpcAi.SENSORS,
+				npc -> PlayerOwnedNpcAi.getActivities());
+
+	}
+
+	@Override
+	protected void addAdditionalSaveData(ValueOutput values) {
+		super.addAdditionalSaveData(values);
+		values.putBoolean("equipped", equipped);
+		values.store("npc_data", Identifier.CODEC, npcData.id());
+	}
+
+	@Override
+	protected void readAdditionalSaveData(ValueInput values) {
+		super.readAdditionalSaveData(values);
+
+		equipped = values.getBooleanOr("equipped", false);
+		npcData = AWResources.npc(values.read("npc_data", Identifier.CODEC).orElseThrow());
+
+		if (!equipped) {
+			equipped = true;
+			equipNpc();
+		}
+	}
+
+	public static ItemStack itemFromNpcData(HolderLookup.Provider registries, FactionNpcData data) {
+		TagValueOutput input = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
+		input.store("npc_data", Identifier.CODEC, data.id());
+
+		Identifier npcId = data.id();
+		ItemStack stack = new ItemStack(AWItems.FACTION_NPC_SPAWNER);
+		stack.applyComponents(DataComponentMap.builder()
+				.set(DataComponents.ENTITY_DATA,
+						TypedEntityData.of(AWEntities.FACTION_NPC, input.buildResult()))
+				.set(DataComponents.ITEM_NAME,
+						Component.translatable(data.getDescription()))
+				.build());
+		return stack;
+	}
+
+	@Override
+	public ItemStack item() {
+		return itemFromNpcData(level().registryAccess(), npcData);
+	}
+
+	public void equipNpc() {
+		switch (npcData.equipment()) {
+			case NpcEquipmentTable table -> {
+				//TODO: implement equipment from equipment table
+			}
+			case NpcEquipmentFixed fixed -> {
+				if (fixed.mainHandItemId() != null) {
+					setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(BuiltInRegistries.ITEM.getValue(fixed.mainHandItemId())));
+				}
+				if (fixed.offHandItemId() != null) {
+					setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(BuiltInRegistries.ITEM.getValue(fixed.offHandItemId())));
+				}
+			}
+		}
+	}
+}

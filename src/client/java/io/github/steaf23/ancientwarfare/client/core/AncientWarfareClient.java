@@ -4,6 +4,7 @@ import io.github.steaf23.ancientwarfare.client.core.registry.AWBlockEntityRender
 import io.github.steaf23.ancientwarfare.client.core.registry.AWRenderer;
 import io.github.steaf23.ancientwarfare.client.core.registry.AWScreens;
 import io.github.steaf23.ancientwarfare.client.datagen.CoinMetalTintSource;
+import io.github.steaf23.ancientwarfare.client.datagen.FactionTintSource;
 import io.github.steaf23.ancientwarfare.client.npc.gui.SelectedUnitsElement;
 import io.github.steaf23.ancientwarfare.client.npc.render.item.CommandBatonOverlay;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
@@ -25,6 +26,7 @@ public class AncientWarfareClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
+		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("faction"), FactionTintSource.CODEC);
 
 		AWScreens.initialize();
 		AWRenderer.initialize();

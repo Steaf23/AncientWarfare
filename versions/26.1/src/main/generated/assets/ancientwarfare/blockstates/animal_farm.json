@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "ancientwarfare:block/animal_farm",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "ancientwarfare:block/animal_farm"
+    },
+    "facing=south": {
+      "model": "ancientwarfare:block/animal_farm",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "ancientwarfare:block/animal_farm",
+      "y": 270
+    }
+  }
+}

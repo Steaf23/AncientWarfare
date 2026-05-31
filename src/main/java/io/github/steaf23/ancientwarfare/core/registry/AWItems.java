@@ -5,12 +5,15 @@ import io.github.steaf23.ancientwarfare.core.item.UnobtainableItem;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
+import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
@@ -32,7 +35,11 @@ public class AWItems {
 
 	public static final SpawnEggItem NPC_SPAWNER = AWItems.registerItem("npc_spawner", SpawnEggItem::new,
 			new Item.Properties()
-					.spawnEgg(AWEntities.BASE_NPC));
+					.spawnEgg(AWEntities.PLAYER_NPC));
+
+	public static final SpawnEggItem FACTION_NPC_SPAWNER = AWItems.registerItemNoCreativeTab("faction_npc_spawner", SpawnEggItem::new,
+			new Item.Properties()
+					.spawnEgg(AWEntities.FACTION_NPC));
 
 	public static final WardSealItem WARD_SEAL = AWItems.registerItem("ward_seal", WardSealItem::new, new Item.Properties());
 
@@ -59,6 +66,12 @@ public class AWItems {
 			ItemStack stack4 = new ItemStack(COINS);
 			stack4.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
 			group.addItem(stack4);
+
+			var npcReg = AWResources.npcs();
+
+			for (FactionNpcData npc : npcReg) {
+				group.addItem(FactionNpc.itemFromNpcData(group.context().holders(), npc));
+			}
 		});
 	}
 

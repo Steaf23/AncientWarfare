@@ -7,7 +7,7 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
-public class AWWorksiteUpgrades {
+public class WorksiteUpgrades {
 
 	//~ if <=1.21.11 'create(' -> 'createSimple('
 	public static final Registry<WorksiteUpgrade> UPGRADE_REGISTRY = FabricRegistryBuilder.create(ResourceKey.<WorksiteUpgrade>createRegistryKey(AncientWarfare.id("worksite_upgrade")))

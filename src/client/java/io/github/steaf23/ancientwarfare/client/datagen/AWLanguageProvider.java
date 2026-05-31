@@ -32,9 +32,9 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 		builder.forBlocks().auto(
 				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM
 		).forItems().auto(
-				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.WARD_SEAL
+				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.FACTION_NPC_SPAWNER, AWItems.WARD_SEAL
 		).forEntityTypes().auto(
-				AWEntities.BASE_NPC
+				AWEntities.PLAYER_NPC, AWEntities.FACTION_NPC
 		).forCreativeTabs().auto(
 				CreativeTabManager.ITEM_GROUP_KEY
 		)
@@ -43,6 +43,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				.custom("metal.ancientwarfare." + CoinMetal.COPPER.name(), "Copper")
 				.custom("metal.ancientwarfare." + CoinMetal.GOLD.name(), "Gold")
 				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.name(), "Ancient")
+				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
 		;
 	}
 

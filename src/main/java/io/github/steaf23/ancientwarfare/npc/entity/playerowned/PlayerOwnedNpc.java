@@ -3,13 +3,18 @@ package io.github.steaf23.ancientwarfare.npc.entity.playerowned;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
 import io.github.steaf23.ancientwarfare.core.util.EntityHelper;
+import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
 import io.github.steaf23.ancientwarfare.npc.command.NpcCommand;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.upkeep.NpcUpkeep;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.upkeep.UpkeepValueProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -19,10 +24,13 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.TraceableEntity;
+import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
@@ -31,6 +39,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class PlayerOwnedNpc extends BaseNpc implements TraceableEntity {
+
+	public static BrainFactory<BaseNpc> BRAIN_MAKER = new BrainFactory<>(
+			PlayerOwnedNpcAi.MEMORY_MODULES,
+			PlayerOwnedNpcAi.SENSORS,
+			npc -> PlayerOwnedNpcAi.getActivities());
 
 	//FIXME: REFACTOR Command into memory module
 	NpcCommand.Command currentPlayerCommand = NpcCommand.Command.NONE;
@@ -47,6 +60,11 @@ public class PlayerOwnedNpc extends BaseNpc implements TraceableEntity {
 		super(entityType, world);
 
 		this.upkeep = new NpcUpkeep(6000, new UpkeepValueProvider.FoodProvider());
+	}
+
+	@Override
+	public BrainFactory<BaseNpc> initBrainMaker() {
+		return BRAIN_MAKER;
 	}
 
 	public void handlePlayerCommand(NpcCommand.Command command) {
@@ -185,5 +203,17 @@ public class PlayerOwnedNpc extends BaseNpc implements TraceableEntity {
 		super.aiStep();
 
 		upkeep.tick();
+	}
+
+	@Override
+	public ItemStack item() {
+		TagValueOutput input = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level().registryAccess());
+		addAdditionalSaveData(input);
+
+		ItemStack stack = new ItemStack(AWItems.NPC_SPAWNER);
+		stack.applyComponents(DataComponentMap.builder().set(DataComponents.ENTITY_DATA, TypedEntityData.of(
+				getType(), input.buildResult()
+		)).build());
+		return stack;
 	}
 }

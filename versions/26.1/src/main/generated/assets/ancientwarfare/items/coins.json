@@ -1,0 +1,11 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "ancientwarfare:item/coins",
+    "tints": [
+      {
+        "type": "ancientwarfare:coin_metal"
+      }
+    ]
+  }
+}

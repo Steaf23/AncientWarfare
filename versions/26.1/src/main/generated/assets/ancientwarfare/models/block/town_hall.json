@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "ancientwarfare:block/town_hall_bottom",
+    "side": "ancientwarfare:block/town_hall_side",
+    "top": "ancientwarfare:block/town_hall_top"
+  }
+}

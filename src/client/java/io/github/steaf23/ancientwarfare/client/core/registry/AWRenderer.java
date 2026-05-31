@@ -25,6 +25,7 @@ public class AWRenderer {
 	}
 
 	public static void initialize() {
-		EntityRenderers.register(AWEntities.BASE_NPC, NpcEntityRenderer::new);
+		EntityRenderers.register(AWEntities.PLAYER_NPC, NpcEntityRenderer::new);
+		EntityRenderers.register(AWEntities.FACTION_NPC, NpcEntityRenderer::new);
 	}
 }

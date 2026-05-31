@@ -16,7 +16,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.function.Function;
 
-public class BrainFactory<E extends LivingEntity> {
+public final class BrainFactory<E extends LivingEntity> {
 
 	private final Collection<? extends MemoryModuleType<?>> memoryModules;
 	private final Collection<? extends SensorType<? extends Sensor<? super E>>> sensors;

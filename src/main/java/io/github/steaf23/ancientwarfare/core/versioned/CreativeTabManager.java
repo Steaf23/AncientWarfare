@@ -2,9 +2,12 @@ package io.github.steaf23.ancientwarfare.core.versioned;
 
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 //? if <= 1.21.11 {
-/*import net.fabricmc.fabric.api.itemgroup.v1.FabricCreativeModeTab;
+/*import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 *///?} else {
+import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
+import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 //?}
@@ -25,11 +28,12 @@ public class CreativeTabManager {
 
 	public static final ResourceKey<CreativeModeTab> ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare"));
 	public static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
-			.icon(Items.ENCHANTING_TABLE.asItem()::getDefaultInstance)
+			.icon(AWBlocks.TOWN_HALL.asItem()::getDefaultInstance)
 			.title(Component.translatable("itemGroup.ancient_warfare"))
 			.build();
 
 	public static class Tab {
+		CreativeModeTab.ItemDisplayParameters context;
 		List<ItemStack> stacks = new ArrayList<>();
 
 		public void addItem(Item item) {
@@ -38,6 +42,10 @@ public class CreativeTabManager {
 
 		public void addItem(ItemStack stack) {
 			stacks.add(stack);
+		}
+
+		public CreativeModeTab.ItemDisplayParameters context() {
+			return context;
 		}
 	}
 
@@ -51,6 +59,7 @@ public class CreativeTabManager {
 		CreativeModeTabEvents.modifyOutputEvent(ITEM_GROUP_KEY).register(group -> {
 		//?}
 			Tab tab = new Tab();
+			tab.context = group.getContext();
 			itemAdder.accept(tab);
 			group.acceptAll(tab.stacks);
 		});

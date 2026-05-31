@@ -4,7 +4,7 @@ import io.github.steaf23.ancientwarfare.automation.block.worksite.BoundedArea;
 import io.github.steaf23.ancientwarfare.automation.block.worksite.UpgradableWorksite;
 import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteUpgrade;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
-import io.github.steaf23.ancientwarfare.core.registry.AWWorksiteUpgrades;
+import io.github.steaf23.ancientwarfare.core.registry.WorksiteUpgrades;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
@@ -85,7 +85,7 @@ public abstract class AbstractWorksiteBlockEntity extends BaseContainerBlockEnti
 
 		active = input.getBooleanOr("active", false);
 		bounds = input.read("bounds", BoundedArea.CODEC).orElse(new BoundedArea(1, 25).maximizeBoundsOnCenter(getBlockPos()));
-		upgrades = new HashSet<>(input.read("upgrades", AWWorksiteUpgrades.UPGRADE_REGISTRY.byNameCodec().listOf()).orElse(List.of()));
+		upgrades = new HashSet<>(input.read("upgrades", WorksiteUpgrades.UPGRADE_REGISTRY.byNameCodec().listOf()).orElse(List.of()));
 	}
 
 	@Override
@@ -94,6 +94,6 @@ public abstract class AbstractWorksiteBlockEntity extends BaseContainerBlockEnti
 
 		output.putBoolean("active", active);
 		output.store("bounds", BoundedArea.CODEC, bounds);
-		output.store("upgrades", AWWorksiteUpgrades.UPGRADE_REGISTRY.byNameCodec().listOf(), new ArrayList<>(upgrades));
+		output.store("upgrades", WorksiteUpgrades.UPGRADE_REGISTRY.byNameCodec().listOf(), new ArrayList<>(upgrades));
 	}
 }
