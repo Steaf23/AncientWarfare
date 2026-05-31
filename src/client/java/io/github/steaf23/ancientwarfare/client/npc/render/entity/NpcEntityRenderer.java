@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
 import net.minecraft.client.renderer.entity.layers.HumanoidArmorLayer;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class NpcEntityRenderer<T extends BaseNpc> extends HumanoidMobRenderer<T, NpcRenderState, NpcEntityModel> {
@@ -32,5 +33,13 @@ public class NpcEntityRenderer<T extends BaseNpc> extends HumanoidMobRenderer<T,
 	@Override
 	public @NotNull NpcRenderState createRenderState() {
 		return new NpcRenderState();
+	}
+
+	@Override
+	public Vec3 getRenderOffset(NpcRenderState state) {
+		if (state.isPassenger) {
+			return new Vec3(0.0, -.70, 0.0);
+		}
+		return super.getRenderOffset(state);
 	}
 }

@@ -15,6 +15,8 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.entity.monster.zombie.Zombie;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -36,13 +38,37 @@ public class FactionNpcProvider implements DataProvider {
 	}
 
 	public void generate(HolderLookup.Provider reg) {
-		Identifier soldierSubType = AncientWarfare.id("soldier");
 
-		saveNpc(FactionNpcData.builder(AncientWarfare.id("empire/soldier"))
+		saveNpc(FactionNpcData.builder()
 				.faction(AncientWarfare.id("empire"))
-				.npcType(soldierSubType)
-				.equipment(Identifier.withDefaultNamespace("iron_spear"), null)
-				.build());
+				.npcType(AncientWarfare.id("soldier"))
+				.equipment(Items.IRON_SPEAR, null)
+				.buildAutoId());
+
+		FactionNpcData amazon = FactionNpcData.builder()
+				.faction(AncientWarfare.id("amazon"))
+				.buildAutoId();
+		saveNpc(FactionNpcData.builder().setFromData(amazon)
+				.npcType(AncientWarfare.id("soldier"))
+				.equipment(Items.GOLDEN_SPEAR, Items.SHIELD)
+				.buildAutoId());
+		saveNpc(FactionNpcData.builder().setFromData(amazon)
+				.npcType(AncientWarfare.id("elite_soldier"))
+				//TODO: golden halberd .equipment()
+				.buildAutoId());
+		saveNpc(FactionNpcData.builder().setFromData(amazon)
+				.npcType(AncientWarfare.id("cavalry"))
+				.equipment(Items.GOLDEN_SPEAR, Items.SHIELD)
+				.horseMount()
+				.buildAutoId());
+		saveNpc(FactionNpcData.builder().setFromData(amazon)
+				.npcType(AncientWarfare.id("leader"))
+				//TODO: golden halberd .equipment()
+				.buildAutoId());
+		saveNpc(FactionNpcData.builder().setFromData(amazon)
+				.npcType(AncientWarfare.id("elite_leader"))
+				.equipment(Items.GOLDEN_SWORD, null)
+				.buildAutoId());
 	}
 
 	@Override

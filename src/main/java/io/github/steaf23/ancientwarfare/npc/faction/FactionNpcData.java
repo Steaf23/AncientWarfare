@@ -8,16 +8,22 @@ import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipment;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentTable;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentTable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.TypedEntityData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -35,7 +41,8 @@ public record FactionNpcData(
 		@NotNull NpcEquipment equipment,
 		@NotNull Identifier lootTable,
 		boolean enabled,
-		Set<Identifier> spells) {
+		Set<Identifier> spells,
+		Optional<TypedEntityData<EntityType<?>>> mount) {
 
 	public static final Codec<FactionNpcData> CODEC = RecordCodecBuilder.create(i -> i.group(
 			Identifier.CODEC.fieldOf("id").forGetter(FactionNpcData::id),
@@ -60,7 +67,9 @@ public record FactionNpcData(
 			Codec.BOOL.fieldOf("enabled")
 					.forGetter(FactionNpcData::enabled),
 			Identifier.CODEC.listOf().xmap(Set::copyOf, List::copyOf).fieldOf("spells")
-					.forGetter(FactionNpcData::spells)
+					.forGetter(FactionNpcData::spells),
+			TypedEntityData.codec(EntityType.CODEC).optionalFieldOf("mount")
+					.forGetter(FactionNpcData::mount)
 	).apply(i, FactionNpcData::new));
 
 	public static final FactionNpcData DEFAULT = new FactionNpcData(
@@ -72,11 +81,12 @@ public record FactionNpcData(
 			false, false, false,
 			new NpcEquipmentTable(new EquipmentTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("empty")), 0.0f)), Identifier.withDefaultNamespace("empty"),
 			true,
-			Set.of()
+			Set.of(),
+			Optional.empty()
 	);
 
-	public static Builder builder(Identifier npcId) {
-		Builder builder = new Builder(npcId);
+	public static Builder builder() {
+		Builder builder = new Builder();
 		builder.setFromData(FactionNpcData.DEFAULT);
 		return builder;
 	}
@@ -86,7 +96,6 @@ public record FactionNpcData(
 	}
 
 	public static class Builder {
-		private final Identifier id;
 		private ResourceKey<Faction> faction;
 		private Identifier npcType;
 		private Map<Identifier, Double> defaultAttributes;
@@ -98,8 +107,9 @@ public record FactionNpcData(
 		private @Nullable Identifier lootTable;
 		private boolean enabled;
 		private Set<Identifier> spells = new HashSet<>();
+		private @Nullable TypedEntityData<EntityType<?>> mount;
 
-		public void setFromData(FactionNpcData data) {
+		public Builder setFromData(FactionNpcData data) {
 			this.faction = data.faction;
 			this.npcType = data.npcType;
 			this.defaultAttributes = data.defaultAttributes;
@@ -111,14 +121,13 @@ public record FactionNpcData(
 			this.lootTable = data.lootTable;
 			this.enabled = data.enabled;
 			this.spells = data.spells;
+			return this;
 		}
 
-		private Builder(Identifier id) {
-			this.id = id;
-		}
+		private Builder() {}
 
 		public static Builder fromData(FactionNpcData data) {
-			Builder builder = new Builder(data.id);
+			Builder builder = new Builder();
 			builder.setFromData(data);
 			return builder;
 		}
@@ -155,7 +164,22 @@ public record FactionNpcData(
 			return this;
 		}
 
-		public FactionNpcData build() {
+		public Builder equipment(Item mainHand, Item offHand) {
+			this.equipment = new NpcEquipmentFixed(mainHand == null ? null : BuiltInRegistries.ITEM.getKey(mainHand), offHand == null ? null : BuiltInRegistries.ITEM.getKey(offHand));
+			return this;
+		}
+
+		public Builder simpleMount(EntityType<?> entity) {
+			this.mount = TypedEntityData.of(entity, new CompoundTag());
+			return this;
+		}
+
+		public Builder horseMount() {
+			this.mount = TypedEntityData.of(EntityType.HORSE, new CompoundTag());
+			return this;
+		}
+
+		public FactionNpcData build(Identifier id) {
 			return new FactionNpcData(
 					id,
 					faction,
@@ -168,8 +192,13 @@ public record FactionNpcData(
 					equipment,
 					lootTable,
 					enabled,
-					spells
+					spells,
+					Optional.ofNullable(mount)
 			);
+		}
+
+		public FactionNpcData buildAutoId() {
+			return build(AncientWarfare.id((faction == null ? "" : faction.identifier().getPath() + "/") + npcType.getPath()));
 		}
 	}
 }

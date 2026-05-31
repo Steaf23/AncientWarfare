@@ -15,10 +15,15 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
@@ -29,7 +34,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 public class FactionNpc extends BaseNpc {
 
 	private FactionNpcData npcData;
-	private boolean equipped;
+	private boolean spawnCompleted;
 
 	public FactionNpc(EntityType<? extends PathfinderMob> entityType, Level world) {
 		super(entityType, world);
@@ -48,7 +53,7 @@ public class FactionNpc extends BaseNpc {
 	@Override
 	protected void addAdditionalSaveData(ValueOutput values) {
 		super.addAdditionalSaveData(values);
-		values.putBoolean("equipped", equipped);
+		values.putBoolean("spawn_completed", spawnCompleted);
 		values.store("npc_data", Identifier.CODEC, npcData.id());
 	}
 
@@ -56,12 +61,12 @@ public class FactionNpc extends BaseNpc {
 	protected void readAdditionalSaveData(ValueInput values) {
 		super.readAdditionalSaveData(values);
 
-		equipped = values.getBooleanOr("equipped", false);
+		spawnCompleted = values.getBooleanOr("spawn_completed", false);
 		npcData = AWResources.npc(values.read("npc_data", Identifier.CODEC).orElseThrow());
 
-		if (!equipped) {
-			equipped = true;
-			equipNpc();
+		if (!spawnCompleted) {
+			spawnCompleted = true;
+			setupNpcFromData();
 		}
 	}
 
@@ -83,6 +88,33 @@ public class FactionNpc extends BaseNpc {
 	@Override
 	public ItemStack item() {
 		return itemFromNpcData(level().registryAccess(), npcData);
+	}
+
+	public void setupNpcFromData() {
+		equipNpc();
+
+		npcData.mount().ifPresent(this::addMount);
+	}
+
+	public void addMount(TypedEntityData<EntityType<?>> mount) {
+		if (isPassenger()) {
+			return;
+		}
+
+		if (!(level() instanceof ServerLevel level)) {
+			return;
+		}
+
+		Entity entity = mount.type().create(level, EntitySpawnReason.JOCKEY);
+		if (entity != null) {
+			entity.snapTo(getX(), getY(), getZ(), getYRot(), 0.0f);
+			mount.loadInto(entity);
+			if (entity instanceof Mob mob) {
+				mob.finalizeSpawn(level, level.getCurrentDifficultyAt(blockPosition()), EntitySpawnReason.JOCKEY, null);
+			}
+			this.startRiding(entity);
+			level.addFreshEntity(entity);
+		}
 	}
 
 	public void equipNpc() {

@@ -47,6 +47,15 @@ public class FactionProvider implements DataProvider {
 						AncientWarfare.id("kill"), -10,
 						AncientWarfare.id("trade"), 2)
 				));
+		saveFaction(new Faction(
+				AncientWarfare.id("amazon"),
+				0xffd34848,
+				Set.of(),
+				20,
+				Map.of(
+						AncientWarfare.id("kill"), -20,
+						AncientWarfare.id("trade"), 2)
+		));
 
 
 		return CompletableFuture.completedFuture(null);

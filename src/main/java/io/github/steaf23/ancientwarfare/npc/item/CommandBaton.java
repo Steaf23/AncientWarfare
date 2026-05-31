@@ -1,7 +1,6 @@
 package io.github.steaf23.ancientwarfare.npc.item;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
-import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpc;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
@@ -62,7 +61,7 @@ public class CommandBaton extends Item {
 		}
 
 		if (result instanceof EntityHitResult entityHit) {
-			if (entityHit.getEntity() instanceof BaseNpc npc) {
+			if (entityHit.getEntity() instanceof PlayerOwnedNpc npc) {
 				clickNpc(npc, user.getItemInHand(hand));
 				return InteractionResult.SUCCESS;
 			}
@@ -81,7 +80,7 @@ public class CommandBaton extends Item {
 			return super.interactLivingEntity(stack, user, entity, hand);
 		}
 
-		if (entity instanceof BaseNpc npc) {
+		if (entity instanceof PlayerOwnedNpc npc) {
 			clickNpc(npc, user.getItemInHand(hand));
 			return InteractionResult.SUCCESS;
 		}
@@ -126,7 +125,7 @@ public class CommandBaton extends Item {
 		);
 	}
 
-	public void clickNpc(BaseNpc npc, ItemStack baton) {
+	public void clickNpc(PlayerOwnedNpc npc, ItemStack baton) {
 		if (!(npc.level() instanceof ServerLevel world)) {
 			return;
 		}

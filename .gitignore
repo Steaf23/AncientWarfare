@@ -5,3 +5,4 @@ AncientWarfareTODO/
 build/
 run/
 src/main/generated
+versions/**/src/main/generated
