@@ -8,6 +8,7 @@ import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipment;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentTable;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -15,9 +16,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentTable;
-import net.minecraft.world.entity.animal.equine.Horse;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.TypedEntityData;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,8 @@ public record FactionNpcData(
 		@NotNull Identifier lootTable,
 		boolean enabled,
 		Set<Identifier> spells,
-		Optional<TypedEntityData<EntityType<?>>> mount) {
+		Optional<TypedEntityData<EntityType<?>>> mount,
+		AdditionalAttributes additional) {
 
 	public static final Codec<FactionNpcData> CODEC = RecordCodecBuilder.create(i -> i.group(
 			Identifier.CODEC.fieldOf("id").forGetter(FactionNpcData::id),
@@ -72,10 +73,12 @@ public record FactionNpcData(
 			Identifier.CODEC.listOf().xmap(Set::copyOf, List::copyOf).fieldOf("spells")
 					.forGetter(FactionNpcData::spells),
 			TypedEntityData.codec(EntityType.CODEC).optionalFieldOf("mount")
-					.forGetter(FactionNpcData::mount)
+					.forGetter(FactionNpcData::mount),
+			AdditionalAttributes.CODEC.fieldOf("additional_attributes")
+					.forGetter(FactionNpcData::additional)
 	).apply(i, FactionNpcData::new));
 
-	public static final FactionNpcData DEFAULT = new FactionNpcData(
+	public static final FactionNpcData INVALID_DEFAULT = new FactionNpcData(
 			AncientWarfare.id(""),
 			ResourceKey.create(Factions.FACTION_REGISTRY_KEY, AncientWarfare.id("neutral")),
 			AWEntities.NPC_SUBTYPE_SOLDIER,
@@ -85,12 +88,13 @@ public record FactionNpcData(
 			new NpcEquipmentTable(new EquipmentTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("empty")), 0.0f)), Identifier.withDefaultNamespace("empty"),
 			true,
 			Set.of(),
-			Optional.empty()
+			Optional.empty(),
+			new AdditionalAttributes(false, 0.0)
 	);
 
 	public static Builder builder() {
 		Builder builder = new Builder();
-		builder.setFromData(FactionNpcData.DEFAULT);
+		builder.setFromData(FactionNpcData.INVALID_DEFAULT);
 		return builder;
 	}
 
@@ -111,6 +115,8 @@ public record FactionNpcData(
 		private boolean enabled;
 		private Set<Identifier> spells = new HashSet<>();
 		private @Nullable TypedEntityData<EntityType<?>> mount;
+		private boolean burnsInSun;
+		private double healPerTry;
 
 		public Builder setFromData(FactionNpcData data) {
 			this.faction = data.faction;
@@ -124,7 +130,26 @@ public record FactionNpcData(
 			this.lootTable = data.lootTable;
 			this.enabled = data.enabled;
 			this.spells = data.spells;
+			this.burnsInSun = data.additional.burnsInSun();
+			this.healPerTry = data.additional.healPerTry();
 			return this;
+		}
+
+		public Builder copy() {
+			Builder copy = new Builder();
+			copy.faction = this.faction;
+			copy.npcType = this.npcType;
+			copy.defaultAttributes = this.defaultAttributes;
+			copy.experienceDropped = this.experienceDropped;
+			copy.canSwim = this.canSwim;
+			copy.canBreakDoors = this.canBreakDoors;
+			copy.canOpenDoors = this.canOpenDoors;
+			copy.equipment = this.equipment;
+			copy.lootTable = this.lootTable;
+			copy.enabled = this.enabled;
+			copy.spells = this.spells;
+			copy.burnsInSun = this.burnsInSun;
+			return copy;
 		}
 
 		private Builder() {}
@@ -150,6 +175,11 @@ public record FactionNpcData(
 			return this;
 		}
 
+		public Builder experienceDropped(int expPoints) {
+			this.experienceDropped = expPoints;
+			return this;
+		}
+
 		public Builder navigation(boolean canSwim, boolean canBreakDoors, boolean canOpenDoors) {
 			this.canSwim = canSwim;
 			this.canBreakDoors = canBreakDoors;
@@ -157,8 +187,28 @@ public record FactionNpcData(
 			return this;
 		}
 
+		public Builder lootTable(Identifier lootTable) {
+			this.lootTable = lootTable;
+			return this;
+		}
+
+		public Builder burnsInSun(boolean burnsInSun) {
+			this.burnsInSun = burnsInSun;
+			return this;
+		}
+
+		public Builder healPerTry(double healPerTry) {
+			this.healPerTry = healPerTry;
+			return this;
+		}
+
 		public Builder equipmentTable(EquipmentTable table) {
 			this.equipment = new NpcEquipmentTable(table);
+			return this;
+		}
+
+		public Builder addAttribute(Holder<Attribute> attribute, double defaultValue) {
+			this.defaultAttributes.put(attribute.unwrapKey().map(ResourceKey::identifier).orElseThrow(), defaultValue);
 			return this;
 		}
 
@@ -205,7 +255,8 @@ public record FactionNpcData(
 					lootTable,
 					enabled,
 					spells,
-					Optional.ofNullable(mount)
+					Optional.ofNullable(mount),
+					new AdditionalAttributes(burnsInSun, healPerTry)
 			);
 		}
 

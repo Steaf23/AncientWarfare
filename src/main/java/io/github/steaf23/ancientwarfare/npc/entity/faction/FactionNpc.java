@@ -23,7 +23,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.monster.zombie.Zombie;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
@@ -38,7 +37,7 @@ public class FactionNpc extends BaseNpc {
 
 	public FactionNpc(EntityType<? extends PathfinderMob> entityType, Level world) {
 		super(entityType, world);
-		this.npcData = FactionNpcData.DEFAULT;
+		this.npcData = FactionNpcData.INVALID_DEFAULT;
 	}
 
 	@Override

@@ -57,7 +57,6 @@ public class FactionProvider implements DataProvider {
 						AncientWarfare.id("trade"), 2)
 		));
 
-
 		return CompletableFuture.completedFuture(null);
 	}
 
