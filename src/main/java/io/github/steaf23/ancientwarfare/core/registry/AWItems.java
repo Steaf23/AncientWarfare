@@ -66,7 +66,9 @@ public class AWItems {
 			ItemStack stack4 = new ItemStack(COINS);
 			stack4.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
 			group.addItem(stack4);
+		});
 
+		CreativeTabManager.addItemsToModTab(group -> {
 			var factions = AWResources.factionIds();
 
 			for (Identifier faction : factions) {
@@ -75,7 +77,7 @@ public class AWItems {
 					group.addItem(FactionNpc.itemFromNpcData(group.context().holders(), npc));
 				}
 			}
-		});
+		}, CreativeTabManager.FACTION_NPCS_KEY);
 	}
 
 	public static Item registerItem(String name, Item.Properties settings) {

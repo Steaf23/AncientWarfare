@@ -36,7 +36,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 		).forEntityTypes().auto(
 				AWEntities.PLAYER_NPC, AWEntities.FACTION_NPC
 		).forCreativeTabs().auto(
-				CreativeTabManager.ITEM_GROUP_KEY
+				CreativeTabManager.ITEM_GROUP_KEY, CreativeTabManager.FACTION_NPCS_KEY
 		)
 				.custom(AWItems.COINS.getDescriptionId(), "%s Coins")
 				.custom("metal.ancientwarfare." + CoinMetal.SILVER.name(), "Silver")
