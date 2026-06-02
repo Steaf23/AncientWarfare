@@ -7,6 +7,7 @@ import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
 import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
+import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentEmpty;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentTable;
 import net.minecraft.core.HolderLookup;
@@ -128,6 +129,9 @@ public class FactionNpc extends BaseNpc {
 				if (fixed.offHandItemId() != null) {
 					setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(BuiltInRegistries.ITEM.getValue(fixed.offHandItemId())));
 				}
+			}
+			case NpcEquipmentEmpty _ -> {
+				// NOOP
 			}
 		}
 	}

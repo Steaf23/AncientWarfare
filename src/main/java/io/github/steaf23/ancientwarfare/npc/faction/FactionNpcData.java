@@ -6,11 +6,11 @@ import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.Factions;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipment;
+import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentEmpty;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentTable;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -23,6 +23,7 @@ import net.minecraft.world.item.component.TypedEntityData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -82,14 +83,14 @@ public record FactionNpcData(
 			AncientWarfare.id(""),
 			ResourceKey.create(Factions.FACTION_REGISTRY_KEY, AncientWarfare.id("neutral")),
 			AWEntities.NPC_SUBTYPE_SOLDIER,
-			Map.of(),
+			new HashMap<>(),
 			0,
 			false, false, false,
-			new NpcEquipmentTable(new EquipmentTable(ResourceKey.create(Registries.LOOT_TABLE, Identifier.withDefaultNamespace("empty")), 0.0f)), Identifier.withDefaultNamespace("empty"),
+			new NpcEquipmentEmpty(), Identifier.withDefaultNamespace("empty"),
 			true,
 			Set.of(),
 			Optional.empty(),
-			new AdditionalAttributes(false, 0.0)
+			new AdditionalAttributes(false, false, 0.0, AncientWarfare.id("player"))
 	);
 
 	public static Builder builder() {
@@ -116,7 +117,9 @@ public record FactionNpcData(
 		private Set<Identifier> spells = new HashSet<>();
 		private @Nullable TypedEntityData<EntityType<?>> mount;
 		private boolean burnsInSun;
+		private boolean undead;
 		private double healPerTry;
+		private Identifier soundSet = AncientWarfare.id("player");
 
 		public Builder setFromData(FactionNpcData data) {
 			this.faction = data.faction;
@@ -130,8 +133,11 @@ public record FactionNpcData(
 			this.lootTable = data.lootTable;
 			this.enabled = data.enabled;
 			this.spells = data.spells;
+			// Additional
 			this.burnsInSun = data.additional.burnsInSun();
+			this.undead = data.additional.undead();
 			this.healPerTry = data.additional.healPerTry();
+			this.soundSet = data.additional.soundSet();
 			return this;
 		}
 
@@ -139,7 +145,7 @@ public record FactionNpcData(
 			Builder copy = new Builder();
 			copy.faction = this.faction;
 			copy.npcType = this.npcType;
-			copy.defaultAttributes = this.defaultAttributes;
+			copy.defaultAttributes = new HashMap<>(this.defaultAttributes);
 			copy.experienceDropped = this.experienceDropped;
 			copy.canSwim = this.canSwim;
 			copy.canBreakDoors = this.canBreakDoors;
@@ -148,7 +154,11 @@ public record FactionNpcData(
 			copy.lootTable = this.lootTable;
 			copy.enabled = this.enabled;
 			copy.spells = this.spells;
+			// Additional
 			copy.burnsInSun = this.burnsInSun;
+			copy.undead = this.undead;
+			copy.healPerTry = this.healPerTry;
+			copy.soundSet = this.soundSet;
 			return copy;
 		}
 
@@ -187,6 +197,11 @@ public record FactionNpcData(
 			return this;
 		}
 
+		public Builder canSwim(boolean canSwim) {
+			this.canSwim = canSwim;
+			return this;
+		}
+
 		public Builder lootTable(Identifier lootTable) {
 			this.lootTable = lootTable;
 			return this;
@@ -197,8 +212,18 @@ public record FactionNpcData(
 			return this;
 		}
 
+		public Builder undead(boolean undead) {
+			this.undead = undead;
+			return this;
+		}
+
 		public Builder healPerTry(double healPerTry) {
 			this.healPerTry = healPerTry;
+			return this;
+		}
+
+		public Builder soundSet(Identifier soundSet) {
+			this.soundSet = soundSet;
 			return this;
 		}
 
@@ -219,6 +244,11 @@ public record FactionNpcData(
 
 		public Builder equipment(Item mainHand, Item offHand) {
 			this.equipment = new NpcEquipmentFixed(mainHand == null ? null : BuiltInRegistries.ITEM.getKey(mainHand), offHand == null ? null : BuiltInRegistries.ITEM.getKey(offHand));
+			return this;
+		}
+
+		public Builder noEquipment() {
+			this.equipment = new NpcEquipmentEmpty();
 			return this;
 		}
 
@@ -256,7 +286,7 @@ public record FactionNpcData(
 					enabled,
 					spells,
 					Optional.ofNullable(mount),
-					new AdditionalAttributes(burnsInSun, healPerTry)
+					new AdditionalAttributes(burnsInSun, undead, healPerTry, soundSet)
 			);
 		}
 

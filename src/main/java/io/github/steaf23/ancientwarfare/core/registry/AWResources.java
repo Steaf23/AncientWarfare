@@ -7,7 +7,10 @@ import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class AWResources {
 
@@ -15,6 +18,7 @@ public class AWResources {
 
 	private AWResourceLoader<Faction> factions = null;
 	private AWResourceLoader<FactionNpcData> npcs = null;
+	private Map<Identifier, Set<FactionNpcData>> npcsPerFaction = new HashMap<>();
 
 	public static Collection<FactionNpcData> npcs() {
 		return INSTANCE.npcs.allValues();
@@ -32,8 +36,17 @@ public class AWResources {
 		return INSTANCE.npcs.byId(id);
 	}
 
+	public static Set<FactionNpcData> npcsInFaction(Identifier factionId) {
+		INSTANCE.setupNpcs();
+		return INSTANCE.npcsPerFaction.getOrDefault(factionId, Set.of());
+	}
+
 	public static Collection<Faction> factions() {
 		return INSTANCE.factions.allValues();
+	}
+
+	public static Collection<Identifier> factionIds() {
+		return INSTANCE.factions.entries().keySet();
 	}
 
 	public static @Nullable Faction faction(Identifier id) {
@@ -46,6 +59,19 @@ public class AWResources {
 
 	public static void setFactions(AWResourceLoader<Faction> factions) {
 		INSTANCE.factions = factions;
+	}
+
+	private void setupNpcs() {
+		npcsPerFaction.clear();
+
+		for (FactionNpcData npc : npcs()) {
+			Identifier factionId = npc.faction().identifier();
+			if (!npcsPerFaction.containsKey(factionId))
+			{
+				npcsPerFaction.put(factionId, new HashSet<>());
+			}
+			npcsPerFaction.get(factionId).add(npc);
+		}
 	}
 
 }

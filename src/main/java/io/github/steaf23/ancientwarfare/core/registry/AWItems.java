@@ -67,10 +67,13 @@ public class AWItems {
 			stack4.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
 			group.addItem(stack4);
 
-			var npcReg = AWResources.npcs();
+			var factions = AWResources.factionIds();
 
-			for (FactionNpcData npc : npcReg) {
-				group.addItem(FactionNpc.itemFromNpcData(group.context().holders(), npc));
+			for (Identifier faction : factions) {
+				var npcReg = AWResources.npcsInFaction(faction);
+				for (FactionNpcData npc : npcReg) {
+					group.addItem(FactionNpc.itemFromNpcData(group.context().holders(), npc));
+				}
 			}
 		});
 	}
