@@ -1,0 +1,11 @@
+{
+  "dimensions": {
+    "minecraft:overworld": {
+      "type": "minecraft:overworld",
+      "generator": {
+        "type": "ancientwarfare:structure_debug_generator",
+        "settings": "minecraft:overworld"
+      }
+    }
+  }
+}

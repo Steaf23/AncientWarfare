@@ -1,6 +1,5 @@
 package io.github.steaf23.ancientwarfare.client.datagen.structure;
 
-import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.MinifyStructuresTask;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
@@ -24,13 +23,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class AWStructureConversionProvider implements DataProvider {
+public class StructureConversionProvider implements DataProvider {
 
-	private static final Logger log = LogManager.getLogger(AWStructureConversionProvider.class);
+	private static final Logger log = LogManager.getLogger(StructureConversionProvider.class);
 	private final FabricPackOutput output;
 	private final CompletableFuture<HolderLookup.Provider> registries;
 
-	public AWStructureConversionProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public StructureConversionProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
 	}
@@ -45,22 +44,22 @@ public class AWStructureConversionProvider implements DataProvider {
 		try {
 			List<String> paths;
 			paths = Files.readAllLines(structureList);
-			String path = "portal_test_5.aws";
-			Path input = base.resolve(path.trim()).normalize();
-
-			new MinifyStructuresTask().minifyTemplate(input);
-			convert(lookup, base, path);
-//			int i = 0;
-//			for (String path : paths) {
-//				Path inputPath = base.resolve(path.trim()).normalize();
-//				System.out.println("Converting structure #" + i + ": " + path);
-//				convert(lookup, base, path);
-////				if (i == 10) {
-////					break;
-////				}
+//			String path = "portal_test_5.aws";
+//			Path input = base.resolve(path.trim()).normalize();
 //
-//				i++;
-//			}
+//			new MinifyStructuresTask().minifyTemplate(input);
+//			convert(lookup, base, path);
+			int i = 0;
+			for (String path : paths) {
+//				Path inputPath = base.resolve(path.trim()).normalize();
+				System.out.println("Converting structure #" + i + ": " + path);
+				convert(lookup, base, path);
+//				if (i == 10) {
+//					break;
+//				}
+
+				i++;
+			}
 		} catch (IOException exc) {
 			log.error("e: ", exc);
 		} catch (TemplateParsingException templateExc) {

@@ -44,6 +44,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				.custom("metal.ancientwarfare." + CoinMetal.GOLD.name(), "Gold")
 				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.name(), "Ancient")
 				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
+				.custom("generator.ancientwarfare.structure_debug", "AW Structure Debug")
 		;
 	}
 

@@ -1,13 +1,12 @@
 package io.github.steaf23.ancientwarfare.core.versioned;
 
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
-//? if <= 1.21.11 {
-/*import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricCreativeModeTab;
-import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-*///?} else {
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+//? if <= 1.21.11 {
+/*import net.fabricmc.fabric.api.itemgroup.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+*///?} else {
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 //?}
@@ -26,13 +25,13 @@ import java.util.function.Consumer;
 public class CreativeTabManager {
 
 	public static final ResourceKey<CreativeModeTab> ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare"));
-	public static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
+	private static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
 			.icon(AWBlocks.TOWN_HALL.asItem()::getDefaultInstance)
 			.title(Component.translatable("itemGroup.ancient_warfare"))
 			.build();
 
 	public static final ResourceKey<CreativeModeTab> FACTION_NPCS_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare_factions"));
-	public static CreativeModeTab FACTION_NPCS;
+	private static CreativeModeTab FACTION_NPCS;
 
 	public static class Tab {
 		CreativeModeTab.ItemDisplayParameters context;

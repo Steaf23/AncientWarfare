@@ -8,6 +8,7 @@ import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.registry.AWContainerMenus;
 import io.github.steaf23.ancientwarfare.core.registry.AWGeneration;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import io.github.steaf23.ancientwarfare.core.registry.AWStructures;
 import io.github.steaf23.ancientwarfare.core.registry.Factions;
 import io.github.steaf23.ancientwarfare.core.registry.WorksiteUpgrades;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
@@ -40,6 +41,7 @@ public class AncientWarfare implements ModInitializer {
 		Factions.initialize();
 		AWEntities.initialize();
 		AWGeneration.initialize();
+		AWStructures.initialize();
 
 		//~ if <=1.21.11 'serverboundPlay' -> 'playC2S' {
 		PayloadTypeRegistry.serverboundPlay().register(ExtendedScreenUpdatePayload.ID, ExtendedScreenUpdatePayload.CODEC);
