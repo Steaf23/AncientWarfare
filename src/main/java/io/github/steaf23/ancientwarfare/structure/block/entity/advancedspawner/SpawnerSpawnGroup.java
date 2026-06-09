@@ -161,7 +161,7 @@ public class SpawnerSpawnGroup {
 			BlockPos.MutableBlockPos mutable = spawnPos.mutable();
 			if (range == 0) {
 				mutable.set(spawnPos.offset(0, 1, 0));
-				if (world.isEmptyBlock(mutable) && world.noCollision(e.getType().getSpawnAABB(mutable.getX(), mutable.getY(), mutable.getZ()))) {
+				if (world.isEmptyBlock(mutable) && world.noCollision(e.getType().getDimensions().makeBoundingBox(mutable.getX(), mutable.getY(), mutable.getZ()))) {
 					e.snapTo(mutable.getX() + 0.5, mutable.getY(), mutable.getZ() + 0.5, world.getRandom().nextFloat() * 360.0F, 0.0F);
 					return true;
 				}
@@ -174,7 +174,7 @@ public class SpawnerSpawnGroup {
 				int z = spawnPos.getZ() + world.getRandom().nextInt(range * 2) - range;
 
 				mutable.set(x, y, z);
-				if (world.isEmptyBlock(mutable) && world.noCollision(e.getType().getSpawnAABB(x, y, z))) {
+				if (world.isEmptyBlock(mutable) && world.noCollision(e.getType().getDimensions().makeBoundingBox(x, y, z))) {
 					e.snapTo(x + 0.5, y, z + 0.5, world.getRandom().nextFloat() * 360.0F, 0.0F);
 					return true;
 				}

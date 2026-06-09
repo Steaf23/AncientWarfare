@@ -79,7 +79,7 @@ public abstract class ExtendedContainerMenu extends AbstractContainerMenu {
 
 	public <Data> void applyClientUpdate(ServerPlayer player, ScreenUpdate update) {
 		if (player.level().isClientSide()) {
-			System.out.println("ExtendedContainerMenu.applyClientData should only be called on the Server!");
+			System.out.println("ExtendedContainerMenu.applyClientUpdate should only be called on the Server!");
 			return;
 		}
 		String key = update.key();
@@ -107,7 +107,7 @@ public abstract class ExtendedContainerMenu extends AbstractContainerMenu {
 
 	public <Data> void applyServerUpdate(Player player, ScreenUpdate update) {
 		if (!getPlayer().level().isClientSide()) {
-			System.out.println("ExtendedContainerMenu.applyDataToServer should only be called on the client!");
+			System.out.println("ExtendedContainerMenu.applyServerUpdate should only be called on the client!");
 			return;
 		}
 		String key = update.key();

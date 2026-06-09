@@ -1,7 +1,9 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 
+import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
+import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -499,7 +501,6 @@ public class TemplateRuleBlock extends TemplateRule {
 			propertyMap.put(RotatedPillarBlock.AXIS, Direction.Axis.byName(variant.replace("lines_", "")));
 		}
 
-
 		//~ if <=1.21.11 'keySet' -> 'keys'
 		for (String propName : stateProperties.keySet()) {
 			// TODO: check which one of these to check for item types
@@ -517,8 +518,7 @@ public class TemplateRuleBlock extends TemplateRule {
 					 "check_decay",
 					 "legacy_data",
 					 "visible",
-					 "double",
-					 "transparent" -> true;
+					 "double" -> true;
 				default -> false;
 			}) {
 				continue;
@@ -606,6 +606,7 @@ public class TemplateRuleBlock extends TemplateRule {
 				case "delay" -> BlockStateProperties.DELAY;
 				case "mode" -> BlockStateProperties.MODE_COMPARATOR;
 				case "locked" -> BlockStateProperties.LOCKED;
+				case "transparent" -> AdvancedSpawnerBlock.TRANSPARENT;
 				default -> throw new TemplateParsingException.TemplateRuleParsingException("Unknown block state property: " + propName + " for block " + blockId);
 			};
 			String propertyValue = stateProperties.getStringOr(propName, "");

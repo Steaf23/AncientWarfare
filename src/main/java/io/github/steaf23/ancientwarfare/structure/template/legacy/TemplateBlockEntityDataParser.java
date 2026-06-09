@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
+import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerSettings;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardInfo;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.Direction;
@@ -14,14 +15,18 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -154,9 +159,47 @@ public class TemplateBlockEntityDataParser {
 					writeItemsToTileEntity(input.childrenListOrEmpty("Items"), chestOutput);
 				});
 
-				//TODO: FIX FACING
 				String facing = context.newState.getValue(BlockStateProperties.FACING).getName();
 				output.store("block_capture", CapturedBlockInfo.CODEC, new CapturedBlockInfo(Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, Direction.byName(facing)), chestOutput.buildResult()));
+			}
+			case "advanced_spawner" -> {
+				output.putString("id", "ancientwarfare:advanced_spawner");
+
+				ValueInput spawnerSettings = input.childOrEmpty("spawnerSettings");
+
+				AdvancedSpawnerSettings.Builder settings = new AdvancedSpawnerSettings.Builder()
+						.removeGroup(0)
+						.minDelayTicks(spawnerSettings.getIntOr("minDelay", 100))
+						.maxDelayTicks(spawnerSettings.getIntOr("maxDelay", 200))
+						.lightSensitive(spawnerSettings.getStringOr("lightSensitive", "0b").equals("1b"))
+						.playerRange(spawnerSettings.getIntOr("playerRange", 8))
+						.redstoneSensitive(spawnerSettings.getStringOr("respondToRedstone", "0b").equals("1b"))
+						.spawnRange(spawnerSettings.getIntOr("spawnRange", 0))
+						.transparent(spawnerSettings.getStringOr("transparent", "0b").equals("1b"))
+						.spawnYOffset(spawnerSettings.getIntOr("spawnYOffset", 0))
+						.xpToDrop(spawnerSettings.getIntOr("xpToDrop", 0))
+						.mobRange(spawnerSettings.getIntOr("mobRange", 1))
+						.debugMode(spawnerSettings.getStringOr("debugMode", "0b").equals("1b"))
+						.maximumAllowedNearbyEntities(spawnerSettings.getIntOr("maxNearbyMonsters", 0));
+
+				for (ValueInput group : spawnerSettings.childrenListOrEmpty("spawnGroups")) {
+					List<AdvancedSpawnerSettings.SpawnEntry> convertedEntries = new ArrayList<>();
+					for (ValueInput entry : group.childrenListOrEmpty("settingsList")) {
+						convertedEntries.add(new AdvancedSpawnerSettings.SpawnEntry(
+								entry.getIntOr("minToSpawn", 1),
+								entry.getIntOr("maxToSpawn", 4),
+								entry.getIntOr("remainingSpawnCount", 0),
+								Identifier.parse(entry.getStringOr("entityId", "minecraft:pig"))
+						));
+					}
+					AdvancedSpawnerSettings.SpawnGroup convertedGroup = new AdvancedSpawnerSettings.SpawnGroup(
+							group.getIntOr("spawnWeight", 0),
+							convertedEntries);
+					settings.addGroup(convertedGroup);
+				}
+				AdvancedSpawnerSettings settingsBuilt = settings.build();
+				output.store("settings", AdvancedSpawnerSettings.CODEC, settingsBuilt);
+				output.putInt("ticks_until_next_attempt", settingsBuilt.maxDelayTicks());
 			}
 		}
 	}

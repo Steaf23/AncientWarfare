@@ -176,12 +176,12 @@ public class AdvancedSpawnerLogic {
 
 	public void readData(ValueInput reader) {
 		setSettings(reader.read("settings", AdvancedSpawnerSettings.CODEC).orElse(AdvancedSpawnerSettings.builder().build()));
-		ticksUntilNextAttempt = reader.getIntOr("ticksUntilNextAttempt", ticksUntilNextAttempt);
+		ticksUntilNextAttempt = reader.getIntOr("ticks_until_next_attempt", ticksUntilNextAttempt);
 	}
 
 	public void writeData(ValueOutput writer) {
 		writer.store("settings", AdvancedSpawnerSettings.CODEC, settings);
-		writer.putInt("ticksUntilNextAttempt", ticksUntilNextAttempt);
+		writer.putInt("ticks_until_next_attempt", ticksUntilNextAttempt);
 	}
 
 }

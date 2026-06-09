@@ -11,6 +11,7 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.SpriteIconButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -56,6 +57,7 @@ public class PlayerOwnedNpcScreen extends ExtendedScreen<NpcContainerMenu> {
 		nameField.setVisible(true);
 		nameField.setResponder(menu::setNpcName);
 		nameField.setValue(getMenu().getNpcName());
+		nameField.setCanLoseFocus(true);
 		addRenderableWidget(nameField);
 
 		commandButtons.clear();

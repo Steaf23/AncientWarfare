@@ -1,6 +1,7 @@
 package io.github.steaf23.ancientwarfare.client.structure.gui.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import io.github.steaf23.ancientwarfare.client.core.render.SubmitHelper;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -74,7 +75,7 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 				text.add(Component.literal("Guarded by effect: ").append(Component.translatable(state.wardInfo.effect().getDescriptionId()).withStyle(ChatFormatting.GOLD)));
 			}
 
-			renderLabelAboveBlock(text, state.blockPos, poseStack, submitNodeCollector, camera, state.lightCoords);
+			SubmitHelper.submitLabelAboveBlock(text, state.blockPos, poseStack, submitNodeCollector, camera, state.lightCoords);
 		}
 
 		// render block
@@ -96,36 +97,5 @@ public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBloc
 //		BlockEntityRenderState capturedRenderState = renderer.createRenderState();
 //		renderer.extractRenderState(fake, capturedRenderState, 0.0f, camera.pos, new ModelFeatureRenderer.CrumblingOverlay(-1, poseStack.last()));
 //		renderer.submit(capturedRenderState, poseStack, submitNodeCollector, camera);
-	}
-
-	public void renderLabelAboveBlock(List<Component> text, BlockPos pos, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, int light) {
-		HitResult hit = Minecraft.getInstance().hitResult;
-
-		if (!(hit instanceof BlockHitResult block)) {
-			return;
-		}
-
-		if (!block.getBlockPos().equals(pos)) {
-			return;
-		}
-
-		poseStack.pushPose();
-		Vec3 tagAttachment = new Vec3(0.5, 1.0, 0.5);
-
-		for (Component c : text.reversed()) {
-			submitNodeCollector.submitNameTag(
-					poseStack,
-					tagAttachment,
-					0,
-					c,
-					true,
-					light,
-					camera.pos.distanceToSqr(pos.getCenter()),
-					camera
-			);
-			tagAttachment = tagAttachment.add(0.0, 0.2, 0.0);
-		}
-
-		poseStack.popPose();
 	}
 }

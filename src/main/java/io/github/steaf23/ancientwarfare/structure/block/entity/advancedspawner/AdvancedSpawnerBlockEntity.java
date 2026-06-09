@@ -4,16 +4,22 @@ import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
+import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.ProblemReporter;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,14 +33,19 @@ import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class AdvancedSpawnerBlockEntity extends BlockEntity implements BlockEntityMenuProvider {
 
 	private final AdvancedSpawnerLogic logic;
+
+	private @Nullable Component entityDisplayName = null;
 
 	public AdvancedSpawnerBlockEntity(BlockPos pos, BlockState state) {
 		super(AWBlockEntities.ADVANCED_SPAWNER, pos, state);
 
 		logic = new AdvancedSpawnerLogic();
+		computeEntityDisplayName();
 	}
 
 	public static void serverTick(Level level, BlockPos pos, BlockState blockState, AdvancedSpawnerBlockEntity spawner) {
@@ -47,13 +58,18 @@ public class AdvancedSpawnerBlockEntity extends BlockEntity implements BlockEnti
 
 	public static void updateSettings(Level level, BlockPos pos, BlockState blockState, AdvancedSpawnerBlockEntity spawner, AdvancedSpawnerSettings settings) {
 		spawner.logic.setSettings(settings);
+		spawner.updated();
 		//TODO: add?
-		level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
+
+		if (!level.isClientSide()) {
+			level.sendBlockUpdated(pos, blockState, blockState, Block.UPDATE_ALL);
+		}
 	}
 
 	@Override
 	protected void loadAdditional(ValueInput view) {
 		logic.readData(view);
+		updated();
 	}
 
 	@Override
@@ -67,8 +83,33 @@ public class AdvancedSpawnerBlockEntity extends BlockEntity implements BlockEnti
 	}
 
 	@Override
+	public @org.jspecify.annotations.Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+		return ClientboundBlockEntityDataPacket.create(this);
+	}
+
+	@Override
 	public @NotNull Component getDisplayName() {
 		return Component.translatable(getBlockState().getBlock().getDescriptionId());
+	}
+
+	public void computeEntityDisplayName() {
+		entityDisplayName = null;
+
+		if (logic == null || logic.settings().groups().isEmpty()) {
+			return;
+		}
+
+		List<AdvancedSpawnerSettings.SpawnEntry> entries = logic.settings().groups().getFirst().entries();
+		if (entries.isEmpty()) {
+			return;
+		}
+
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(entries.getFirst().entity());
+		entityDisplayName = Component.translatable(type.getDescriptionId());
+	}
+
+	public Component displayEntityName() {
+		return entityDisplayName;
 	}
 
 	@Override
@@ -90,5 +131,12 @@ public class AdvancedSpawnerBlockEntity extends BlockEntity implements BlockEnti
 
 	public AdvancedSpawnerLogic logic() {
 		return logic;
+	}
+
+	public void updated() {
+		computeEntityDisplayName();
+		if (level != null) {
+			level.setBlockAndUpdate(getBlockPos(), getBlockState().setValue(AdvancedSpawnerBlock.TRANSPARENT, logic.settings().transparent()));
+		}
 	}
 }

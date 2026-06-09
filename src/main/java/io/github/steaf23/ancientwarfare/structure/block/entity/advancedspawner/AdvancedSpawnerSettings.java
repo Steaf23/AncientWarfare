@@ -241,19 +241,19 @@ public record AdvancedSpawnerSettings(
 	}
 
 	public static final Codec<AdvancedSpawnerSettings> CODEC = RecordCodecBuilder.create(i -> i.group(
-			Codec.BOOL.fieldOf("debugMode").forGetter(AdvancedSpawnerSettings::debugMode),
+			Codec.BOOL.fieldOf("debug_mode").forGetter(AdvancedSpawnerSettings::debugMode),
 			Codec.BOOL.fieldOf("transparent").forGetter(AdvancedSpawnerSettings::transparent),
-			Codec.BOOL.fieldOf("redstoneSensitive").forGetter(AdvancedSpawnerSettings::redstoneSensitive),
-			Codec.BOOL.fieldOf("lightSensitive").forGetter(AdvancedSpawnerSettings::lightSensitive),
+			Codec.BOOL.fieldOf("redstone_sensitive").forGetter(AdvancedSpawnerSettings::redstoneSensitive),
+			Codec.BOOL.fieldOf("light_sensitive").forGetter(AdvancedSpawnerSettings::lightSensitive),
 
-			Codec.INT.fieldOf("playerRange").forGetter(AdvancedSpawnerSettings::playerRange),
-			Codec.INT.fieldOf("mobRange").forGetter(AdvancedSpawnerSettings::mobRange),
-			Codec.INT.fieldOf("spawnRange").forGetter(AdvancedSpawnerSettings::spawnRange),
-			Codec.INT.fieldOf("minDelayTicks").forGetter(AdvancedSpawnerSettings::minDelayTicks),
-			Codec.INT.fieldOf("maxDelayTicks").forGetter(AdvancedSpawnerSettings::maxDelayTicks),
-			Codec.INT.fieldOf("maximumAllowedNearbyEntities").forGetter(AdvancedSpawnerSettings::maximumAllowedNearbyEntities),
-			Codec.INT.fieldOf("xpToDrop").forGetter(AdvancedSpawnerSettings::xpToDrop),
-			Codec.INT.fieldOf("spawnYOffset").forGetter(AdvancedSpawnerSettings::spawnYOffset),
+			Codec.INT.fieldOf("player_range").forGetter(AdvancedSpawnerSettings::playerRange),
+			Codec.INT.fieldOf("mob_range").forGetter(AdvancedSpawnerSettings::mobRange),
+			Codec.INT.fieldOf("spawn_range").forGetter(AdvancedSpawnerSettings::spawnRange),
+			Codec.INT.fieldOf("minDelay_ticks").forGetter(AdvancedSpawnerSettings::minDelayTicks),
+			Codec.INT.fieldOf("maxDelay_ticks").forGetter(AdvancedSpawnerSettings::maxDelayTicks),
+			Codec.INT.fieldOf("maximum_allowed_nearby_entities").forGetter(AdvancedSpawnerSettings::maximumAllowedNearbyEntities),
+			Codec.INT.fieldOf("xp_to_drop").forGetter(AdvancedSpawnerSettings::xpToDrop),
+			Codec.INT.fieldOf("spawn_y_offset").forGetter(AdvancedSpawnerSettings::spawnYOffset),
 			SpawnGroup.CODEC.listOf().fieldOf("groups").forGetter(AdvancedSpawnerSettings::groups)
 	).apply(i, AdvancedSpawnerSettings::new));
 
@@ -316,8 +316,8 @@ public record AdvancedSpawnerSettings(
 
 		public static final Codec<SpawnEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
 				Codec.INT.fieldOf("min").forGetter(SpawnEntry::min),
-				Codec.INT.fieldOf("min").forGetter(SpawnEntry::max),
-				Codec.INT.fieldOf("min").forGetter(SpawnEntry::total),
+				Codec.INT.fieldOf("max").forGetter(SpawnEntry::max),
+				Codec.INT.fieldOf("total").forGetter(SpawnEntry::total),
 				Identifier.CODEC.fieldOf("entity").forGetter(SpawnEntry::entity)
 		).apply(i, SpawnEntry::new));
 
