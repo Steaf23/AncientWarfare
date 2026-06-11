@@ -6,6 +6,7 @@ import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
 import net.fabricmc.fabric.mixin.resource.ReloadableServerResourcesMixin;
 import net.minecraft.core.Registry;
@@ -17,6 +18,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
 
@@ -26,6 +28,8 @@ public class AWBlocks {
 			.noOcclusion(), true);
 
 	public static final Block TOWN_HALL = register("town_hall", TownHallBlock::new, BlockBehaviour.Properties.of(), true);
+
+	public static final Block COIN_STACK = register("coin_stack", CoinStackBlock::new, BlockBehaviour.Properties.of(), false);
 
 	public static final Block ANIMAL_FARM = register("animal_farm", properties -> new WorksiteBlock(properties, AnimalFarmBlockEntity::new), BlockBehaviour.Properties.of(), true);
 

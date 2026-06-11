@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.client.core;
 import io.github.steaf23.ancientwarfare.client.core.registry.AWBlockEntityRenderers;
 import io.github.steaf23.ancientwarfare.client.core.registry.AWRenderer;
 import io.github.steaf23.ancientwarfare.client.core.registry.AWScreens;
+import io.github.steaf23.ancientwarfare.client.datagen.CoinMetalSelectProperty;
 import io.github.steaf23.ancientwarfare.client.datagen.CoinMetalTintSource;
 import io.github.steaf23.ancientwarfare.client.datagen.FactionTintSource;
 import io.github.steaf23.ancientwarfare.client.npc.gui.SelectedUnitsElement;
@@ -20,6 +21,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderEvents;
 //?}
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
 
 public class AncientWarfareClient implements ClientModInitializer {
 
@@ -27,6 +29,7 @@ public class AncientWarfareClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("faction"), FactionTintSource.CODEC);
+		SelectItemModelProperties.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalSelectProperty.TYPE);
 
 		AWScreens.initialize();
 		AWRenderer.initialize();

@@ -3,12 +3,18 @@ package io.github.steaf23.ancientwarfare.client.datagen;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
+import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
+import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.color.item.Constant;import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
+import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
+import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
 import net.minecraft.client.data.models.model.ModelLocationUtils;
 import net.minecraft.client.data.models.model.ModelTemplate;
@@ -17,11 +23,16 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 //?if >1.21.11
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.SelectItemModel;
+import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class AWModelProvider extends FabricModelProvider {
@@ -30,6 +41,7 @@ public class AWModelProvider extends FabricModelProvider {
 		super(output);
 
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
+		SelectItemModelProperties.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalSelectProperty.TYPE);
 		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("faction"), FactionTintSource.CODEC);
 	}
 
@@ -39,6 +51,10 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createTrivialBlock(AWBlocks.ADVANCED_SPAWNER, TexturedModel.CUBE_INNER_FACES);
 		blockModels.createTrivialBlock(AWBlocks.TOWN_HALL, TexturedModel.CUBE_TOP_BOTTOM);
 		blockModels.createNonTemplateModelBlock(AWBlocks.WARDED_BLOCK);
+		blockModels.createCoinStack(CoinMetal.GOLD);
+//		blockModels.createCoinStack(CoinMetal.COPPER);
+//		blockModels.createCoinStack(CoinMetal.SILVER);
+//		blockModels.createCoinStack(CoinMetal.ANCIENT);
 
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);
 	}
@@ -50,7 +66,7 @@ public class AWModelProvider extends FabricModelProvider {
 		itemModels.generateFlatItem(AWItems.WOODEN_COMMAND_BATON, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.TOWN_HALL_KEY_DUMMY, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.WARD_SEAL, ModelTemplates.FLAT_ITEM);
-		itemModels.generateTintedItem(AWItems.COINS, new CoinMetalTintSource());
+		itemModels.generateCoinMetalItem(AWItems.COINS);
 
 		itemModels.generateNpcSpawnerItem(true, "miner");
 		itemModels.generateNpcSpawnerItem(false, "soldier");
@@ -75,6 +91,12 @@ public class AWModelProvider extends FabricModelProvider {
 
 		public void createRotatableWorksite(Block workSite) {
 			createHorizontallyRotatedBlock(workSite, TexturedModel.createDefault(b -> workSiteTextureMapping(b, true), ModelTemplates.CUBE));
+		}
+
+		public void createCoinStack(CoinMetal metal) {
+			this.blockStateOutput.accept(MultiVariantGenerator.dispatch(AWBlocks.COIN_STACK)
+					.with(PropertyDispatch.initial(CoinStackBlock.STACK_SIZE)
+							.generate(size -> plainVariant(AncientWarfare.id("block/coin_stack_" + size.getSerializedName())))));
 		}
 	}
 
@@ -132,6 +154,15 @@ public class AWModelProvider extends FabricModelProvider {
 			Identifier model = ModelLocationUtils.getModelLocation(item);
 			ModelTemplates.FLAT_ITEM.create(model, TextureMapping.layer0(layer), this.modelOutput);
 			this.itemModelOutput.accept(item, ItemModelUtils.tintedModel(model, source));
+		}
+
+		public void generateCoinMetalItem(CoinItem item) {
+			List<SelectItemModel.SwitchCase<CoinMetal>> cases = new ArrayList<>();
+			for (CoinMetal metal : CoinMetal.ALL) {
+				ItemModel.Unbaked model = ItemModelUtils.plainModel(this.createFlatItemModel(item, "_" + metal.name(), ModelTemplates.FLAT_ITEM));
+				cases.add(new SelectItemModel.SwitchCase<>(List.of(metal), model));
+			}
+			this.itemModelOutput.accept(item, ItemModelUtils.select(new CoinMetalSelectProperty(), cases.getFirst().model(), cases));
 		}
 	}
 }
