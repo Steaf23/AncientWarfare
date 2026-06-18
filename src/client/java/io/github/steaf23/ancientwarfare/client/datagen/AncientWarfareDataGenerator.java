@@ -20,6 +20,7 @@ public class AncientWarfareDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(AWLanguageProvider::new);
 		pack.addProvider(FactionProvider::new);
 		pack.addProvider(FactionNpcProvider::new);
+		pack.addProvider(AWSoundProvider::new);
 		pack.addProvider((output, registriesFuture) ->
 				new FabricDynamicRegistryProvider(output, registriesFuture) {
 					@Override

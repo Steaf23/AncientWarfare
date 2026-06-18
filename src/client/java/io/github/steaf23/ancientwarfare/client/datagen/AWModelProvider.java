@@ -1,10 +1,12 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
+import com.google.gson.JsonObject;
+import com.mojang.math.Quadrant;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
-import io.github.steaf23.ancientwarfare.npc.item.CoinItem;
+import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -12,7 +14,6 @@ import net.minecraft.client.color.item.Constant;import net.minecraft.client.colo
 import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
-import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
@@ -51,11 +52,7 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createTrivialBlock(AWBlocks.ADVANCED_SPAWNER, TexturedModel.CUBE_INNER_FACES);
 		blockModels.createTrivialBlock(AWBlocks.TOWN_HALL, TexturedModel.CUBE_TOP_BOTTOM);
 		blockModels.createNonTemplateModelBlock(AWBlocks.WARDED_BLOCK);
-		blockModels.createCoinStack(CoinMetal.GOLD);
-//		blockModels.createCoinStack(CoinMetal.COPPER);
-//		blockModels.createCoinStack(CoinMetal.SILVER);
-//		blockModels.createCoinStack(CoinMetal.ANCIENT);
-
+		blockModels.createCoinStack();
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);
 	}
 
@@ -93,10 +90,44 @@ public class AWModelProvider extends FabricModelProvider {
 			createHorizontallyRotatedBlock(workSite, TexturedModel.createDefault(b -> workSiteTextureMapping(b, true), ModelTemplates.CUBE));
 		}
 
-		public void createCoinStack(CoinMetal metal) {
+		public void createCoinStack() {
 			this.blockStateOutput.accept(MultiVariantGenerator.dispatch(AWBlocks.COIN_STACK)
-					.with(PropertyDispatch.initial(CoinStackBlock.STACK_SIZE)
-							.generate(size -> plainVariant(AncientWarfare.id("block/coin_stack_" + size.getSerializedName())))));
+					.with(PropertyDispatch.initial(CoinStackBlock.METAL, CoinStackBlock.STACK_SIZE)
+							.generate((metal, size) -> {
+								Identifier id = generateCoinStack(metal, size);
+
+								return variants(
+										plainModel(id),
+										plainModel(id).withYRot(Quadrant.R90),
+										plainModel(id).withYRot(Quadrant.R180),
+										plainModel(id).withYRot(Quadrant.R270)
+										);
+							})));
+		}
+
+		public Identifier generateCoinStack(CoinMetal metal, CoinStackBlock.StackSize size) {
+			Identifier modelId = AncientWarfare.id(
+					"block/coin_stack/" +
+							metal.getSerializedName() + "_" +
+							size.getSerializedName());
+			Identifier parent = AncientWarfare.id(
+					"block/coin_stack_" + size.getSerializedName()
+			);
+
+			JsonObject json = new JsonObject();
+
+			json.addProperty("parent", parent.toString());
+
+			JsonObject textures = new JsonObject();
+			textures.addProperty("top", "ancientwarfare:block/" + metal.getSerializedName() + "_coin_stack_top");
+			textures.addProperty("side", "ancientwarfare:block/" + metal.getSerializedName() + "_coin_stack_side");
+			textures.addProperty("side_offset", "ancientwarfare:block/" + metal.getSerializedName() + "_coin_stack_side_offset");
+			textures.addProperty("bottom", "ancientwarfare:block/" + metal.getSerializedName() + "_coin_stack_bottom");
+
+			json.add("textures", textures);
+
+			modelOutput.accept(modelId, () -> json);
+			return modelId;
 		}
 	}
 
@@ -159,7 +190,7 @@ public class AWModelProvider extends FabricModelProvider {
 		public void generateCoinMetalItem(CoinItem item) {
 			List<SelectItemModel.SwitchCase<CoinMetal>> cases = new ArrayList<>();
 			for (CoinMetal metal : CoinMetal.ALL) {
-				ItemModel.Unbaked model = ItemModelUtils.plainModel(this.createFlatItemModel(item, "_" + metal.name(), ModelTemplates.FLAT_ITEM));
+				ItemModel.Unbaked model = ItemModelUtils.plainModel(this.createFlatItemModel(item, "_" + metal.getSerializedName(), ModelTemplates.FLAT_ITEM));
 				cases.add(new SelectItemModel.SwitchCase<>(List.of(metal), model));
 			}
 			this.itemModelOutput.accept(item, ItemModelUtils.select(new CoinMetalSelectProperty(), cases.getFirst().model(), cases));

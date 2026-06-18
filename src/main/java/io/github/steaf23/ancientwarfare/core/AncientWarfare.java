@@ -8,6 +8,7 @@ import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.registry.AWContainerMenus;
 import io.github.steaf23.ancientwarfare.core.registry.AWGeneration;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import io.github.steaf23.ancientwarfare.core.registry.AWSounds;
 import io.github.steaf23.ancientwarfare.core.registry.AWStructures;
 import io.github.steaf23.ancientwarfare.core.registry.Factions;
 import io.github.steaf23.ancientwarfare.core.registry.WorksiteUpgrades;
@@ -30,6 +31,7 @@ public class AncientWarfare implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		AWSounds.initialize();
 		AWActivities.initialize();
 		AWMemories.initialize();
 		AWComponents.initialize();

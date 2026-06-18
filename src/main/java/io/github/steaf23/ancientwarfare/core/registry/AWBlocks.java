@@ -29,7 +29,9 @@ public class AWBlocks {
 
 	public static final Block TOWN_HALL = register("town_hall", TownHallBlock::new, BlockBehaviour.Properties.of(), true);
 
-	public static final Block COIN_STACK = register("coin_stack", CoinStackBlock::new, BlockBehaviour.Properties.of(), false);
+	public static final Block COIN_STACK = register("coin_stack", CoinStackBlock::new, BlockBehaviour.Properties.of()
+			.noOcclusion()
+			.sound(AWSounds.COIN_STACK_BLOCK), false);
 
 	public static final Block ANIMAL_FARM = register("animal_farm", properties -> new WorksiteBlock(properties, AnimalFarmBlockEntity::new), BlockBehaviour.Properties.of(), true);
 

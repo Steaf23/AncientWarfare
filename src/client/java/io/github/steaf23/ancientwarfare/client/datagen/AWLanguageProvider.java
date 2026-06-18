@@ -39,10 +39,10 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				CreativeTabManager.ITEM_GROUP_KEY, CreativeTabManager.FACTION_NPCS_KEY
 		)
 				.custom(AWItems.COINS.getDescriptionId(), "%s Coins")
-				.custom("metal.ancientwarfare." + CoinMetal.SILVER.name(), "Silver")
-				.custom("metal.ancientwarfare." + CoinMetal.COPPER.name(), "Copper")
-				.custom("metal.ancientwarfare." + CoinMetal.GOLD.name(), "Gold")
-				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.name(), "Ancient")
+				.custom("metal.ancientwarfare." + CoinMetal.SILVER.getSerializedName(), "Silver")
+				.custom("metal.ancientwarfare." + CoinMetal.COPPER.getSerializedName(), "Copper")
+				.custom("metal.ancientwarfare." + CoinMetal.GOLD.getSerializedName(), "Gold")
+				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.getSerializedName(), "Ancient")
 				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
 				.custom("generator.ancientwarfare.structure_debug", "AW Structure Debug")
 		;
