@@ -49,6 +49,8 @@ public class AWModelProvider extends FabricModelProvider {
 	@Override
 	public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
 		AncientWarfareBlockModelGenerators blockModels = new AncientWarfareBlockModelGenerators(blockStateModelGenerator);
+		blockModels.createAirLikeBlock(AWBlocks.INVALID_CONVERSION, new Material(AncientWarfare.id("block/invalid_conversion")));
+		blockModels.registerSimpleFlatItemModel(AWBlocks.INVALID_CONVERSION);
 		blockModels.createTrivialBlock(AWBlocks.ADVANCED_SPAWNER, TexturedModel.CUBE_INNER_FACES);
 		blockModels.createTrivialBlock(AWBlocks.TOWN_HALL, TexturedModel.CUBE_TOP_BOTTOM);
 		blockModels.createNonTemplateModelBlock(AWBlocks.WARDED_BLOCK);

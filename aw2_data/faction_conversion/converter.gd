@@ -6,22 +6,40 @@ func _ready() -> void:
 	var input = JSON.parse_string(file.get_as_text())
 	file.close()
 	
+	var enabled_types = []
+	for type in input.defaults.npc_subtypes.keys():
+		var sub_type = input.defaults.npc_subtypes[type]
+		if (!"enabled" in sub_type) or sub_type.enabled:
+			enabled_types.append(type)
+	
+	
 	var output = ""
 	for faction_id in input.factions.keys():
 		var faction = input.factions[faction_id]
 		output += "var " + faction_id.to_camel_case() + " = factionBuilder(\"" + faction_id + "\")\n"
+		
 		for arg in faction.keys():
 			var value = faction[arg]
 			if arg == "npc_subtypes":
 				output = output.substr(0, output.length()  -1) + ";\n"
-				for id in faction.npc_subtypes.keys():
-					var npc = faction.npc_subtypes[id]
-					var npc_type = id.split(".")
+				var all_types = faction.npc_subtypes.keys()
+				all_types.append_array(enabled_types)
+		
+				for existing_type: String in all_types:
+					var npc = {}
+					var default = false
+					if existing_type in faction.npc_subtypes:
+						npc = faction.npc_subtypes[existing_type]
+					else:
+						npc = input.defaults.npc_subtypes[existing_type]
+						default = true
+
+					var npc_type = existing_type.split(".")
 					if "spellcaster" not in npc_type:
 						npc_type.reverse()
 						
 					npc_type = "_".join(npc_type)
-					output += convert_npc(npc_type, faction_id, npc)
+					output += convert_npc(default, npc_type, faction_id, npc)
 			else:
 				output += parse_attribute(arg, value)
 		
@@ -31,10 +49,10 @@ func _ready() -> void:
 	file.close()
 
 
-func convert_npc(id: String, faction: String, npc: Dictionary) -> String:
+func convert_npc(default: bool, id: String, faction: String, npc: Dictionary) -> String:
 	if not npc.get("enabled", true):
 		return ""
-	
+
 	var res = "saveNpc(build"
 	if "spellcaster" in id:
 		res += "Spellcaster(" + faction.to_camel_case() + ", " 
@@ -44,9 +62,11 @@ func convert_npc(id: String, faction: String, npc: Dictionary) -> String:
 			res += "0)\n"
 	else:
 		res += id.to_pascal_case() + "(" + faction.to_camel_case() + ")\n"
-	for key in npc.keys():
-		var value = npc[key]
-		res += parse_attribute(key, value)
+	
+	if !default:
+		for key in npc.keys():
+			var value = npc[key]
+			res += parse_attribute(key, value)
 	res = res.substr(0, res.length()  -1) + ");\n"
 	return res
 	

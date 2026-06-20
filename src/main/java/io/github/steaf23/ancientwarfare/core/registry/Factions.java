@@ -7,6 +7,7 @@ import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import net.fabricmc.fabric.api.resource.v1.DataResourceLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.resources.Resource;
 
 import java.util.Map;
 import java.util.Set;
@@ -18,6 +19,8 @@ public class Factions {
 
 	public static final ResourceKey<Registry<FactionNpcData>> FACTION_NPCS_REGISTRY_KEY =
 			ResourceKey.createRegistryKey(AncientWarfare.id("npcs"));
+
+	public static final ResourceKey<Faction> NEUTRAL_KEY = ResourceKey.create(FACTION_REGISTRY_KEY, AncientWarfare.id("neutral"));
 
 	public static final Faction NEUTRAL = new Faction(
 			AncientWarfare.id("neutral"),

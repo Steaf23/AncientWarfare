@@ -4,14 +4,19 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
+import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.item.component.TypedEntityData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public record AdvancedSpawnerSettings(
 		boolean debugMode,
@@ -187,11 +192,11 @@ public record AdvancedSpawnerSettings(
 			return this;
 		}
 
-		public Builder groupEntryEntity(int groupIndex, int entryIndex, Identifier entity) {
+		public Builder groupEntryEntity(int groupIndex, int entryIndex, Identifier entity, CompoundTag entityData) {
 			SpawnGroup group = groups.get(groupIndex);
 			List<SpawnEntry> entriesCopy = new ArrayList<>(group.entries);
 			SpawnEntry entry = entriesCopy.remove(entryIndex);
-			entriesCopy.add(new SpawnEntry(entry.min, entry.max, entry.total, entity));
+			entriesCopy.add(new SpawnEntry(entry.min, entry.max, entry.total, entity, entityData));
 			groupEntries(groupIndex, entriesCopy);
 			return this;
 		}
@@ -200,7 +205,7 @@ public record AdvancedSpawnerSettings(
 			SpawnGroup group = groups.get(groupIndex);
 			List<SpawnEntry> entriesCopy = new ArrayList<>(group.entries);
 			SpawnEntry entry = entriesCopy.remove(entryIndex);
-			entriesCopy.add(new SpawnEntry(min, entry.max, entry.total, entry.entity));
+			entriesCopy.add(new SpawnEntry(min, entry.max, entry.total, entry.entity, entry.entityData));
 			groupEntries(groupIndex, entriesCopy);
 			return this;
 		}
@@ -209,7 +214,7 @@ public record AdvancedSpawnerSettings(
 			SpawnGroup group = groups.get(groupIndex);
 			List<SpawnEntry> entriesCopy = new ArrayList<>(group.entries);
 			SpawnEntry entry = entriesCopy.remove(entryIndex);
-			entriesCopy.add(new SpawnEntry(entry.min, max, entry.total, entry.entity));
+			entriesCopy.add(new SpawnEntry(entry.min, max, entry.total, entry.entity, entry.entityData));
 			groupEntries(groupIndex, entriesCopy);
 			return this;
 		}
@@ -218,7 +223,7 @@ public record AdvancedSpawnerSettings(
 			SpawnGroup group = groups.get(groupIndex);
 			List<SpawnEntry> entriesCopy = new ArrayList<>(group.entries);
 			SpawnEntry entry = entriesCopy.remove(entryIndex);
-			entriesCopy.add(new SpawnEntry(entry.min, entry.max, total, entry.entity));
+			entriesCopy.add(new SpawnEntry(entry.min, entry.max, total, entry.entity, entry.entityData));
 			groupEntries(groupIndex, entriesCopy);
 			return this;
 		}
@@ -308,17 +313,22 @@ public record AdvancedSpawnerSettings(
 		);
 	}
 
-	public record SpawnEntry(int min, int max, int total, Identifier entity) {
+	public record SpawnEntry(int min, int max, int total, Identifier entity, CompoundTag entityData) {
+
+		public SpawnEntry(int min, int max, int total, Identifier entity, Optional<CompoundTag> entityData) {
+			this(min, max, total, entity, entityData.orElse(new CompoundTag()));
+		}
 
 		public static SpawnEntry standard() {
-			return new SpawnEntry(1, 4, 0, Identifier.withDefaultNamespace("pig"));
+			return new SpawnEntry(1, 4, 0, Identifier.withDefaultNamespace("pig"), new CompoundTag());
 		}
 
 		public static final Codec<SpawnEntry> CODEC = RecordCodecBuilder.create(i -> i.group(
 				Codec.INT.fieldOf("min").forGetter(SpawnEntry::min),
 				Codec.INT.fieldOf("max").forGetter(SpawnEntry::max),
 				Codec.INT.fieldOf("total").forGetter(SpawnEntry::total),
-				Identifier.CODEC.fieldOf("entity").forGetter(SpawnEntry::entity)
+				Identifier.CODEC.fieldOf("entity").forGetter(SpawnEntry::entity),
+				CompoundTag.CODEC.optionalFieldOf("entityData").forGetter(entry -> Optional.of(entry.entityData))
 		).apply(i, SpawnEntry::new));
 
 		public static final StreamCodec<ByteBuf, SpawnEntry> STREAM_CODEC = StreamCodec.composite(
@@ -326,6 +336,7 @@ public record AdvancedSpawnerSettings(
 				ByteBufCodecs.INT, SpawnEntry::max,
 				ByteBufCodecs.INT, SpawnEntry::total,
 				Identifier.STREAM_CODEC, SpawnEntry::entity,
+				ByteBufCodecs.COMPOUND_TAG, SpawnEntry::entityData,
 				SpawnEntry::new
 		);
 	}

@@ -2,10 +2,13 @@ package io.github.steaf23.ancientwarfare.npc.entity.faction;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.AWResources;
+import io.github.steaf23.ancientwarfare.core.registry.Factions;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.util.FactionOwned;
 import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
 import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
+import io.github.steaf23.ancientwarfare.npc.faction.Faction;
 import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentEmpty;
 import io.github.steaf23.ancientwarfare.npc.item.NpcEquipmentFixed;
@@ -14,8 +17,10 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
@@ -30,8 +35,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import org.jetbrains.annotations.Nullable;
 
-public class FactionNpc extends BaseNpc {
+public class FactionNpc extends BaseNpc implements FactionOwned {
 
 	private FactionNpcData npcData;
 	private boolean spawnCompleted;
@@ -134,5 +140,19 @@ public class FactionNpc extends BaseNpc {
 				// NOOP
 			}
 		}
+	}
+
+	public static String getNpcDescriptionIdFromData(CompoundTag tag) {
+		FactionNpcData npcData = AWResources.npc(Identifier.parse(tag.getString("npc_data").orElse("")));
+		if (npcData == null) {
+			return AWEntities.FACTION_NPC.getDescriptionId();
+		}
+
+		return "ancientwarfare:npc.faction." + npcData.faction().identifier().getPath() + "." + npcData.npcType().getPath();
+	}
+
+	@Override
+	public @Nullable ResourceKey<Faction> getFactionKey() {
+		return npcData.faction();
 	}
 }

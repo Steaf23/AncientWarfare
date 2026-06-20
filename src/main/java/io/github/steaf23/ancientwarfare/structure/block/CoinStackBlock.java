@@ -138,6 +138,28 @@ public class CoinStackBlock extends Block {
 		public int amount() {
 			return amount;
 		}
+
+		public static StackSize byAmount(int amount) {
+			return switch (amount) {
+				case 8 -> StackSize.SIZE_8;
+				case 16 -> StackSize.SIZE_16;
+				case 24 -> StackSize.SIZE_24;
+				case 32 -> StackSize.SIZE_32;
+				case 40 -> StackSize.SIZE_40;
+				case 48 -> StackSize.SIZE_48;
+				case 56 -> StackSize.SIZE_56;
+				case 64 -> StackSize.SIZE_64;
+				case 72 -> StackSize.SIZE_72;
+				case 80 -> StackSize.SIZE_80;
+				case 88 -> StackSize.SIZE_88;
+				case 96 -> StackSize.SIZE_96;
+				case 104 -> StackSize.SIZE_104;
+				case 112 -> StackSize.SIZE_112;
+				case 120 -> StackSize.SIZE_120;
+				case 128 -> StackSize.SIZE_128;
+				default -> StackSize.SIZE_8;
+			};
+		}
 	}
 
 	private static final VoxelShape[] SHAPES = Block.boxes(16, height -> Block.column(16.0, 0.0, height));

@@ -4,6 +4,8 @@ import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
+import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
 import io.netty.buffer.ByteBuf;
@@ -104,8 +106,14 @@ public class AdvancedSpawnerBlockEntity extends BlockEntity implements BlockEnti
 			return;
 		}
 
-		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(entries.getFirst().entity());
-		entityDisplayName = Component.translatable(type.getDescriptionId());
+		AdvancedSpawnerSettings.SpawnEntry entry = entries.getFirst();
+		EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(entry.entity());
+		if (type.equals(AWEntities.FACTION_NPC)) {
+			entityDisplayName = Component.translatable(FactionNpc.getNpcDescriptionIdFromData(entry.entityData()));
+		}
+		else {
+			entityDisplayName = Component.translatable(type.getDescriptionId());
+		}
 	}
 
 	public Component displayEntityName() {

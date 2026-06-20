@@ -22,6 +22,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.CommonColors;
@@ -168,7 +169,7 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 		scrollContents.addChild(groupsLayout, LayoutSettings.defaults().padding(5));
 		scrollContents.addChild(new Button.Builder(Component.literal("Add group"), (btn) -> {
 			AdvancedSpawnerSettings.SpawnGroup group = new AdvancedSpawnerSettings.SpawnGroup(1,
-					List.of(new AdvancedSpawnerSettings.SpawnEntry(1, 4, 0, Identifier.withDefaultNamespace("pig"))));
+					List.of(AdvancedSpawnerSettings.SpawnEntry.standard()));
 
 			newSettingsBuilder.addGroup(group);
 			minecraft.setScreen(this);
@@ -206,7 +207,7 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 		for (AdvancedSpawnerSettings.SpawnEntry entry : spawnGroup.entries()) {
 			int indexToEdit = entryIndex;
 			listLayout.addChild(entityButton(entry.entity(), (btn, newEntity) -> {
-				newSettingsBuilder.groupEntryEntity(groupIndex, indexToEdit, newEntity);
+				newSettingsBuilder.groupEntryEntity(groupIndex, indexToEdit, newEntity, new CompoundTag());
 			}), entryIndex + 1, 0);
 
 			listLayout.addChild(SpinBoxWidget.defaultIntegerBox(font, val -> {

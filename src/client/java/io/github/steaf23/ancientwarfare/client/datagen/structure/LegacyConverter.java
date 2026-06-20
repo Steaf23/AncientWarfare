@@ -7,6 +7,7 @@ import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateRuleBl
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.level.block.Block;
@@ -18,18 +19,28 @@ import net.minecraft.world.level.storage.ValueOutput;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LegacyConverter {
 	public StructureEntry convertToTemplate(HolderLookup.Provider registries, HolderGetter<Block> blockLookup, ParsedStructure structure, Path filePath) {
 
 		TagValueOutput writer = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
 
+		Map<Integer, CompoundTag> blockEntityRuleData = new HashMap<>();
+
 		var sizeList = writer.list("size", Codec.INT);
 		sizeList.add(structure.size.getX());
 		sizeList.add(structure.size.getY());
 		sizeList.add(structure.size.getZ());
 		var list = writer.list("palette", BlockState.CODEC);
-		for (TemplateRuleBlock rule : structure.getBlockRules().values()) {
+		for (int ruleNr : structure.getBlockRules().keySet()) {
+			TemplateRuleBlock rule = structure.getBlockRules().get(ruleNr);
+			if (rule.hasBlockEntityData()) {
+				TagValueOutput output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, registries);
+				rule.writeBlockEntityData(registries, output);
+				blockEntityRuleData.put(ruleNr, output.buildResult());
+			}
 			list.add(rule.getState());
 		}
 
@@ -53,11 +64,9 @@ public class LegacyConverter {
 						continue;
 					}
 
-					if (!rule.hasBlockEntityData()) {
-						continue;
+					if (blockEntityRuleData.containsKey((int)blockNr)) {
+						blockEntry.store("nbt", CompoundTag.CODEC, blockEntityRuleData.get((int)blockNr));
 					}
-
-					rule.writeBlockEntityData(registries, blockEntry.child("nbt"));
 				}
 			}
 		}

@@ -7,6 +7,9 @@ import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
+import io.github.steaf23.ancientwarfare.structure.block.FactionBannerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.FactionWallBannerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.InvalidConversionBlock;
 import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
 import net.fabricmc.fabric.mixin.resource.ReloadableServerResourcesMixin;
 import net.minecraft.core.Registry;
@@ -23,6 +26,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Function;
 
 public class AWBlocks {
+	public static final Block INVALID_CONVERSION = AWBlocks.register("invalid_conversion", InvalidConversionBlock::new, BlockBehaviour.Properties.of()
+			.noOcclusion()
+			.noCollision(), true);
 
 	public static final Block ADVANCED_SPAWNER = AWBlocks.register("advanced_spawner", AdvancedSpawnerBlock::new, BlockBehaviour.Properties.of()
 			.noOcclusion(), true);
@@ -41,6 +47,9 @@ public class AWBlocks {
 			.noLootTable()
 			.isValidSpawn(Blocks::never)
 			.noTerrainParticles(), false);
+
+	public static final Block FACTION_BANNER = register("faction_banner", FactionBannerBlock::new, BlockBehaviour.Properties.of(), false);
+	public static final Block FACTION_WALL_BANNER = register("faction_wall_banner", FactionWallBannerBlock::new, BlockBehaviour.Properties.of(), false);
 
 	public static Block register(String name, BlockBehaviour.Properties settings, boolean withItem) {
 		return register(name, Block::new, settings, withItem);

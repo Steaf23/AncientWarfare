@@ -1,9 +1,12 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 
-import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import com.mojang.serialization.Codec;
+import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
+import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -38,6 +41,7 @@ import net.minecraft.world.level.storage.TagValueInput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +54,9 @@ public class TemplateRuleBlock extends TemplateRule {
 	private Identifier legacyId;
 	private CompoundTag jsonRule = null;
 	private boolean placeInSurvival = false;
-	private CompoundTag nbt = null;
+	private CompoundTag nbt = new CompoundTag();
+
+	List<String> failComment = List.of();
 
 	public TemplateRuleBlock() {
 	}
@@ -80,8 +86,17 @@ public class TemplateRuleBlock extends TemplateRule {
 	public void parseRule(ValueInput tag) {
 		try {
 			legacyId = Identifier.parse(tag.childOrEmpty("blockState").getStringOr("blockName", "minecraft:air"));
-			state = readBlockState(tag);
-			this.nbt = tag.read("teData", CompoundTag.CODEC).orElse(new CompoundTag());
+			List<String> failReason = new ArrayList<>();
+			state = readBlockState(tag, failReason);
+			if (!failReason.isEmpty()) {
+				failComment = failReason;
+				state = AWBlocks.INVALID_CONVERSION.defaultBlockState();
+				this.nbt = new CompoundTag();
+				this.nbt.store("comment", Codec.STRING.listOf(), failComment);
+			}
+			else {
+				this.nbt = tag.read("teData", CompoundTag.CODEC).orElse(new CompoundTag());
+			}
 		}
 		catch (MissingResourceException e) {
 //			AncientWarfareStructure.LOG.warn("Unable to find blockstate while parsing structure template thus replacing it with air - {}.", e.getMessage());
@@ -98,15 +113,26 @@ public class TemplateRuleBlock extends TemplateRule {
 	}
 
 	public void writeBlockEntityData(HolderLookup.Provider registries, ValueOutput output) {
-		ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, registries, nbt);
+		if (!failComment.isEmpty()) {
+			output.putString("id", "ancientwarfare:invalid_conversion");
+			output.store("comment", Codec.STRING.listOf(), failComment);
+			this.state = AWBlocks.INVALID_CONVERSION.defaultBlockState();
+			return;
+		}
 
+		ValueInput input = TagValueInput.create(ProblemReporter.DISCARDING, registries, nbt);
 		TemplateBlockEntityDataParser.TileEntityConversionContext context = new TemplateBlockEntityDataParser.TileEntityConversionContext(
 				legacyId,
 				state,
 				input,
 				registries
 		);
-		TemplateBlockEntityDataParser.convert(context, output);
+		failComment = TemplateBlockEntityDataParser.convert(context, output);
+		if (!failComment.isEmpty()) {
+			output.putString("id", "ancientwarfare:invalid_conversion");
+			output.store("comment", Codec.STRING.listOf(), failComment);
+			this.state = AWBlocks.INVALID_CONVERSION.defaultBlockState();
+		}
 	}
 //
 //	@Nullable
@@ -120,7 +146,7 @@ public class TemplateRuleBlock extends TemplateRule {
 	}
 
 
-	public BlockState readBlockState(ValueInput data) throws TemplateParsingException.TemplateRuleParsingException {
+	public BlockState readBlockState(ValueInput data, List<String> failComment) throws TemplateParsingException.TemplateRuleParsingException {
 		ValueInput blockStateData = data.childOrEmpty("blockState");
 		Identifier originalId = Identifier.parse(blockStateData.getStringOr("blockName", "minecraft:air"));
 		Identifier blockId = originalId;
@@ -384,6 +410,7 @@ public class TemplateRuleBlock extends TemplateRule {
 				case "advanced_loot_chest", "loot_basket" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.WARDED_BLOCK);
 				case "advanced_spawner" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.ADVANCED_SPAWNER);
 				case "urn" -> blockId = Identifier.withDefaultNamespace("decorated_pot");
+				case "coin_stack_gold", "coin_stack_copper", "coin_stack_silver", "coin_stack_ancient" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.COIN_STACK);
 			}
 		}
 
@@ -396,9 +423,11 @@ public class TemplateRuleBlock extends TemplateRule {
 		if (opt.isEmpty()) {
 			if (blockId.getNamespace().equals("minecraft")) {
 				System.out.println("block with id " + blockId + " not registered");
+				failComment.add("Block with id " + blockId + " is not registered on the server");
 			}
 			else {
 				System.out.println("modded block with id " + blockId + " not registered");
+				failComment.add("Modded block with id " + blockId + " is not registered on the server");
 			}
 			return Blocks.AIR.defaultBlockState();
 		}
@@ -500,6 +529,18 @@ public class TemplateRuleBlock extends TemplateRule {
 			String variant = stateProperties.getStringOr("variant", "lines_y");
 			propertyMap.put(RotatedPillarBlock.AXIS, Direction.Axis.byName(variant.replace("lines_", "")));
 		}
+		if (blockId.getPath().equals("coin_stack")) {
+			int size = Integer.parseInt(stateProperties.getStringOr("size", "8"));
+			propertyMap.put(CoinStackBlock.STACK_SIZE, CoinStackBlock.StackSize.byAmount(size));
+
+			CoinMetal metal = switch (originalId.getPath().replace("coin_stack_", "")) {
+				case "copper" -> CoinMetal.COPPER;
+				case "silver" -> CoinMetal.SILVER;
+				case "ancient" -> CoinMetal.ANCIENT;
+				default -> CoinMetal.GOLD;
+			};
+			propertyMap.put(CoinStackBlock.METAL, metal);
+		}
 
 		//~ if <=1.21.11 'keySet' -> 'keys'
 		for (String propName : stateProperties.keySet()) {
@@ -518,7 +559,8 @@ public class TemplateRuleBlock extends TemplateRule {
 					 "check_decay",
 					 "legacy_data",
 					 "visible",
-					 "double" -> true;
+					 "double",
+					 "size" -> true;
 				default -> false;
 			}) {
 				continue;

@@ -39,7 +39,7 @@ public record Faction(
 			return null;
 		}
 
-		FactionNpcData npcData = AWResources.npc(data.copyTagWithoutId().read("npc_data", Identifier.CODEC).orElseThrow());
+		FactionNpcData npcData = AWResources.npc(data.copyTagWithoutId().read("npc_data", Identifier.CODEC).orElse(null));
 		return npcData == null ? AWResources.faction(AncientWarfare.id("neutral")) : AWResources.faction(npcData.faction().identifier());
 	}
 

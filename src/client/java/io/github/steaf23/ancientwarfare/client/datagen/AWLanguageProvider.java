@@ -30,7 +30,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 	public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
 		AWTranslationBuilder builder = new AWTranslationBuilder(translationBuilder);
 		builder.forBlocks().auto(
-				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM
+				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM, AWBlocks.INVALID_CONVERSION
 		).forItems().auto(
 				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.FACTION_NPC_SPAWNER, AWItems.WARD_SEAL
 		).forEntityTypes().auto(
@@ -45,6 +45,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.getSerializedName(), "Ancient")
 				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
 				.custom("generator.ancientwarfare.structure_debug", "AW Structure Debug")
+				.custom("item.ancientwarfare.faction_banner", "%s Banner")
 		;
 	}
 

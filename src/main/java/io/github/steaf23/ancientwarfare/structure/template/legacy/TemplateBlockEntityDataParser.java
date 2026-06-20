@@ -1,5 +1,8 @@
 package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
+import com.mojang.serialization.Codec;
+import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.core.registry.AWResources;
 import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerSettings;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardInfo;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
@@ -15,10 +18,8 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
-import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.storage.TagValueOutput;
@@ -34,12 +35,14 @@ public class TemplateBlockEntityDataParser {
 
 	public record TileEntityConversionContext(Identifier oldId, BlockState newState, ValueInput input, HolderLookup.Provider registries) {}
 
-	public static void convert(TileEntityConversionContext context, ValueOutput output) {
+	public static List<String> convert(TileEntityConversionContext context, ValueOutput output) {
+		List<String> errors = new ArrayList<>();
 		Identifier oldId = context.oldId;
 
 		ValueInput input = context.input;
 
 		output.putString("id", oldId.toString());
+		output.store("comment", Codec.STRING.listOf(), input.read("comment", Codec.STRING.listOf()).orElse(List.of()));
 		String oldName = oldId.getPath();
 		switch (oldName) {
 			case "skull" -> { // Convert Owner:{Properties:{textures:[{Value:<texture>}]}}
@@ -128,6 +131,7 @@ public class TemplateBlockEntityDataParser {
 						Identifier entityId = TemplateEntityDataParser.updateId(Identifier.parse(entity));
 						if (!BuiltInRegistries.ENTITY_TYPE.containsKey(entityId)) {
 							System.out.println("Cannot load entity with id: " + entityId + ", converting to pig!");
+							errors.add("Cannot load entity with id: " + entityId + " into warded block, because this entity does not exist on the server!");
 						}
 						entityType = BuiltInRegistries.ENTITY_TYPE.getValue(entityId);
 					}
@@ -144,6 +148,7 @@ public class TemplateBlockEntityDataParser {
 							effectInstance = new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(mobEffect), durationTicks, amplifier);
 						} else {
 							System.out.println("Cannot load mob effect with id: " + effectId);
+							errors.add("Cannot load mob effect with id: " + effectId + " into warded block, because this mob effect does not exist on the server!");
 						}
 					}
 
@@ -185,12 +190,38 @@ public class TemplateBlockEntityDataParser {
 				for (ValueInput group : spawnerSettings.childrenListOrEmpty("spawnGroups")) {
 					List<AdvancedSpawnerSettings.SpawnEntry> convertedEntries = new ArrayList<>();
 					for (ValueInput entry : group.childrenListOrEmpty("settingsList")) {
+						String entityId = entry.getStringOr("entityId", "");
+						CompoundTag entityData = new CompoundTag();
+
+						if (entityId.startsWith("ancientwarfarenpc:faction.")) {
+							String npcArchetype = entityId.replace("ancientwarfarenpc:faction.", "");
+							CompoundTag data = entry.read("customTag", CompoundTag.CODEC).orElse(new CompoundTag());
+							String factionName = data.getStringOr("factionName", "neutral");
+							npcArchetype = switch (npcArchetype) {
+								case "soldier.elite" -> "elite_soldier";
+								case "leader.elite" -> "elite_leader";
+								case "archer.elite" -> "elite_archer";
+								default -> npcArchetype;
+							};
+							entityId = "ancientwarfare:faction_npc";
+							entityData.putString("npc_data", AncientWarfare.id(factionName + "/" + npcArchetype).toString());
+						}
+
 						convertedEntries.add(new AdvancedSpawnerSettings.SpawnEntry(
 								entry.getIntOr("minToSpawn", 1),
 								entry.getIntOr("maxToSpawn", 4),
 								entry.getIntOr("remainingSpawnCount", 0),
-								Identifier.parse(entry.getStringOr("entityId", "minecraft:pig"))
-						));
+								Identifier.parse(entityId.isEmpty() ? "minecraft:pig" : entityId), entityData
+								));
+
+						if (!BuiltInRegistries.ENTITY_TYPE.containsKey(Identifier.parse(entityId))) {
+							if (entityId.isEmpty()) {
+								errors.add("Cannot load entity into advanced spawner because it does not have an id!");
+							}
+							else {
+								errors.add("Cannot load entity with id " + entityId + " into advanced spawner, because this entity does not exist on the server!");
+							}
+						}
 					}
 					AdvancedSpawnerSettings.SpawnGroup convertedGroup = new AdvancedSpawnerSettings.SpawnGroup(
 							group.getIntOr("spawnWeight", 0),
@@ -202,6 +233,8 @@ public class TemplateBlockEntityDataParser {
 				output.putInt("ticks_until_next_attempt", settingsBuilt.maxDelayTicks());
 			}
 		}
+
+		return errors;
 	}
 
 	public static void writeItemsToTileEntity(ValueInput.ValueInputList items, ValueOutput output) {

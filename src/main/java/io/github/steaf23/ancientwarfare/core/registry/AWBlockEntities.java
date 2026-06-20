@@ -3,7 +3,10 @@ package io.github.steaf23.ancientwarfare.core.registry;
 import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalFarmBlockEntity;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.block.entity.TownHallBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.InvalidConversionBlock;
 import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.entity.factionbanner.FactionBannerBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.entity.invalidconversionblock.InvalidConversionBlockEntity;
 import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
@@ -14,6 +17,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class AWBlockEntities {
 
+	public static final BlockEntityType<InvalidConversionBlockEntity> INVALID_CONVERSION = AWBlockEntities.register("invalid_conversion", InvalidConversionBlockEntity::new, AWBlocks.INVALID_CONVERSION);
+
 	public static final BlockEntityType<AdvancedSpawnerBlockEntity> ADVANCED_SPAWNER = AWBlockEntities.register("advanced_spawner", AdvancedSpawnerBlockEntity::new, AWBlocks.ADVANCED_SPAWNER);
 
 	public static final BlockEntityType<TownHallBlockEntity> TOWN_HALL = AWBlockEntities.register("town_hall", TownHallBlockEntity::new, AWBlocks.TOWN_HALL);
@@ -21,6 +26,8 @@ public class AWBlockEntities {
 	public static final BlockEntityType<AnimalFarmBlockEntity> ANIMAL_FARM = AWBlockEntities.register("animal_farm", AnimalFarmBlockEntity::new, AWBlocks.ANIMAL_FARM);
 
 	public static final BlockEntityType<WardedBlockEntity> WARDED_BLOCK = AWBlockEntities.register("warded_block", WardedBlockEntity::new, AWBlocks.WARDED_BLOCK);
+
+	public static final BlockEntityType<FactionBannerBlockEntity> FACTION_BANNER = AWBlockEntities.register("faction_banner", FactionBannerBlockEntity::new, AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER);
 
 	public static <T extends BlockEntity> BlockEntityType<T> register(
 			String name,

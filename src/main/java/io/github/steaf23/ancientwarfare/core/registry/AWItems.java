@@ -6,21 +6,26 @@ import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
+import io.github.steaf23.ancientwarfare.npc.faction.Faction;
 import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
-import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
-import io.github.steaf23.ancientwarfare.structure.item.CoinItemStacked;
 import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
+import net.minecraft.world.item.StandingAndWallBlockItem;
 
 import java.util.List;
 import java.util.function.Function;
@@ -48,16 +53,17 @@ public class AWItems {
 
 	public static final WardSealItem WARD_SEAL = AWItems.registerItem("ward_seal", WardSealItem::new, new Item.Properties());
 
-	public static Item[] COMMAND_BATONS = {
+	public static final Item FACTION_BANNER = AWItems.registerItemNoCreativeTab("faction_banner", properties -> new StandingAndWallBlockItem(AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER, Direction.DOWN, properties), new Item.Properties()
+			.component(AWComponents.FACTION_ITEM, Factions.NEUTRAL_KEY));
+
+	public static final Item[] COMMAND_BATONS = {
 			WOODEN_COMMAND_BATON,
 	};
 
 	public static final Item TOWN_HALL_KEY_DUMMY = AWItems.registerItem("town_hall_key", UnobtainableItem::new, new Item.Properties());
 
-
 	public static void initialize() {
 		CreativeTabManager.initialize();
-
 		CreativeTabManager.addItemsToModTab(group -> {
 			ItemStack stack = new ItemStack(COINS);
 			stack.set(AWComponents.COIN_METAL, CoinMetal.GOLD);
@@ -71,6 +77,14 @@ public class AWItems {
 			ItemStack stack4 = new ItemStack(COINS);
 			stack4.set(AWComponents.COIN_METAL, CoinMetal.ANCIENT);
 			group.addItem(stack4);
+
+			for (Identifier factionId : AWResources.factionIds()) {
+				ItemStack banner = new ItemStack(FACTION_BANNER, 1);
+				Faction faction = AWResources.faction(factionId);
+				banner.set(AWComponents.FACTION_ITEM, ResourceKey.create(Factions.FACTION_REGISTRY_KEY, factionId));
+				banner.set(DataComponents.ITEM_NAME, Component.translatable("item.ancientwarfare.faction_banner", faction.getDescription()));
+				group.addItem(banner);
+			}
 		});
 
 		CreativeTabManager.addItemsToModTab(group -> {
