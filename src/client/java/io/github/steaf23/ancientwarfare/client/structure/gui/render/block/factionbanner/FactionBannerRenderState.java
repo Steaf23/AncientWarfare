@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.structure.gui.render.block;
+package io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner;
 
 import net.minecraft.client.renderer.blockentity.state.BannerRenderState;
 import net.minecraft.resources.Identifier;

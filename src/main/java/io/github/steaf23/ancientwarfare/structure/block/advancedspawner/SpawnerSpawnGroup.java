@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner;
+package io.github.steaf23.ancientwarfare.structure.block.advancedspawner;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWResources;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;

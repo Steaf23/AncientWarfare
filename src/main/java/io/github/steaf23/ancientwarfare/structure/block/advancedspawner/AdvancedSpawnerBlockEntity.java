@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner;
+package io.github.steaf23.ancientwarfare.structure.block.advancedspawner;
 
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
@@ -6,7 +6,6 @@ import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
-import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;

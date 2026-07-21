@@ -1,8 +1,8 @@
-package io.github.steaf23.ancientwarfare.structure.block;
+package io.github.steaf23.ancientwarfare.structure.block.wardedblock;
 
 import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
-import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

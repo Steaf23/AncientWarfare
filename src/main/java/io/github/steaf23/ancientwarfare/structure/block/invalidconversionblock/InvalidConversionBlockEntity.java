@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.invalidconversionblock;
+package io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock;
 
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;

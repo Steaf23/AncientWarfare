@@ -4,7 +4,7 @@ import io.github.steaf23.ancientwarfare.client.core.gui.ScreenHelper;
 import io.github.steaf23.ancientwarfare.client.core.gui.components.OptionList;
 import io.github.steaf23.ancientwarfare.client.core.gui.components.SpinBoxWidget;
 import io.github.steaf23.ancientwarfare.client.core.gui.components.SubScreen;
-import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerSettings;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerSettings;
 import io.github.steaf23.ancientwarfare.structure.menu.AdvancedSpawnerContainerMenu;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphicsExtractor;

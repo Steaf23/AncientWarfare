@@ -1,18 +1,15 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner;
+package io.github.steaf23.ancientwarfare.structure.block.advancedspawner;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
-import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
-import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.item.component.TypedEntityData;
 
 import java.util.ArrayList;
 import java.util.List;

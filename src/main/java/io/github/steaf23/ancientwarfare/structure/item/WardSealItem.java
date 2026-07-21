@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.structure.item;
 
-import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
+import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;

@@ -29,6 +29,7 @@
   ],
   "depends": {
     "fabricloader": ">=0.17",
-    "minecraft": "${minecraft}"
+    "minecraft": "${minecraft}",
+    "mcwfurnitures": ">=3.4.2"
   }
 }

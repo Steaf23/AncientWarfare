@@ -2,16 +2,21 @@ package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
-import io.github.steaf23.ancientwarfare.core.registry.AWResources;
-import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerSettings;
-import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardInfo;
+import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
+import io.github.steaf23.ancientwarfare.core.registry.Factions;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerSettings;
+import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardInfo;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.ItemStackWithSlot;
 import net.minecraft.world.effect.MobEffect;
@@ -231,6 +236,17 @@ public class TemplateBlockEntityDataParser {
 				AdvancedSpawnerSettings settingsBuilt = settings.build();
 				output.store("settings", AdvancedSpawnerSettings.CODEC, settingsBuilt);
 				output.putInt("ticks_until_next_attempt", settingsBuilt.maxDelayTicks());
+			}
+			case "decorative_flag" -> {
+				output.putString("id", "ancientwarfare:faction_banner");
+
+				String factionName = input.getStringOr("name", "neutral");
+				DataComponentMap components = DataComponentMap.builder()
+						.set(AWComponents.FACTION_ITEM, ResourceKey.create(Factions.FACTION_REGISTRY_KEY, AncientWarfare.id(factionName)))
+						.set(DataComponents.ITEM_NAME, Component.translatable("item.ancientwarfare.faction_banner", "faction.ancientwarfare." + factionName))
+						.build();
+
+				output.store("components", DataComponentMap.CODEC, components);
 			}
 		}
 

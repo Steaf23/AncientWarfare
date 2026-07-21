@@ -15,7 +15,7 @@ import io.github.steaf23.ancientwarfare.core.registry.WorksiteUpgrades;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWMemories;
-import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlockEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;

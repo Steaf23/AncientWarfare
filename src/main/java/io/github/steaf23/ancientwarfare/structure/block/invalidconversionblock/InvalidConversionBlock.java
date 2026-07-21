@@ -1,6 +1,5 @@
-package io.github.steaf23.ancientwarfare.structure.block;
+package io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock;
 
-import io.github.steaf23.ancientwarfare.structure.block.entity.invalidconversionblock.InvalidConversionBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

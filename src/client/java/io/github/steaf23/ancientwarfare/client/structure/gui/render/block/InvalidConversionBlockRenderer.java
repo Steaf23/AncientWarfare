@@ -2,7 +2,7 @@ package io.github.steaf23.ancientwarfare.client.structure.gui.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
-import io.github.steaf23.ancientwarfare.structure.block.entity.invalidconversionblock.InvalidConversionBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock.InvalidConversionBlockEntity;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -13,7 +13,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;

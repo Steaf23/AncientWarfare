@@ -2,7 +2,7 @@ package io.github.steaf23.ancientwarfare.client.structure.gui.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.steaf23.ancientwarfare.client.core.render.SubmitHelper;
-import io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock.WardedBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlockEntity;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,16 +14,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.state./*?if >1.21.11 {*/level./*?}*/CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class WardedBlockEntityRenderer implements BlockEntityRenderer<WardedBlockEntity, WardedBlockRenderState> {
 

@@ -3,10 +3,13 @@ package io.github.steaf23.ancientwarfare.npc.faction;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.registry.AWResources;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.TypedEntityData;
 import org.jetbrains.annotations.Nullable;
@@ -29,6 +32,10 @@ public record Faction(
 			Codec.INT.fieldOf("default_reputation").forGetter(Faction::defaultReputation),
 			Codec.unboundedMap(Identifier.CODEC, Codec.INT).fieldOf("reputation_modifiers").forGetter(Faction::reputationModifiers)
 	).apply(i, Faction::new));
+
+	public static @Nullable ResourceKey<Faction> factionKeyFromItem(ItemStack stack) {
+		return stack.get(AWComponents.FACTION_ITEM);
+	}
 
 	public static @Nullable Faction fromItem(ItemStack stack) {
 		TypedEntityData<?> data = stack.get(DataComponents.ENTITY_DATA);

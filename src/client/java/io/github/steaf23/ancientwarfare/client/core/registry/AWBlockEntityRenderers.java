@@ -3,12 +3,10 @@ package io.github.steaf23.ancientwarfare.client.core.registry;
 import io.github.steaf23.ancientwarfare.client.automation.render.block.WorksiteBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.npc.render.block.TownHallBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.AdvancedSpawnerBlockEntityRenderer;
-import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.FactionBannerRenderer;
+import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner.FactionBannerRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.InvalidConversionBlockRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.WardedBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
-import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerBlockEntity;
-import io.github.steaf23.ancientwarfare.structure.block.entity.invalidconversionblock.InvalidConversionBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 
 public class AWBlockEntityRenderers {

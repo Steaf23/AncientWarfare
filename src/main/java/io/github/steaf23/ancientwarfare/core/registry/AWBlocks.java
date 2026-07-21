@@ -5,13 +5,12 @@ import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalF
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
-import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
-import io.github.steaf23.ancientwarfare.structure.block.FactionBannerBlock;
-import io.github.steaf23.ancientwarfare.structure.block.FactionWallBannerBlock;
-import io.github.steaf23.ancientwarfare.structure.block.InvalidConversionBlock;
-import io.github.steaf23.ancientwarfare.structure.block.WardedBlock;
-import net.fabricmc.fabric.mixin.resource.ReloadableServerResourcesMixin;
+import io.github.steaf23.ancientwarfare.structure.block.factionbanner.FactionBannerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.factionbanner.FactionWallBannerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock.InvalidConversionBlock;
+import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -21,7 +20,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.function.Function;
 

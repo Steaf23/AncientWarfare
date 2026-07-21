@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock;
+package io.github.steaf23.ancientwarfare.structure.block.wardedblock;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;

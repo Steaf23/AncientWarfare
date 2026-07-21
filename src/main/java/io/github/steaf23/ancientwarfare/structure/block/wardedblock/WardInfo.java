@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.wardedblock;
+package io.github.steaf23.ancientwarfare.structure.block.wardedblock;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

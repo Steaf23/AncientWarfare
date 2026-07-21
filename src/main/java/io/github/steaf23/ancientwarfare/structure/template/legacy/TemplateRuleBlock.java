@@ -2,10 +2,9 @@ package io.github.steaf23.ancientwarfare.structure.template.legacy;
 
 
 import com.mojang.serialization.Codec;
-import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
-import io.github.steaf23.ancientwarfare.structure.block.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -411,6 +410,14 @@ public class TemplateRuleBlock extends TemplateRule {
 				case "advanced_spawner" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.ADVANCED_SPAWNER);
 				case "urn" -> blockId = Identifier.withDefaultNamespace("decorated_pot");
 				case "coin_stack_gold", "coin_stack_copper", "coin_stack_silver", "coin_stack_ancient" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.COIN_STACK);
+				case "decorative_flag" -> blockId = BuiltInRegistries.BLOCK.getKey(AWBlocks.FACTION_BANNER);
+				case "chair", "table" -> {
+					String woodType = stateProperties.getStringOr("variant", "oak");
+					blockId = furniture(woodType + "_" + blockId.getPath());
+					if (stateProperties.getStringOr("visible", "true").equals("false")) {
+						blockId = Identifier.withDefaultNamespace("air");
+					}
+				}
 			}
 		}
 
@@ -688,5 +695,9 @@ public class TemplateRuleBlock extends TemplateRule {
 
 	public boolean hasBlockEntityData() {
 		return !nbt.isEmpty();
+	}
+
+	public Identifier furniture(String name) {
+		return Identifier.fromNamespaceAndPath("mcwfurnitures", name);
 	}
 }

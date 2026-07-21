@@ -2,7 +2,7 @@ package io.github.steaf23.ancientwarfare.client.structure.gui.render.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.steaf23.ancientwarfare.client.core.render.SubmitHelper;
-import io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner.AdvancedSpawnerBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

@@ -2,6 +2,7 @@ package io.github.steaf23.ancientwarfare.client.datagen;
 
 import com.google.gson.JsonObject;
 import com.mojang.math.Quadrant;
+import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner.FactionBannerSpecialRenderer;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
@@ -11,9 +12,9 @@ import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.client.color.item.Constant;import net.minecraft.client.color.item.ItemTintSource;
-import net.minecraft.client.color.item.ItemTintSources;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
+import net.minecraft.client.data.models.MultiVariant;
 import net.minecraft.client.data.models.blockstates.MultiVariantGenerator;
 import net.minecraft.client.data.models.blockstates.PropertyDispatch;
 import net.minecraft.client.data.models.model.ItemModelUtils;
@@ -24,12 +25,13 @@ import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 //?if >1.21.11
+import net.minecraft.client.renderer.blockentity.BannerRenderer;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.SelectItemModel;
-import net.minecraft.client.renderer.item.properties.select.SelectItemModelProperties;
 import net.minecraft.client.resources.model.sprite.Material;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 
 import java.util.ArrayList;
@@ -41,9 +43,7 @@ public class AWModelProvider extends FabricModelProvider {
 	public AWModelProvider(FabricPackOutput output) {
 		super(output);
 
-		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalTintSource.CODEC);
-		SelectItemModelProperties.ID_MAPPER.put(AncientWarfare.id("coin_metal"), CoinMetalSelectProperty.TYPE);
-		ItemTintSources.ID_MAPPER.put(AncientWarfare.id("faction"), FactionTintSource.CODEC);
+		ModelDatagenHelper.initialize();
 	}
 
 	@Override
@@ -56,6 +56,7 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createNonTemplateModelBlock(AWBlocks.WARDED_BLOCK);
 		blockModels.createCoinStack();
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);
+		blockModels.createFactionBanner();
 	}
 
 	@Override
@@ -130,6 +131,16 @@ public class AWModelProvider extends FabricModelProvider {
 
 			modelOutput.accept(modelId, () -> json);
 			return modelId;
+		}
+
+		public void createFactionBanner() {
+			MultiVariant model = plainVariant(ModelLocationUtils.decorateBlockModelLocation("banner"));
+			blockStateOutput.accept(createSimpleBlock(AWBlocks.FACTION_BANNER, model));
+			blockStateOutput.accept(createSimpleBlock(AWBlocks.FACTION_WALL_BANNER, model));
+			itemModelOutput.accept(AWItems.FACTION_BANNER, ItemModelUtils.specialModel(
+					ModelLocationUtils.decorateItemModelLocation("template_banner"),
+					BannerRenderer.TRANSFORMATIONS.freeTransformations(0),
+					new FactionBannerSpecialRenderer.Unbaked(BannerBlock.AttachmentType.GROUND)));
 		}
 	}
 

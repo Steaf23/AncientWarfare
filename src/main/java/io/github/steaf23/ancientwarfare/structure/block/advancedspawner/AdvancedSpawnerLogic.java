@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.structure.block.entity.advancedspawner;
+package io.github.steaf23.ancientwarfare.structure.block.advancedspawner;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
