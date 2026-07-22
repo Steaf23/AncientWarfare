@@ -25,6 +25,10 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
+
+    maven("https://maven.nucleoid.xyz/releases") {
+        name="Nucleoid"
+    }
 }
 
 dependencies {
@@ -42,6 +46,9 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
+    if (stonecutter.current.version == "26.1.2") {
+        modImplementation("eu.pb4:trinkets:${property("deps.trinkets")}")
+    }
 }
 
 loom {

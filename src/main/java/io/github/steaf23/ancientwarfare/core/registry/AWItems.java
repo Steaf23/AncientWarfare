@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.core.registry;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.item.UnobtainableItem;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
+import io.github.steaf23.ancientwarfare.core.research.ResearchBook;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
@@ -32,9 +33,16 @@ import java.util.function.Function;
 
 public class AWItems {
 
-	public static final Item STEEL_INGOT = registerItem("steel_ingot", new Item.Properties());
-	public static final CoinItem COINS = registerItemNoCreativeTab("coins", p -> new CoinItem(AWBlocks.COIN_STACK, p), new Item.Properties()
-			.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
+	public static final ResearchBook RESEARCH_BOOK = registerItem("research_book", ResearchBook::new,
+			new Item.Properties()
+					.stacksTo(1));
+
+	public static final Item STEEL_INGOT = registerItem("steel_ingot",
+			new Item.Properties());
+
+	public static final CoinItem COINS = registerItemNoCreativeTab("coins", p -> new CoinItem(AWBlocks.COIN_STACK, p),
+			new Item.Properties()
+					.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
 //	public static final CoinItemStacked COIN_STACK = registerItem("coin_stack", p -> new CoinItemStacked(AWBlocks.COIN_STACK, p, CoinStackBlock.StackSize.SIZE_128), new Item.Properties());
 //	public static final CoinItemStacked COIN_STACK_SLAB = registerItem("coin_stack_slab", p -> new CoinItemStacked(AWBlocks.COIN_STACK, p, CoinStackBlock.StackSize.SIZE_64), new Item.Properties());

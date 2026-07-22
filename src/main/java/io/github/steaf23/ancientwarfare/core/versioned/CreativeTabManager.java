@@ -25,10 +25,7 @@ import java.util.function.Consumer;
 public class CreativeTabManager {
 
 	public static final ResourceKey<CreativeModeTab> ITEM_GROUP_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare"));
-	private static final CreativeModeTab ITEM_GROUP = FabricCreativeModeTab.builder()
-			.icon(AWBlocks.TOWN_HALL.asItem()::getDefaultInstance)
-			.title(Component.translatable("itemGroup.ancient_warfare"))
-			.build();
+	private static CreativeModeTab ITEM_GROUP;
 
 	public static final ResourceKey<CreativeModeTab> FACTION_NPCS_KEY = ResourceKey.create(BuiltInRegistries.CREATIVE_MODE_TAB.key(), AncientWarfare.id("ancient_warfare_factions"));
 	private static CreativeModeTab FACTION_NPCS;
@@ -74,6 +71,11 @@ public class CreativeTabManager {
 		FACTION_NPCS = FabricCreativeModeTab.builder()
 				.icon(AWItems.NPC_SPAWNER.asItem()::getDefaultInstance)
 				.title(Component.translatable("itemGroup.ancient_warfare_factions"))
+				.build();
+
+		ITEM_GROUP = FabricCreativeModeTab.builder()
+				.icon(AWItems.RESEARCH_BOOK::getDefaultInstance)
+				.title(Component.translatable("itemGroup.ancient_warfare"))
 				.build();
 
 		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, ITEM_GROUP_KEY, ITEM_GROUP);

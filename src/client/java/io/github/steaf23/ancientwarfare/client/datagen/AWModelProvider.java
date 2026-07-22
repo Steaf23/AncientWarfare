@@ -62,6 +62,7 @@ public class AWModelProvider extends FabricModelProvider {
 	@Override
 	public void generateItemModels(ItemModelGenerators itemModelGenerator) {
 		AncientWarfareItemModelGenerators itemModels = new AncientWarfareItemModelGenerators(itemModelGenerator);
+		itemModels.generateFlatItem(AWItems.RESEARCH_BOOK, ModelTemplates.FLAT_ITEM);
 		itemModels.generateFlatItem(AWItems.STEEL_INGOT, ModelTemplates.FLAT_ITEM);
 		itemModels.generateFlatItem(AWItems.WOODEN_COMMAND_BATON, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.TOWN_HALL_KEY_DUMMY, ModelTemplates.FLAT_HANDHELD_ITEM);

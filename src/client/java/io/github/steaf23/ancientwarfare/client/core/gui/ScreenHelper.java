@@ -33,6 +33,12 @@ public class ScreenHelper {
 		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, INNER_GUI_BACKGROUND, layout.getX() - 3, layout.getY() - 3, layout.getWidth() + 6, layout.getHeight() + 6);
 	}
 
+	public static void blitPartLayoutCenter(GuiGraphicsExtractor graphics, SpritePart sprite, Layout layout) {
+		int layoutCenterX = layout.getX() + layout.getWidth() / 2;
+		int layoutCenterY = layout.getY() + layout.getHeight() / 2;
+		sprite.blit(graphics, layoutCenterX - sprite.width() / 2, layoutCenterY - sprite.height() / 2);
+	}
+
 	public static void centerLayout(Layout layout, int screenWidth, int screenHeight) {
 		layout.setX(screenWidth / 2 - layout.getWidth() / 2);
 		layout.setY(screenHeight / 2 - layout.getHeight() / 2);

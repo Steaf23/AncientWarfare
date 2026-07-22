@@ -46,6 +46,7 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
 				.custom("generator.ancientwarfare.structure_debug", "AW Structure Debug")
 				.custom("item.ancientwarfare.faction_banner", "%s Banner")
+				.custom("item.ancientwarfare.research_book", "Treatise on the Principles of Ruling")
 		;
 	}
 

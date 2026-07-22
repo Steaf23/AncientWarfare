@@ -18,9 +18,11 @@ mod.mc_compat = "1.21.11"
 mod.mc_releases = ["1.21.11"]
 
 deps.fabric_api = "0.141.3+1.21.11"
+deps.trinkets = "3.11.0-beta.2+1.21.11"
 
 ["26.1"]
 mod.mc_compat = "~26.1"
 mod.mc_releases = ["26.1.2"]
 
 deps.fabric_api = "0.145.3+26.1.1"
+deps.trinkets = "4.0.0-beta.3+26.1"
