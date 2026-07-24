@@ -1,11 +1,12 @@
 package io.github.steaf23.ancientwarfare.client.core.research;
 
-import io.github.steaf23.ancientwarfare.client.core.gui.DefinedSprite;
 import io.github.steaf23.ancientwarfare.client.core.gui.ScreenHelper;
 import io.github.steaf23.ancientwarfare.client.core.gui.SpritePart;
-import io.github.steaf23.ancientwarfare.core.AncientWarfare;
+import io.github.steaf23.ancientwarfare.client.core.research.manual.HeaderContent;
+import io.github.steaf23.ancientwarfare.client.core.research.manual.Manual;
+import io.github.steaf23.ancientwarfare.client.core.research.manual.ManualContent;
+import io.github.steaf23.ancientwarfare.client.core.research.manual.TextContent;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;
@@ -16,7 +17,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.PageButton;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -28,9 +28,7 @@ import java.util.Optional;
 
 public class ResearchScreen extends Screen {
 
-	private static final DefinedSprite MANUAL = new DefinedSprite(AncientWarfare.id("manual"), 512, 512)
-			.addPart("book", 0, 0, 412, 254);
-
+	private final Manual manual;
 	private final List<Component> pages = new ArrayList<>();
 	private final int pageCount;
 
@@ -47,11 +45,12 @@ public class ResearchScreen extends Screen {
 	public ResearchScreen() {
 		super(Component.translatable(AWItems.RESEARCH_BOOK.getDescriptionId()));
 
+		this.manual = new Manual(List.of(
+				new HeaderContent("Test Header"),
+				new TextContent(Component.literal("This is some text\n\n double enter to spice it up. This text can grow outside of the page size, which will need to be fixed in the future, otherwise we cannot really properly add multiple chapters to the manual. Some chapters will be unlockable so we have to rebuild the manual after every unlock..."))));
+
 		Component contents = Component.literal("1 \n2 \n3 \n4 \n5 \n6 \n7 \n8 \n9")
-				.withStyle(Style.EMPTY
-						.withoutShadow()
-						.withColor(0x000000)
-						.withFont(new FontDescription.Resource(Minecraft.DEFAULT_FONT)));
+				.withStyle(Manual.DEFAULT_STYLE);
 		List<FormattedText> splitContents = font.splitIgnoringLanguage(contents, 10 * 168);
 		for (FormattedText pageText : splitContents) {
 			MutableComponent page = Component.empty();
@@ -78,7 +77,12 @@ public class ResearchScreen extends Screen {
 		leftPageText = new MultiLineTextWidget(Component.empty(), font)
 				.setMaxWidth(168);
 
-		leftFrame.addChild(leftPageText, LayoutSettings.defaults().alignVerticallyTop());
+		LinearLayout pageLayout = LinearLayout.vertical();
+		for (ManualContent content : manual.allContent()) {
+			 pageLayout.addChild(content.getElement(this));
+		}
+//		leftFrame.addChild(leftPageText, LayoutSettings.defaults().alignVerticallyTop());
+		leftFrame.addChild(pageLayout, LayoutSettings.defaults().alignVerticallyTop());
 		leftPage.addChild(leftFrame);
 
 		LinearLayout rightPage = LinearLayout.vertical();
@@ -107,7 +111,7 @@ public class ResearchScreen extends Screen {
 		layout.visitWidgets(this::addRenderableWidget);
 
 		StringWidget title = new StringWidget(getTitle(), font);
-		SpritePart bookPart = MANUAL.part("book");
+		SpritePart bookPart = Manual.SPRITE.part("book");
 		int bookStartY = (height / 2) - bookPart.height() / 2;
 		title.setWidth(bookPart.width());
 		title.setX(width / 2 - (font.width(getTitle()) / 2));
@@ -140,7 +144,7 @@ public class ResearchScreen extends Screen {
 	public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
 		super.extractBackground(graphics, mouseX, mouseY, a);
 
-		ScreenHelper.blitPartLayoutCenter(graphics, MANUAL.part("book"), layout);
+		ScreenHelper.blitPartLayoutCenter(graphics, Manual.SPRITE.part("book"), layout);
 	}
 
 	@Override
