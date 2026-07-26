@@ -7,6 +7,7 @@ import io.github.steaf23.ancientwarfare.client.core.research.manual.Manual;
 import io.github.steaf23.ancientwarfare.client.core.research.manual.ManualContent;
 import io.github.steaf23.ancientwarfare.client.core.research.manual.TextContent;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.MultiLineTextWidget;
 import net.minecraft.client.gui.components.StringWidget;

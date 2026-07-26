@@ -4,6 +4,7 @@
   "package": "io.github.steaf23.ancientwarfare.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ServerGamePacketListenerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

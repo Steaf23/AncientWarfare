@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.automation.menu;
+package io.github.steaf23.ancientwarfare.worksite.menu;
 
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.ExtendedContainerMenu;

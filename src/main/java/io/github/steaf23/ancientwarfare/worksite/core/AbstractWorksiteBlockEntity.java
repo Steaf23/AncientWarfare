@@ -1,8 +1,5 @@
-package io.github.steaf23.ancientwarfare.automation.block.worksite.entity;
+package io.github.steaf23.ancientwarfare.worksite.core;
 
-import io.github.steaf23.ancientwarfare.automation.block.worksite.BoundedArea;
-import io.github.steaf23.ancientwarfare.automation.block.worksite.UpgradableWorksite;
-import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteUpgrade;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityMenuProvider;
 import io.github.steaf23.ancientwarfare.core.registry.WorksiteUpgrades;
 import net.minecraft.core.BlockPos;

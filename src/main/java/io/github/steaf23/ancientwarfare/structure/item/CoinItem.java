@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.structure.item;
 
+import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import net.minecraft.network.chat.Component;
@@ -11,8 +12,8 @@ import net.minecraft.world.level.block.Block;
 
 public class CoinItem extends BlockItem {
 
-	public CoinItem(Block block, Properties properties) {
-		super(block, properties);
+	public CoinItem(Properties properties) {
+		super(AWBlocks.COIN_STACK, properties);
 	}
 
 	@Override

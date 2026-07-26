@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.core.registry;
 
-import io.github.steaf23.ancientwarfare.automation.menu.AnimalFarmContainerMenu;
+import io.github.steaf23.ancientwarfare.worksite.menu.AnimalFarmContainerMenu;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.EntityScreenData;

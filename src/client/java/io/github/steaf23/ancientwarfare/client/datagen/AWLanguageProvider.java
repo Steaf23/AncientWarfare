@@ -30,9 +30,9 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 	public void generateTranslations(HolderLookup.Provider registryLookup, TranslationBuilder translationBuilder) {
 		AWTranslationBuilder builder = new AWTranslationBuilder(translationBuilder);
 		builder.forBlocks().auto(
-				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM, AWBlocks.INVALID_CONVERSION
+				AWBlocks.ADVANCED_SPAWNER, AWBlocks.TOWN_HALL, AWBlocks.ANIMAL_FARM, AWBlocks.INVALID_CONVERSION, AWBlocks.WORKSITE_MARKER
 		).forItems().auto(
-				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.FACTION_NPC_SPAWNER, AWItems.WARD_SEAL
+				AWItems.STEEL_INGOT, AWItems.WOODEN_COMMAND_BATON, AWItems.NPC_SPAWNER, AWItems.FACTION_NPC_SPAWNER, AWItems.WARD_SEAL, AWItems.SURVEY_KIT
 		).forEntityTypes().auto(
 				AWEntities.PLAYER_NPC, AWEntities.FACTION_NPC
 		).forCreativeTabs().auto(

@@ -7,11 +7,12 @@ import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
-import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
+import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.minecraft.client.color.item.Constant;import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.color.item.Constant;
+import net.minecraft.client.color.item.ItemTintSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.MultiVariant;
@@ -57,6 +58,8 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createCoinStack();
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);
 		blockModels.createFactionBanner();
+		blockModels.createTrivialBlock(AWBlocks.WORKSITE_MARKER, TexturedModel.CUBE_INNER_FACES);
+		blockModels.createSurveyStake(AWBlocks.SURVEY_STAKE);
 	}
 
 	@Override
@@ -68,6 +71,7 @@ public class AWModelProvider extends FabricModelProvider {
 		itemModels.generateFlatItem(AWItems.TOWN_HALL_KEY_DUMMY, ModelTemplates.FLAT_HANDHELD_ITEM);
 		itemModels.generateFlatItem(AWItems.WARD_SEAL, ModelTemplates.FLAT_ITEM);
 		itemModels.generateCoinMetalItem(AWItems.COINS);
+		itemModels.generateFlatItem(AWItems.SURVEY_KIT, ModelTemplates.FLAT_ITEM);
 
 		itemModels.generateNpcSpawnerItem(true, "miner");
 		itemModels.generateNpcSpawnerItem(false, "soldier");
@@ -107,6 +111,10 @@ public class AWModelProvider extends FabricModelProvider {
 										plainModel(id).withYRot(Quadrant.R270)
 										);
 							})));
+		}
+
+		public void createSurveyStake(Block block) {
+			this.blockStateOutput.accept(MultiVariantGenerator.dispatch(block, plainVariant(AncientWarfare.id("block/survey_stake"))));
 		}
 
 		public Identifier generateCoinStack(CoinMetal metal, CoinStackBlock.StackSize size) {

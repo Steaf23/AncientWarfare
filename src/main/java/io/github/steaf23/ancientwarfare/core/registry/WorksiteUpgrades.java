@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.core.registry;
 
-import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteUpgrade;
+import io.github.steaf23.ancientwarfare.worksite.core.WorksiteUpgrade;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;

@@ -1,7 +1,8 @@
-package io.github.steaf23.ancientwarfare.automation.block.worksite.entity;
+package io.github.steaf23.ancientwarfare.worksite.animalfarm;
 
-import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteUpgrade;
-import io.github.steaf23.ancientwarfare.automation.menu.AnimalFarmContainerMenu;
+import io.github.steaf23.ancientwarfare.worksite.core.WorksiteUpgrade;
+import io.github.steaf23.ancientwarfare.worksite.core.AbstractWorksiteBlockEntity;
+import io.github.steaf23.ancientwarfare.worksite.menu.AnimalFarmContainerMenu;
 import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;

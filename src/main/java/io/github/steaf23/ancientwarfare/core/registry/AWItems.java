@@ -12,9 +12,9 @@ import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
+import io.github.steaf23.ancientwarfare.worksite.surveykit.SurveyKit;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -24,7 +24,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 
@@ -40,7 +39,7 @@ public class AWItems {
 	public static final Item STEEL_INGOT = registerItem("steel_ingot",
 			new Item.Properties());
 
-	public static final CoinItem COINS = registerItemNoCreativeTab("coins", p -> new CoinItem(AWBlocks.COIN_STACK, p),
+	public static final CoinItem COINS = registerItemNoCreativeTab("coins", CoinItem::new,
 			new Item.Properties()
 					.component(AWComponents.COIN_METAL, CoinMetal.GOLD));
 
@@ -63,6 +62,9 @@ public class AWItems {
 
 	public static final Item FACTION_BANNER = AWItems.registerItemNoCreativeTab("faction_banner", properties -> new StandingAndWallBlockItem(AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER, Direction.DOWN, properties), new Item.Properties()
 			.component(AWComponents.FACTION_ITEM, Factions.NEUTRAL_KEY));
+
+	public static final SurveyKit SURVEY_KIT = AWItems.registerItem("survey_kit", SurveyKit::new, new Item.Properties()
+			.durability(16));
 
 	public static final Item[] COMMAND_BATONS = {
 			WOODEN_COMMAND_BATON,

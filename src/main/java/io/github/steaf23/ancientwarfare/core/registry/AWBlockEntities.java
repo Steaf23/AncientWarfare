@@ -1,12 +1,13 @@
 package io.github.steaf23.ancientwarfare.core.registry;
 
-import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalFarmBlockEntity;
+import io.github.steaf23.ancientwarfare.worksite.animalfarm.AnimalFarmBlockEntity;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.block.entity.TownHallBlockEntity;
 import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlockEntity;
 import io.github.steaf23.ancientwarfare.structure.block.factionbanner.FactionBannerBlockEntity;
 import io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock.InvalidConversionBlockEntity;
 import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlockEntity;
+import io.github.steaf23.ancientwarfare.worksite.marker.WorksiteMarkerBlockEntity;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,6 +28,8 @@ public class AWBlockEntities {
 	public static final BlockEntityType<WardedBlockEntity> WARDED_BLOCK = AWBlockEntities.register("warded_block", WardedBlockEntity::new, AWBlocks.WARDED_BLOCK);
 
 	public static final BlockEntityType<FactionBannerBlockEntity> FACTION_BANNER = AWBlockEntities.register("faction_banner", FactionBannerBlockEntity::new, AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER);
+
+	public static final BlockEntityType<WorksiteMarkerBlockEntity> WORKSITE_MARKER = AWBlockEntities.register("worksite_marker", WorksiteMarkerBlockEntity::new, AWBlocks.WORKSITE_MARKER);
 
 	public static <T extends BlockEntity> BlockEntityType<T> register(
 			String name,

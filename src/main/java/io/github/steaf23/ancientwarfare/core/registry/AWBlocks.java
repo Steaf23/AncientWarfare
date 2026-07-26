@@ -1,16 +1,18 @@
 package io.github.steaf23.ancientwarfare.core.registry;
 
-import io.github.steaf23.ancientwarfare.automation.block.worksite.WorksiteBlock;
-import io.github.steaf23.ancientwarfare.automation.block.worksite.entity.AnimalFarmBlockEntity;
+import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
+import io.github.steaf23.ancientwarfare.worksite.core.WorksiteBlock;
+import io.github.steaf23.ancientwarfare.worksite.animalfarm.AnimalFarmBlockEntity;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.versioned.CreativeTabManager;
 import io.github.steaf23.ancientwarfare.npc.block.TownHallBlock;
 import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlock;
-import io.github.steaf23.ancientwarfare.structure.block.CoinStackBlock;
 import io.github.steaf23.ancientwarfare.structure.block.factionbanner.FactionBannerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.factionbanner.FactionWallBannerBlock;
 import io.github.steaf23.ancientwarfare.structure.block.invalidconversionblock.InvalidConversionBlock;
 import io.github.steaf23.ancientwarfare.structure.block.wardedblock.WardedBlock;
+import io.github.steaf23.ancientwarfare.worksite.marker.WorksiteMarkerBlock;
+import io.github.steaf23.ancientwarfare.worksite.surveykit.SurveyStakeBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.function.Function;
@@ -48,6 +51,12 @@ public class AWBlocks {
 
 	public static final Block FACTION_BANNER = register("faction_banner", FactionBannerBlock::new, BlockBehaviour.Properties.of(), false);
 	public static final Block FACTION_WALL_BANNER = register("faction_wall_banner", FactionWallBannerBlock::new, BlockBehaviour.Properties.of(), false);
+
+	public static final Block WORKSITE_MARKER = register("worksite_marker", WorksiteMarkerBlock::new, BlockBehaviour.Properties.of(), true);
+	public static final Block SURVEY_STAKE = register("survey_stake", SurveyStakeBlock::new, BlockBehaviour.Properties.of()
+			.noOcclusion()
+			.noCollision()
+			.sound(SoundType.WOOD), false);
 
 	public static Block register(String name, BlockBehaviour.Properties settings, boolean withItem) {
 		return register(name, Block::new, settings, withItem);

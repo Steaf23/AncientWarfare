@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.automation.block.worksite;
+package io.github.steaf23.ancientwarfare.worksite.core;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
