@@ -12,6 +12,7 @@ import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
 import io.github.steaf23.ancientwarfare.structure.item.CoinItem;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import io.github.steaf23.ancientwarfare.structure.item.WardSealItem;
+import io.github.steaf23.ancientwarfare.worksite.marker.SurveyArea;
 import io.github.steaf23.ancientwarfare.worksite.surveykit.SurveyKit;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -60,11 +61,14 @@ public class AWItems {
 
 	public static final WardSealItem WARD_SEAL = AWItems.registerItem("ward_seal", WardSealItem::new, new Item.Properties());
 
-	public static final Item FACTION_BANNER = AWItems.registerItemNoCreativeTab("faction_banner", properties -> new StandingAndWallBlockItem(AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER, Direction.DOWN, properties), new Item.Properties()
-			.component(AWComponents.FACTION_ITEM, Factions.NEUTRAL_KEY));
+	public static final Item FACTION_BANNER = AWItems.registerItemNoCreativeTab("faction_banner", properties -> new StandingAndWallBlockItem(AWBlocks.FACTION_BANNER, AWBlocks.FACTION_WALL_BANNER, Direction.DOWN, properties),
+			new Item.Properties()
+					.component(AWComponents.FACTION_ITEM, Factions.NEUTRAL_KEY));
 
-	public static final SurveyKit SURVEY_KIT = AWItems.registerItem("survey_kit", SurveyKit::new, new Item.Properties()
-			.durability(16));
+	public static final SurveyKit SURVEY_KIT = AWItems.registerItem("survey_kit", SurveyKit::new,
+			new Item.Properties()
+					.durability(16)
+					.component(AWComponents.SURVEY_STAKES, SurveyArea.EMPTY));
 
 	public static final Item[] COMMAND_BATONS = {
 			WOODEN_COMMAND_BATON,

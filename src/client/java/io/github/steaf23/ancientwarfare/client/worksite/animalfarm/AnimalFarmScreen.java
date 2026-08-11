@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.automation.gui;
+package io.github.steaf23.ancientwarfare.client.worksite.animalfarm;
 
 import io.github.steaf23.ancientwarfare.worksite.menu.AnimalFarmContainerMenu;
 import io.github.steaf23.ancientwarfare.client.core.gui.ExtendedScreen;

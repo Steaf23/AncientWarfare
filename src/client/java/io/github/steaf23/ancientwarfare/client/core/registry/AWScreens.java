@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.core.registry;
 
-import io.github.steaf23.ancientwarfare.client.automation.gui.AnimalFarmScreen;
+import io.github.steaf23.ancientwarfare.client.worksite.animalfarm.AnimalFarmScreen;
 import io.github.steaf23.ancientwarfare.client.npc.gui.PlayerOwnedNpcScreen;
 import io.github.steaf23.ancientwarfare.client.npc.gui.TownHallScreen;
 import io.github.steaf23.ancientwarfare.client.structure.gui.AdvancedSpawnerScreen;

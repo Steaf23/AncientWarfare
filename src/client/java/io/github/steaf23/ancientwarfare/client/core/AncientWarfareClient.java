@@ -7,6 +7,7 @@ import io.github.steaf23.ancientwarfare.client.core.research.ResearchScreen;
 import io.github.steaf23.ancientwarfare.client.datagen.ModelDatagenHelper;
 import io.github.steaf23.ancientwarfare.client.npc.gui.SelectedUnitsElement;
 import io.github.steaf23.ancientwarfare.client.npc.render.item.CommandBatonOverlay;
+import io.github.steaf23.ancientwarfare.client.worksite.surveykit.DrawSurveyKitInWorld;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.research.ResearchBookPayload;
 import net.fabricmc.api.ClientModInitializer;
@@ -37,6 +38,7 @@ public class AncientWarfareClient implements ClientModInitializer {
 		WorldRenderEvents.AFTER_ENTITIES.register(CommandBatonOverlay::renderOutlineBoxes);
 		*///?} else {
 		LevelRenderEvents.AFTER_TRANSLUCENT_FEATURES.register(CommandBatonOverlay::renderOutlineBoxes);
+		LevelRenderEvents.AFTER_TRANSLUCENT_TERRAIN.register(DrawSurveyKitInWorld::drawSurveyKit);
 		//?}
 
 		PayloadTypeRegistry.clientboundPlay().register(ResearchBookPayload.ID, ResearchBookPayload.CODEC);

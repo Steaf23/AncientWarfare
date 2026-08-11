@@ -5,6 +5,7 @@ import io.github.steaf23.ancientwarfare.core.menu.BlockEntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
+import io.github.steaf23.ancientwarfare.core.registry.WorksiteRequirements;
 import io.github.steaf23.ancientwarfare.worksite.requirement.WorksiteRequirement;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -25,15 +26,16 @@ import java.util.function.Predicate;
 
 public class WorksiteMarkerBlockEntity extends BlockEntity implements BlockEntityMenuProvider {
 
-	private final List<WorksiteRequirement> requirements = new ArrayList<>();
-	private int searchRadius = 8;
+	private List<WorksiteRequirement> requirements = new ArrayList<>();
+
+	private SurveyArea area = SurveyArea.EMPTY;
 
 	public WorksiteMarkerBlockEntity(BlockPos worldPosition, BlockState blockState) {
  		super(AWBlockEntities.WORKSITE_MARKER, worldPosition, blockState);
 	}
 
 	public List<WorksiteRequirement> checkAndGetIncompleteRequirements() {
-		SearchContext context = new SearchContext(getBlockPos(), searchRadius, (ServerLevel)getLevel());
+		SearchContext context = new SearchContext(getBlockPos(), area, (ServerLevel)getLevel());
 		return requirements.stream()
 				.filter(Predicate.not(r -> r.isCompleted(context)))
 				.toList();
@@ -44,16 +46,26 @@ public class WorksiteMarkerBlockEntity extends BlockEntity implements BlockEntit
 		this.requirements.addAll(requirements);
 	}
 
+	public List<WorksiteRequirement> requirements() {
+		return requirements;
+	}
+
+	public void setArea(SurveyArea area) {
+		this.area = area;
+	}
+
 	@Override
 	protected void loadAdditional(ValueInput input) {
 		super.loadAdditional(input);
-		searchRadius = input.getInt("search_radius").orElse(8);
+		area = input.read("area", SurveyArea.CODEC).orElse(SurveyArea.EMPTY);
+		requirements = new ArrayList<>(input.read("requirements", WorksiteRequirement.CODEC.listOf()).orElse(List.of()));
 	}
 
 	@Override
 	protected void saveAdditional(ValueOutput output) {
 		super.saveAdditional(output);
-		output.putInt("search_radius", searchRadius);
+		output.store("area", SurveyArea.CODEC, area);
+		output.store("requirements", WorksiteRequirement.CODEC.listOf(), requirements);
 	}
 
 	@Override

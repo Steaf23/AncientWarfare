@@ -5,6 +5,8 @@ import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.util.CoinMetal;
 import io.github.steaf23.ancientwarfare.npc.faction.Faction;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
+import io.github.steaf23.ancientwarfare.worksite.marker.SurveyArea;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponentType;
@@ -23,6 +25,8 @@ public class AWComponents {
 	public static final DataComponentType<CapturedBlockInfo> BLOCK_CAPTURE = AWComponents.register("block_capture", CapturedBlockInfo.CODEC);
 
 	public static final DataComponentType<ResourceKey<Faction>> FACTION_ITEM = AWComponents.register("faction_item", ResourceKey.codec(Factions.FACTION_REGISTRY_KEY));
+
+	public static final DataComponentType<SurveyArea> SURVEY_STAKES = AWComponents.register("survey_stakes", SurveyArea.CODEC);
 
 	public static <T> DataComponentType<T> register(String name, Codec<T> codec) {
 		return Registry.register(

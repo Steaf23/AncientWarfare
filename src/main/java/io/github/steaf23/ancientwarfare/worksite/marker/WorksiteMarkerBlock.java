@@ -1,6 +1,7 @@
 package io.github.steaf23.ancientwarfare.worksite.marker;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
+import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.util.SimpleEntityBlock;
 import io.github.steaf23.ancientwarfare.worksite.requirement.StorageRequirement;
 import io.github.steaf23.ancientwarfare.worksite.requirement.WorksiteRequirement;
@@ -30,9 +31,16 @@ public class WorksiteMarkerBlock extends SimpleEntityBlock {
 
 		WorksiteMarkerBlockEntity be = level.getBlockEntity(pos, AWBlockEntities.WORKSITE_MARKER).orElseThrow();
 		List<WorksiteRequirement>  incompleteRequirements = be.checkAndGetIncompleteRequirements();
-		System.out.println("Incomplete worksite!");
-		for (var requirement : incompleteRequirements) {
-			System.out.println(requirement);
+		if (!incompleteRequirements.isEmpty()) {
+			System.out.println("Incomplete worksite!");
+			for (var requirement : incompleteRequirements) {
+				System.out.println(requirement);
+			}
+		} else {
+			System.out.println("Completed worksite with requirements: ");
+			for (var requirement : be.requirements()){
+				System.out.println(requirement);
+			}
 		}
 		return InteractionResult.SUCCESS;
 	}
@@ -41,7 +49,14 @@ public class WorksiteMarkerBlock extends SimpleEntityBlock {
 	protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
 		WorksiteMarkerBlockEntity be = level.getBlockEntity(pos, AWBlockEntities.WORKSITE_MARKER).orElseThrow();
 
-		if (itemStack.is(ItemTags.AXES)) {
+		if (itemStack.has(AWComponents.SURVEY_STAKES)) {
+			SurveyArea area = itemStack.getOrDefault(AWComponents.SURVEY_STAKES, SurveyArea.EMPTY);
+			if (area.isValid() && area.containsPosition(pos)) {
+				be.setArea(area);
+				itemStack.hurtAndBreak(itemStack.getMaxDamage() - itemStack.getDamageValue(), player, hand);
+				return InteractionResult.CONSUME;
+			}
+		} else if (itemStack.is(ItemTags.AXES)) {
 			if (!level.isClientSide()) {
 				be.setRequirements(List.of(new StorageRequirement(2)));
 			}

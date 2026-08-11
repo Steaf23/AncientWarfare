@@ -34,6 +34,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createCoinStack();
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);
 		blockModels.createFactionBanner();
-		blockModels.createTrivialBlock(AWBlocks.WORKSITE_MARKER, TexturedModel.CUBE_INNER_FACES);
+		blockModels.createSideFrontAlternatingCube(AWBlocks.WORKSITE_MARKER);
 		blockModels.createSurveyStake(AWBlocks.SURVEY_STAKE);
 	}
 
@@ -96,6 +97,19 @@ public class AWModelProvider extends FabricModelProvider {
 
 		public void createRotatableWorksite(Block workSite) {
 			createHorizontallyRotatedBlock(workSite, TexturedModel.createDefault(b -> workSiteTextureMapping(b, true), ModelTemplates.CUBE));
+		}
+
+		public void createSideFrontAlternatingCube(Block block) {
+			TextureMapping mapping = new TextureMapping()
+					.put(TextureSlot.PARTICLE, TextureMapping.getBlockTexture(block, "_front"))
+					.put(TextureSlot.UP, TextureMapping.getBlockTexture(block, "_top"))
+					.put(TextureSlot.DOWN, TextureMapping.getBlockTexture(block, "_bottom"))
+					.put(TextureSlot.NORTH, TextureMapping.getBlockTexture(block, "_front"))
+					.put(TextureSlot.SOUTH, TextureMapping.getBlockTexture(block, "_front"))
+					.put(TextureSlot.WEST, TextureMapping.getBlockTexture(block, "_side"))
+					.put(TextureSlot.EAST, TextureMapping.getBlockTexture(block, "_side"));
+			this.blockStateOutput
+					.accept(createSimpleBlock(block, plainVariant(ModelTemplates.CUBE.create(block, mapping, this.modelOutput))));
 		}
 
 		public void createCoinStack() {

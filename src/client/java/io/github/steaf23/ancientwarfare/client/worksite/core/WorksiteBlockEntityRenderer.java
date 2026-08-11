@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.automation.render.block;
+package io.github.steaf23.ancientwarfare.client.worksite.core;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.steaf23.ancientwarfare.worksite.core.AbstractWorksiteBlockEntity;

@@ -1,6 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.core.registry;
 
-import io.github.steaf23.ancientwarfare.client.automation.render.block.WorksiteBlockEntityRenderer;
+import io.github.steaf23.ancientwarfare.client.worksite.core.WorksiteBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.npc.render.block.TownHallBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.AdvancedSpawnerBlockEntityRenderer;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner.FactionBannerRenderer;
