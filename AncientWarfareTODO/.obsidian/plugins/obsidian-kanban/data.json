@@ -1,0 +1,59 @@
+{
+  "tag-colors": [
+    {
+      "tagKey": "#1-7-10",
+      "color": "rgba(250, 137, 137, 1)",
+      "backgroundColor": "rgba(245, 93, 93, 0.1)"
+    },
+    {
+      "tagKey": "#up-to-date",
+      "color": "rgba(157, 250, 137, 1)",
+      "backgroundColor": "rgba(93, 245, 104, 0.1)"
+    },
+    {
+      "tagKey": "#ARR",
+      "color": "rgba(250, 137, 137, 1)",
+      "backgroundColor": "rgba(245, 93, 93, 0.1)"
+    },
+    {
+      "tagKey": "#1-20-1",
+      "color": "rgba(250, 188, 137, 1)",
+      "backgroundColor": "rgba(245, 180, 93, 0.1)"
+    },
+    {
+      "tagKey": "#1-12-2",
+      "color": "rgba(250, 137, 137, 1)",
+      "backgroundColor": "rgba(245, 93, 93, 0.1)"
+    },
+    {
+      "tagKey": "#1-19-2",
+      "color": "rgba(250, 191, 137, 1)",
+      "backgroundColor": "rgba(245, 175, 93, 0.1)"
+    },
+    {
+      "tagKey": "#1-21-1",
+      "color": "rgba(227, 250, 137, 1)",
+      "backgroundColor": "rgba(233, 245, 93, 0.1)"
+    },
+    {
+      "tagKey": "#1-17-1",
+      "color": "rgba(250, 215, 137, 1)",
+      "backgroundColor": "rgba(245, 198, 93, 0.1)"
+    },
+    {
+      "tagKey": "#forge",
+      "color": "rgba(250, 205, 137, 1)",
+      "backgroundColor": "rgba(41, 173, 255, 0.1)"
+    },
+    {
+      "tagKey": "#fabric",
+      "color": "rgba(222, 255, 215, 1)",
+      "backgroundColor": "rgba(255, 122, 122, 0.1)"
+    },
+    {
+      "tagKey": "#neoforge",
+      "color": "rgba(180, 250, 137, 1)",
+      "backgroundColor": "rgba(252, 195, 166, 0.1)"
+    }
+  ]
+}

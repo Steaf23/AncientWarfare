@@ -1,0 +1,14 @@
+{
+	"nodes":[
+		{"id":"09b41944bda9ab46","x":-100,"y":-240,"width":320,"height":580,"type":"group","label":"Player Party"},
+		{"id":"bcd6366471a11fd3","type":"text","text":"Player faction","x":-540,"y":-320,"width":250,"height":60,"color":"#000000"},
+		{"id":"c2cf503145d5e68e","type":"text","text":"Group leaders","x":-740,"y":-120,"width":250,"height":60,"color":"#000000"},
+		{"id":"4836968ba33a316b","type":"text","text":"Soldier","x":-740,"y":80,"width":250,"height":60,"color":"#000000"},
+		{"id":"58c9df9c4bb0bf02","x":-80,"y":-230,"width":250,"height":210,"type":"text","text":"Unlockable party members\nA special npc per faction can be recruited into the players party. The npc can be unlocked as a party member when the player participates in some event."},
+		{"id":"c6f5e90236f6e774","type":"text","text":"Party members follow RPG logic. A player's party can be changed at any time. A party can at most have 3 members to fight alongside the player at any time. if a team member is killed, a new one can be summoned and the current party member is wounded and cannot be sent out again. Until healed","x":-80,"y":0,"width":250,"height":310}
+	],
+	"edges":[
+		{"id":"ca6cf0ecc53953a6","fromNode":"bcd6366471a11fd3","fromSide":"bottom","toNode":"c2cf503145d5e68e","toSide":"top","label":"Can enable follow mode on group leaders"},
+		{"id":"2e8b5eba3d54a4a1","fromNode":"c2cf503145d5e68e","fromSide":"bottom","toNode":"4836968ba33a316b","toSide":"top","label":"Always follows assigned group leader"}
+	]
+}

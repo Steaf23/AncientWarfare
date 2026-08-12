@@ -1,0 +1,10 @@
+{
+	"nodes":[
+		{"id":"e3e27313df92f33a","type":"text","text":"The player that initially created the settlement will stay the permanent owner, unless ownership is transferred.\n\nThe settlement owner can invite, accept, deny, kick players from their settlement. A player that's in a settlement with another player has just as much influence over the settlement as the owner. \n\nThe owner can change this status at any time, even when not in the settlement.","x":100,"y":-260,"width":250,"height":480},
+		{"id":"a1491fc8612d21bc","type":"text","text":"A settlement can be created by placing down a town hall. A settlement is an ever growing town that will eventually attract workers, on a hiring basis.\n\nA Player can have as many settlements as they want (colonies).\nIn multiplayer, a player's settlement can transfer ownership, or multiple players can rule over the same settlement, as long as that player is an ally of the current owner.","x":-500,"y":-20,"width":250,"height":440},
+		{"id":"c56e6b8d174ef812","type":"text","text":"The Town hall is the center of the settlement and is used to determine what complexity the settlement supports.","x":-180,"y":-380,"width":250,"height":177},
+		{"id":"6aac3fd522657323","type":"text","text":"Establish a relationship with an existing faction by following the map given to the player when starting the game.\nOnce arrived, the player will be able to hire people from there into their own town.","x":-180,"y":80,"width":250,"height":240},
+		{"id":"eb8fd1bf03bb5389","type":"text","text":"Starting out with a simple town hall setup, the player automatically upgrades the town hall by performing tasks that can be viewed on a town hall notice board, which is maintained by the town hall. If no notice board is made, the town hall can still upgrade, but the player just wont know the exact steps.","x":-800,"y":-203,"width":250,"height":340}
+	],
+	"edges":[]
+}

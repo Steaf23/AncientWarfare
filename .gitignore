@@ -1,7 +1,6 @@
 .git/
 .gradle/
 .idea/
-AncientWarfareTODO/
 build/
 run/
 src/main/generated

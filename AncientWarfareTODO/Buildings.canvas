@@ -1,0 +1,11 @@
+{
+	"nodes":[
+		{"id":"fae8e058cbd59fe9","type":"text","text":"Making an example building has requirements depending on the goal of the build. I.e. a blacksmith requires an anvil, and a blacksmith forge worksite.\n\nAnd a house requires 1 or more beds depending on the size/ level of the house","x":220,"y":-333,"width":250,"height":271},
+		{"id":"0e343d1405e71801","type":"text","text":"The player can build an \"example\" of a building with a set purpose, or choose from existing buildings created by the mod.","x":-120,"y":-280,"width":250,"height":165},
+		{"id":"e3dafdd211a09d69","type":"text","text":"Example buildings can be created in a different world (in creative for example), and loaded in the game world, like a schematic.","x":220,"y":-20,"width":250,"height":196},
+		{"id":"acc7d95e4e2b6f9b","type":"text","text":"Worksite Marker\n\nMarker placed to mark a plot of land as construction for a building. Worksite markers are used when the player does not want to use an example but free style the construction of a worksite/building.\n\nPlayer can select the kind of building they are constructing there and the marker will keep track of the requirements.\n\nWhen all requirements are satisfied, the player will be able to hire/recruit an npc for the built structure.","x":-440,"y":-486,"width":250,"height":538},
+		{"id":"ae238d963bf4b462","type":"text","text":"Buildings can be used in settlements and can later be built by builder NPCs","x":-440,"y":113,"width":250,"height":127},
+		{"id":"e8153ed85b404460","type":"text","text":"Each building recognized by the town hall is either a building built by a builder or a building built by the player as an example building, with the valid (or detected) requirements for a specific building type.","x":-120,"y":-62,"width":250,"height":228}
+	],
+	"edges":[]
+}
