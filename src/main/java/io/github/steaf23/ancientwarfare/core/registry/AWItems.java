@@ -96,7 +96,7 @@ public class AWItems {
 				ItemStack banner = new ItemStack(FACTION_BANNER, 1);
 				Faction faction = AWResources.faction(factionId);
 				banner.set(AWComponents.FACTION_ITEM, ResourceKey.create(Factions.FACTION_REGISTRY_KEY, factionId));
-				banner.set(DataComponents.ITEM_NAME, Component.translatable("item.ancientwarfare.faction_banner", faction.getDescription()));
+				banner.set(DataComponents.ITEM_NAME, Component.translatable("item.ancientwarfare.faction_banner", Component.translatable(faction.getDescription())));
 				group.addItem(banner);
 			}
 		});

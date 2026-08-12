@@ -21,12 +21,12 @@ kanban-plugin: board
 
 ## In Progress
 
-- [ ] Add faction NPC names
-	#Steven
 
 
 ## Done
 
+- [ ] Add faction NPC names
+	#Steven
 
 
 

@@ -1,7 +1,19 @@
 extends Node
 
+var npc_display_names = {}
+
+
+func create_name_map() -> void:
+	var file = FileAccess.open("res://input/en_US.lang", FileAccess.READ)
+	for line in file.get_as_text().split("\n"):
+		if line.begins_with("entity.ancientwarfarenpc."):
+			var split = line.split("=")
+			var text_length = "entity.ancientwarfarenpc.".length()
+			npc_display_names[split[0].substr(text_length, split[0].length() - text_length - 5)] = split[1]
 
 func _ready() -> void:
+	create_name_map()
+	
 	var file: FileAccess = FileAccess.open("res://input/faction_npc_defaults.json", FileAccess.READ)
 	var input = JSON.parse_string(file.get_as_text())
 	file.close()
@@ -16,15 +28,17 @@ func _ready() -> void:
 	var output = ""
 	for faction_id in input.factions.keys():
 		var faction = input.factions[faction_id]
-		output += "var " + faction_id.to_camel_case() + " = factionBuilder(\"" + faction_id + "\")\n"
+		output += "var " + faction_id.to_camel_case() + " = FactionNpcBuilder.factionBuilder(\"" + faction_id + "\")\n"
 		
 		for arg in faction.keys():
 			var value = faction[arg]
 			if arg == "npc_subtypes":
 				output = output.substr(0, output.length()  -1) + ";\n"
 				var all_types = faction.npc_subtypes.keys()
-				all_types.append_array(enabled_types)
-		
+				for t in enabled_types:
+					if not t in all_types:
+						all_types.append(t)
+						
 				for existing_type: String in all_types:
 					var npc = {}
 					var default = false
@@ -37,9 +51,10 @@ func _ready() -> void:
 					var npc_type = existing_type.split(".")
 					if "spellcaster" not in npc_type:
 						npc_type.reverse()
-						
+					
+					
 					npc_type = "_".join(npc_type)
-					output += convert_npc(default, npc_type, faction_id, npc)
+					output += convert_npc(default, npc_type, faction_id, npc, existing_type)
 			else:
 				output += parse_attribute(arg, value)
 		
@@ -49,19 +64,27 @@ func _ready() -> void:
 	file.close()
 
 
-func convert_npc(default: bool, id: String, faction: String, npc: Dictionary) -> String:
+func convert_npc(default: bool, id: String, faction: String, npc: Dictionary, name_conversion_key: String) -> String:
 	if not npc.get("enabled", true):
 		return ""
 
-	var res = "saveNpc(build"
+	var res = "register(FactionNpcBuilder.build"
 	if "spellcaster" in id:
 		res += "Spellcaster(" + faction.to_camel_case() + ", " 
 		if "_" in id:
-			res += id.replace("spellcaster_", "") + ")\n"
+			res += id.replace("spellcaster_", "")
 		else:
-			res += "0)\n"
+			res += "0"
 	else:
-		res += id.to_pascal_case() + "(" + faction.to_camel_case() + ")\n"
+		res += id.to_pascal_case() + "(" + faction.to_camel_case()
+	res += ")"
+	
+	var name_lookup = faction + "." + name_conversion_key
+	if name_lookup in npc_display_names:
+		res += ".name(\"" + npc_display_names[name_lookup] + "\")\n"
+	else:
+		print("Failed to generate a name for " + name_lookup)
+		res += "\n"
 	
 	if !default:
 		for key in npc.keys():

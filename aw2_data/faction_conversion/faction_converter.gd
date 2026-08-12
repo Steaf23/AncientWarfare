@@ -7,7 +7,7 @@ func _ready() -> void:
 	
 	var output = ""
 	for faction in input.factions:
-		output += "saveFaction(new Faction(\n\t\tAncientWarfare.id(\"" + faction.name + "\"),\n"
+		output += "register(new Faction(\n\t\tAncientWarfare.id(\"" + faction.name + "\"),\n"
 		output += "\t\t0xff" + str(faction.color).to_lower() + ",\n"
 		output += "\t\tSet.of(),\n"
 		output += "\t\t" + str(int(faction.standing_settings.player_default_standing)) + ",\n"

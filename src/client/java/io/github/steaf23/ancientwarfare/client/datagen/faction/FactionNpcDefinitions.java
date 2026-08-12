@@ -1,2498 +1,1652 @@
-package io.github.steaf23.ancientwarfare.client.datagen;
+package io.github.steaf23.ancientwarfare.client.datagen.faction;
 
-import com.google.gson.GsonBuilder;
-import com.mojang.serialization.JsonOps;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
-import io.github.steaf23.ancientwarfare.core.registry.AWItems;
-import io.github.steaf23.ancientwarfare.npc.faction.Faction;
-import io.github.steaf23.ancientwarfare.npc.faction.FactionNpcData;
-import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.minecraft.advancements.AdvancementProgress;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.PackOutput;
 import net.minecraft.resources.Identifier;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.zombie.Zombie;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.w3c.dom.Attr;
+import org.jspecify.annotations.NonNull;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
-public class FactionNpcProvider implements DataProvider {
+public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 
-	private static final Logger log = LogManager.getLogger(FactionNpcProvider.class);
-	private final FabricPackOutput output;
-	private final CompletableFuture<HolderLookup.Provider> registries;
+	private final FactionDefinitions factions = new FactionDefinitions();
 
-	public FactionNpcProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		this.output = output;
-		this.registries = registries;
+	private final List<FactionNpcBuilder> builders = new ArrayList<>();
+
+	public FactionDefinitions factions() {
+		return factions;
 	}
 
-	public void generate(HolderLookup.Provider reg) {
-		var amazon = factionBuilder("amazon")
+	/**
+	 * Constructing this class is very expensive!
+	 */
+	public FactionNpcDefinitions() {
+		var amazon = FactionNpcBuilder.factionBuilder("amazon")
 				.soundSet(AncientWarfare.id("human_female"));
-		saveNpc(buildSoldier(amazon)
+		register(FactionNpcBuilder.buildSoldier(amazon).name("Amazon Mankiller")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(amazon)
+		register(FactionNpcBuilder.buildEliteSoldier(amazon).name("Amazon Heroine")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildCavalry(amazon)
+		register(FactionNpcBuilder.buildCavalry(amazon).name("Amazon Cataphract")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildLeader(amazon)
+		register(FactionNpcBuilder.buildLeader(amazon).name("Amazon Princess")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(amazon)
+		register(FactionNpcBuilder.buildEliteLeader(amazon).name("Amazon Queen")
 				.equipment(Identifier.parse("minecraft:golden_sword"), null));
-		saveNpc(buildSoldier(amazon)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(amazon)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildArcher(amazon));
-		saveNpc(buildEliteArcher(amazon));
-		saveNpc(buildCavalry(amazon)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildMountedArcher(amazon));
-		saveNpc(buildLeader(amazon)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(amazon)
-				.equipment(Identifier.parse("minecraft:golden_sword"), null));
-		saveNpc(buildSiegeEngineer(amazon));
-		saveNpc(buildPriest(amazon));
-		saveNpc(buildBard(amazon));
-		saveNpc(buildTrader(amazon));
-		saveNpc(buildFemaleCivilian(amazon));
-		saveNpc(buildMaleCivilian(amazon));
+		register(FactionNpcBuilder.buildArcher(amazon).name("Amazon Widowmaker"));
+		register(FactionNpcBuilder.buildEliteArcher(amazon).name("Amazon Sentinel"));
+		register(FactionNpcBuilder.buildMountedArcher(amazon).name("Amazon Headhunter"));
+		register(FactionNpcBuilder.buildSiegeEngineer(amazon).name("Amazon Warmaker"));
+		register(FactionNpcBuilder.buildPriest(amazon).name("Amazon Priestess"));
+		register(FactionNpcBuilder.buildBard(amazon).name("Amazon Singer"));
+		register(FactionNpcBuilder.buildTrader(amazon).name("Amazon Bargainer"));
+		register(FactionNpcBuilder.buildFemaleCivilian(amazon).name("Amazon Childbearer"));
+		register(FactionNpcBuilder.buildMaleCivilian(amazon).name("Amazon Male Slave"));
 
-		var barbarian = factionBuilder("barbarian")
+		var barbarian = FactionNpcBuilder.factionBuilder("barbarian")
 				.soundSet(AncientWarfare.id("barbarian"));
-		saveNpc(buildSoldier(barbarian)
+		register(FactionNpcBuilder.buildSoldier(barbarian).name("Barbarian Warrior")
 				.equipment(Identifier.parse("minecraft:stone_axe"), Identifier.parse("ancientwarfarenpc:shield_round_1")));
-		saveNpc(buildLeader(barbarian)
+		register(FactionNpcBuilder.buildLeader(barbarian).name("Barbarian Chief")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:stone_cleaver"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(60));
-		saveNpc(buildPriest(barbarian)
+		register(FactionNpcBuilder.buildPriest(barbarian).name("Barbarian Shaman")
 				.equipment(Identifier.parse("minecraft:skull"), Identifier.parse("minecraft:stone_axe")));
-		saveNpc(buildSoldier(barbarian)
-				.equipment(Identifier.parse("minecraft:stone_axe"), Identifier.parse("ancientwarfarenpc:shield_round_1")));
-		saveNpc(buildArcher(barbarian));
-		saveNpc(buildLeader(barbarian)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:stone_cleaver"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.experienceDropped(60));
-		saveNpc(buildPriest(barbarian)
-				.equipment(Identifier.parse("minecraft:skull"), Identifier.parse("minecraft:stone_axe")));
+		register(FactionNpcBuilder.buildArcher(barbarian).name("Barbarian Archer"));
 
-		var beast = factionBuilder("beast");
-		saveNpc(buildSoldier(beast)
+		var beast = FactionNpcBuilder.factionBuilder("beast");
+		register(FactionNpcBuilder.buildSoldier(beast).name("Kobold")
 				.addAttribute(Attributes.MAX_HEALTH, 10)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.soundSet(AncientWarfare.id("kobold"))
 				.equipment(Identifier.parse("minecraft:stone_axe"), null));
-		saveNpc(buildEliteSoldier(beast)
+		register(FactionNpcBuilder.buildEliteSoldier(beast).name("Gargoyle")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("gargoyle")));
-		saveNpc(buildLeader(beast)
+		register(FactionNpcBuilder.buildLeader(beast).name("Owlbear")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("owlbear")));
-		saveNpc(buildEliteLeader(beast)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 16)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("ent")));
-		saveNpc(buildSoldier(beast)
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.soundSet(AncientWarfare.id("kobold"))
-				.equipment(Identifier.parse("minecraft:stone_axe"), null));
-		saveNpc(buildEliteSoldier(beast)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("gargoyle")));
-		saveNpc(buildLeader(beast)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("owlbear")));
-		saveNpc(buildEliteLeader(beast)
+		register(FactionNpcBuilder.buildEliteLeader(beast).name("Huorn")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 16)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("ent")));
 
-		var brigand = factionBuilder("brigand")
+		var brigand = FactionNpcBuilder.factionBuilder("brigand")
 				.soundSet(AncientWarfare.id("brigand"));
-		saveNpc(buildSoldier(brigand)
+		register(FactionNpcBuilder.buildSoldier(brigand).name("Brigand")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null)
 				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(brigand)
+		register(FactionNpcBuilder.buildEliteSoldier(brigand).name("Brigand Cuthroat")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null)
 				.experienceDropped(20));
-		saveNpc(buildArcher(brigand)
+		register(FactionNpcBuilder.buildArcher(brigand).name("Brigand Backshooter")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildEliteArcher(brigand)
+		register(FactionNpcBuilder.buildEliteArcher(brigand).name("Brigand Lookout")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildCavalry(brigand)
+		register(FactionNpcBuilder.buildCavalry(brigand).name("Brigand Reiver")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildMountedArcher(brigand)
+		register(FactionNpcBuilder.buildMountedArcher(brigand).name("Highwayman")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildLeader(brigand)
+		register(FactionNpcBuilder.buildLeader(brigand).name("Brigand Chief")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null)
 				.experienceDropped(40));
-		saveNpc(buildEliteLeader(brigand)
+		register(FactionNpcBuilder.buildEliteLeader(brigand).name("Brigand Warlord")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
 				.experienceDropped(60));
-		saveNpc(buildFemaleCivilian(brigand)
+		register(FactionNpcBuilder.buildFemaleCivilian(brigand).name("Brigandess")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.equipment(Identifier.parse("minecraft:iron_axe"), null)
-				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null)
-				.experienceDropped(20));
-		saveNpc(buildArcher(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildEliteArcher(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildCavalry(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildMountedArcher(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildLeader(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null)
-				.experienceDropped(40));
-		saveNpc(buildEliteLeader(brigand)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
-				.experienceDropped(60));
-		saveNpc(buildSiegeEngineer(brigand));
-		saveNpc(buildPriest(brigand));
-		saveNpc(buildBard(brigand));
-		saveNpc(buildTrader(brigand));
-		saveNpc(buildFemaleCivilian(brigand)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(brigand));
+		register(FactionNpcBuilder.buildSiegeEngineer(brigand).name("Renegade Artificier"));
+		register(FactionNpcBuilder.buildPriest(brigand).name("Heretic Priest"));
+		register(FactionNpcBuilder.buildBard(brigand).name("Brigand Talespinner"));
+		register(FactionNpcBuilder.buildTrader(brigand).name("Brigand Fence"));
+		register(FactionNpcBuilder.buildMaleCivilian(brigand).name("Brigand"));
 
-		var buffloka = factionBuilder("buffloka")
+		var buffloka = FactionNpcBuilder.factionBuilder("buffloka")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(buffloka)
+		register(FactionNpcBuilder.buildSoldier(buffloka).name("Buffloka Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:stone_spear"), Identifier.parse("ancientwarfarenpc:shield_buffloka")));
-		saveNpc(buildEliteSoldier(buffloka)
+		register(FactionNpcBuilder.buildEliteSoldier(buffloka).name("Buffloka Brave")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("minecraft:stone_axe"), null)
 				.experienceDropped(30));
-		saveNpc(buildCavalry(buffloka)
+		register(FactionNpcBuilder.buildCavalry(buffloka).name("Buffloka Raider")
 				.equipment(Identifier.parse("ancientwarfarenpc:stone_spear"), Identifier.parse("ancientwarfarenpc:shield_buffloka")));
-		saveNpc(buildLeader(buffloka)
+		register(FactionNpcBuilder.buildLeader(buffloka).name("Buffloka Chief")
 				.equipment(Identifier.parse("ancientwarfarenpc:diamond_spear"), null));
-		saveNpc(buildEliteLeader(buffloka)
+		register(FactionNpcBuilder.buildEliteLeader(buffloka).name("Buffloka Big Chief")
 				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildPriest(buffloka)
+		register(FactionNpcBuilder.buildPriest(buffloka).name("Buffloka Medicine Man")
 				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildTrader(buffloka)
+		register(FactionNpcBuilder.buildTrader(buffloka).name("Buffloka Bargainer")
 				.equipment(Identifier.parse("minecraft:feather"), null));
-		saveNpc(buildFemaleCivilian(buffloka)
+		register(FactionNpcBuilder.buildFemaleCivilian(buffloka).name("Buffloka Woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(buffloka)
-				.equipment(Identifier.parse("ancientwarfarenpc:stone_spear"), Identifier.parse("ancientwarfarenpc:shield_buffloka")));
-		saveNpc(buildEliteSoldier(buffloka)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("minecraft:stone_axe"), null)
-				.experienceDropped(30));
-		saveNpc(buildArcher(buffloka));
-		saveNpc(buildEliteArcher(buffloka));
-		saveNpc(buildCavalry(buffloka)
-				.equipment(Identifier.parse("ancientwarfarenpc:stone_spear"), Identifier.parse("ancientwarfarenpc:shield_buffloka")));
-		saveNpc(buildMountedArcher(buffloka));
-		saveNpc(buildLeader(buffloka)
-				.equipment(Identifier.parse("ancientwarfarenpc:diamond_spear"), null));
-		saveNpc(buildEliteLeader(buffloka)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildSiegeEngineer(buffloka));
-		saveNpc(buildPriest(buffloka)
-				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildBard(buffloka));
-		saveNpc(buildTrader(buffloka)
-				.equipment(Identifier.parse("minecraft:feather"), null));
-		saveNpc(buildFemaleCivilian(buffloka)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(buffloka));
+		register(FactionNpcBuilder.buildArcher(buffloka).name("Buffloka Bowman"));
+		register(FactionNpcBuilder.buildEliteArcher(buffloka).name("Buffloka Lookout"));
+		register(FactionNpcBuilder.buildMountedArcher(buffloka).name("Buffloka Hunter"));
+		register(FactionNpcBuilder.buildSiegeEngineer(buffloka).name("Buffloka Bigshot"));
+		register(FactionNpcBuilder.buildBard(buffloka).name("Buffloka Legendweaver"));
+		register(FactionNpcBuilder.buildMaleCivilian(buffloka).name("Buffloka Man"));
 
-		var coven = factionBuilder("coven");
-		saveNpc(buildArcher(coven)
+		var coven = FactionNpcBuilder.factionBuilder("coven");
+		register(FactionNpcBuilder.buildArcher(coven).name("Coven Satyr")
 				.soundSet(AncientWarfare.id("coven_satyr")));
-		saveNpc(buildEliteArcher(coven)
+		register(FactionNpcBuilder.buildEliteArcher(coven).name("Coven Dryad")
 				.soundSet(AncientWarfare.id("coven_dryad")));
-		saveNpc(buildSoldier(coven)
+		register(FactionNpcBuilder.buildSoldier(coven).name("Coven Scarecrow")
 				.equipment(Identifier.parse("ancientwarfarenpc:sickle"), null)
 				.soundSet(AncientWarfare.id("coven_scarecrow")));
-		saveNpc(buildEliteSoldier(coven)
+		register(FactionNpcBuilder.buildEliteSoldier(coven).name("Coven Witch Puppet")
 				.addAttribute(Attributes.MAX_HEALTH, 55)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.soundSet(AncientWarfare.id("coven_puppet")));
-		saveNpc(buildCavalry(coven)
+		register(FactionNpcBuilder.buildCavalry(coven).name("Coven Headless Horseman")
 				.equipment(Identifier.parse("ancientwarfarenpc:death_scythe"), null)
 				.simpleMount(EntityType.SKELETON_HORSE)
 				.soundSet(AncientWarfare.id("coven_puppetd")));
-		saveNpc(buildLeader(coven)
+		register(FactionNpcBuilder.buildLeader(coven).name("Coven Familiar")
 				.soundSet(AncientWarfare.id("coven_familiar"))
 				.addAttribute(Attributes.MAX_HEALTH, 45)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildEliteLeader(coven)
+		register(FactionNpcBuilder.buildEliteLeader(coven).name("Coven Leader")
 				.addAttribute(Attributes.MAX_HEALTH, 75)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 5)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.soundSet(AncientWarfare.id("coven_witch"))
 				.equipment(Identifier.parse("ancientwarfarenpc:sickle"), null));
-		saveNpc(buildSpellcaster(coven, 0)
+		register(FactionNpcBuilder.buildSpellcaster(coven, 0).name("Coven Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(coven, 1)
+		register(FactionNpcBuilder.buildSpellcaster(coven, 1).name("Coven Crone")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(40)
 				.spells(Set.of(Identifier.parse("ebwizardry:smoke_bomb"), Identifier.parse("ebwizardry:dart"), Identifier.parse("ebwizardry:poison_bomb"), Identifier.parse("ebwizardry:snare"))));
-		saveNpc(buildSpellcaster(coven, 2)
+		register(FactionNpcBuilder.buildSpellcaster(coven, 2).name("Coven Hag")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(50)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(coven, 3)
+		register(FactionNpcBuilder.buildSpellcaster(coven, 3).name("Coven Witch")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(60)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:cobwebs"), Identifier.parse("ebwizardry:poison"), Identifier.parse("ebwizardry:spider_swarm"))));
-		saveNpc(buildSpellcaster(coven, 4)
+		register(FactionNpcBuilder.buildSpellcaster(coven, 4).name("Coven Enchantress")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(80)
 				.spells(Set.of(Identifier.parse("ebwizardry:lightning_web"), Identifier.parse("ebwizardry:entrapment"), Identifier.parse("ebwizardry:greater_ward"), Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:summon_shadow_wraith"), Identifier.parse("ebwizardry:curse_of_undeath"))));
-		saveNpc(buildSoldier(coven)
-				.equipment(Identifier.parse("ancientwarfarenpc:sickle"), null)
-				.soundSet(AncientWarfare.id("coven_scarecrow")));
-		saveNpc(buildEliteSoldier(coven)
-				.addAttribute(Attributes.MAX_HEALTH, 55)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.soundSet(AncientWarfare.id("coven_puppet")));
-		saveNpc(buildArcher(coven)
-				.soundSet(AncientWarfare.id("coven_satyr")));
-		saveNpc(buildEliteArcher(coven)
-				.soundSet(AncientWarfare.id("coven_dryad")));
-		saveNpc(buildCavalry(coven)
-				.equipment(Identifier.parse("ancientwarfarenpc:death_scythe"), null)
-				.simpleMount(EntityType.SKELETON_HORSE)
-				.soundSet(AncientWarfare.id("coven_puppetd")));
-		saveNpc(buildLeader(coven)
-				.soundSet(AncientWarfare.id("coven_familiar"))
-				.addAttribute(Attributes.MAX_HEALTH, 45)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildEliteLeader(coven)
-				.addAttribute(Attributes.MAX_HEALTH, 75)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 5)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.soundSet(AncientWarfare.id("coven_witch"))
-				.equipment(Identifier.parse("ancientwarfarenpc:sickle"), null));
-		saveNpc(buildPriest(coven));
-		saveNpc(buildTrader(coven));
+		register(FactionNpcBuilder.buildPriest(coven).name("Coven Witch"));
+		register(FactionNpcBuilder.buildTrader(coven).name("Coven Enchantress"));
 
-		var demon = factionBuilder("demon");
-		saveNpc(buildSoldier(demon)
+		var demon = FactionNpcBuilder.factionBuilder("demon");
+		register(FactionNpcBuilder.buildSoldier(demon).name("Demon")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), null)
 				.experienceDropped(35));
-		saveNpc(buildEliteSoldier(demon)
+		register(FactionNpcBuilder.buildEliteSoldier(demon).name("Demon of the Pit")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null)
 				.experienceDropped(60));
-		saveNpc(buildCavalry(demon)
+		register(FactionNpcBuilder.buildCavalry(demon).name("Demon Hell Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 55)
 				.equipment(Identifier.parse("minecraft:golden_sword"), null)
 				.experienceDropped(55));
-		saveNpc(buildMountedArcher(demon)
+		register(FactionNpcBuilder.buildMountedArcher(demon).name("Demon Hell Rider")
 				.addAttribute(Attributes.MAX_HEALTH, 45)
 				.experienceDropped(45));
-		saveNpc(buildLeader(demon)
+		register(FactionNpcBuilder.buildLeader(demon).name("Demon Warlord")
 				.addAttribute(Attributes.MAX_HEALTH, 75)
 				.experienceDropped(75));
-		saveNpc(buildEliteLeader(demon)
+		register(FactionNpcBuilder.buildEliteLeader(demon).name("Demon Archfiend")
 				.addAttribute(Attributes.MAX_HEALTH, 150)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
 				.experienceDropped(150));
-		saveNpc(buildSiegeEngineer(demon)
+		register(FactionNpcBuilder.buildSiegeEngineer(demon).name("Demoness")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildPriest(demon)
+		register(FactionNpcBuilder.buildPriest(demon).name("Demon Hell Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("minecraft:enchanted_book"), null)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(demon)
+		register(FactionNpcBuilder.buildFemaleCivilian(demon).name("Demon Succubus")
 				.addAttribute(Attributes.MAX_HEALTH, 10));
-		saveNpc(buildMaleCivilian(demon)
+		register(FactionNpcBuilder.buildMaleCivilian(demon).name("Demon Damned Soul")
 				.addAttribute(Attributes.MAX_HEALTH, 10));
-		saveNpc(buildSpellcaster(demon, 0)
+		register(FactionNpcBuilder.buildSpellcaster(demon, 0).name("Diabolus")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(demon, 1)
+		register(FactionNpcBuilder.buildSpellcaster(demon, 1).name("Baphomet")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(demon, 2)
+		register(FactionNpcBuilder.buildSpellcaster(demon, 2).name("Mephistopheles")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(demon, 3)
+		register(FactionNpcBuilder.buildSpellcaster(demon, 3).name("Archfiend")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(demon, 4)
+		register(FactionNpcBuilder.buildSpellcaster(demon, 4).name("Demon Prince")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 35)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), null)
-				.experienceDropped(35));
-		saveNpc(buildEliteSoldier(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null)
-				.experienceDropped(60));
-		saveNpc(buildArcher(demon));
-		saveNpc(buildEliteArcher(demon));
-		saveNpc(buildCavalry(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 55)
-				.equipment(Identifier.parse("minecraft:golden_sword"), null)
-				.experienceDropped(55));
-		saveNpc(buildMountedArcher(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 45)
-				.experienceDropped(45));
-		saveNpc(buildLeader(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 75)
-				.experienceDropped(75));
-		saveNpc(buildEliteLeader(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 150)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
-				.experienceDropped(150));
-		saveNpc(buildSiegeEngineer(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildPriest(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("minecraft:enchanted_book"), null)
-				.experienceDropped(50));
-		saveNpc(buildBard(demon));
-		saveNpc(buildTrader(demon));
-		saveNpc(buildFemaleCivilian(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 10));
-		saveNpc(buildMaleCivilian(demon)
-				.addAttribute(Attributes.MAX_HEALTH, 10));
+		register(FactionNpcBuilder.buildArcher(demon).name("Demon Goatkin"));
+		register(FactionNpcBuilder.buildEliteArcher(demon).name("Demon Guardian"));
+		register(FactionNpcBuilder.buildBard(demon).name("Demon Jester"));
+		register(FactionNpcBuilder.buildTrader(demon).name("Demon Soul Thief"));
 
-		var dwarf = factionBuilder("dwarf");
-		saveNpc(buildArcher(dwarf)
+		var dwarf = FactionNpcBuilder.factionBuilder("dwarf");
+		register(FactionNpcBuilder.buildArcher(dwarf).name("Dwarf Crossbowman")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildSoldier(dwarf)
+		register(FactionNpcBuilder.buildSoldier(dwarf).name("Dwarf Warrior")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildEliteSoldier(dwarf)
+		register(FactionNpcBuilder.buildEliteSoldier(dwarf).name("Dwarf Hero")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(60)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildLeader(dwarf)
+		register(FactionNpcBuilder.buildLeader(dwarf).name("Dwarf Warlord")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.experienceDropped(70)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(dwarf)
+		register(FactionNpcBuilder.buildEliteLeader(dwarf).name("Dwarf Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 120)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildPriest(dwarf)
+		register(FactionNpcBuilder.buildPriest(dwarf).name("Dwarf Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(dwarf)
+		register(FactionNpcBuilder.buildFemaleCivilian(dwarf).name("Dwarf Matron")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(dwarf, 0)
+		register(FactionNpcBuilder.buildSpellcaster(dwarf, 0).name("Dwarf Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(dwarf, 1)
+		register(FactionNpcBuilder.buildSpellcaster(dwarf, 1).name("Dwarf Emerald Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(dwarf, 2)
+		register(FactionNpcBuilder.buildSpellcaster(dwarf, 2).name("Dwarf Ruby Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(dwarf, 3)
+		register(FactionNpcBuilder.buildSpellcaster(dwarf, 3).name("Dwarf Sapphire Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(dwarf, 4)
+		register(FactionNpcBuilder.buildSpellcaster(dwarf, 4).name("Dwarf Diamond Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildEliteSoldier(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.experienceDropped(60)
-				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildArcher(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildEliteArcher(dwarf));
-		saveNpc(buildLeader(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.experienceDropped(70)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 120)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.experienceDropped(100)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildSiegeEngineer(dwarf));
-		saveNpc(buildPriest(dwarf)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(dwarf));
-		saveNpc(buildTrader(dwarf));
-		saveNpc(buildFemaleCivilian(dwarf)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(dwarf));
+		register(FactionNpcBuilder.buildEliteArcher(dwarf).name("Dwarf Sentinel"));
+		register(FactionNpcBuilder.buildSiegeEngineer(dwarf).name("Dwarf Artificier"));
+		register(FactionNpcBuilder.buildBard(dwarf).name("Dwarf Bard"));
+		register(FactionNpcBuilder.buildTrader(dwarf).name("Dwarf Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(dwarf).name("Dwarf Worker"));
 
-		var elf = factionBuilder("elf")
+		var elf = FactionNpcBuilder.factionBuilder("elf")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(elf)
+		register(FactionNpcBuilder.buildSoldier(elf).name("Elf Warrior")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(elf)
+		register(FactionNpcBuilder.buildEliteSoldier(elf).name("Elf Hero")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield"))
 				.experienceDropped(70));
-		saveNpc(buildArcher(elf)
+		register(FactionNpcBuilder.buildArcher(elf).name("Elf Archer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildCavalry(elf)
+		register(FactionNpcBuilder.buildCavalry(elf).name("Elf Lancer")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), Identifier.parse("ancientwarfarenpc:gold_shield"))
 				.experienceDropped(70));
-		saveNpc(buildLeader(elf)
+		register(FactionNpcBuilder.buildLeader(elf).name("Elf Leader")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.equipment(Identifier.parse("ancientwarfarenpc:diamond_halberd"), null)
 				.experienceDropped(70));
-		saveNpc(buildEliteLeader(elf)
+		register(FactionNpcBuilder.buildEliteLeader(elf).name("Elf Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("minecraft:diamond_sword"))
 				.experienceDropped(100));
-		saveNpc(buildPriest(elf)
+		register(FactionNpcBuilder.buildPriest(elf).name("Elf Healer")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(elf)
+		register(FactionNpcBuilder.buildFemaleCivilian(elf).name("Elf Maiden")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(elf, 0)
+		register(FactionNpcBuilder.buildSpellcaster(elf, 0).name("Elf Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(elf, 1)
+		register(FactionNpcBuilder.buildSpellcaster(elf, 1).name("Elf Enchanter")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(elf, 2)
+		register(FactionNpcBuilder.buildSpellcaster(elf, 2).name("Elf Spell Binder")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(elf, 3)
+		register(FactionNpcBuilder.buildSpellcaster(elf, 3).name("Elf Spell Weaver")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(elf, 4)
+		register(FactionNpcBuilder.buildSpellcaster(elf, 4).name("Elf Spell Lord")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield"))
-				.experienceDropped(70));
-		saveNpc(buildArcher(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildEliteArcher(elf));
-		saveNpc(buildCavalry(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), Identifier.parse("ancientwarfarenpc:gold_shield"))
-				.experienceDropped(70));
-		saveNpc(buildMountedArcher(elf));
-		saveNpc(buildLeader(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.equipment(Identifier.parse("ancientwarfarenpc:diamond_halberd"), null)
-				.experienceDropped(70));
-		saveNpc(buildEliteLeader(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("minecraft:diamond_sword"))
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(elf));
-		saveNpc(buildPriest(elf)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(elf));
-		saveNpc(buildTrader(elf));
-		saveNpc(buildFemaleCivilian(elf)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(elf));
+		register(FactionNpcBuilder.buildEliteArcher(elf).name("Elf Guardian"));
+		register(FactionNpcBuilder.buildMountedArcher(elf).name("Elf Hunter"));
+		register(FactionNpcBuilder.buildSiegeEngineer(elf).name("Elf Warcrafter"));
+		register(FactionNpcBuilder.buildBard(elf).name("Elf Lore keeper"));
+		register(FactionNpcBuilder.buildTrader(elf).name("Elf Merchant"));
+		register(FactionNpcBuilder.buildMaleCivilian(elf).name("Elf Wanderer"));
 
-		var empire = factionBuilder("empire")
+		var empire = FactionNpcBuilder.factionBuilder("empire")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildEliteSoldier(empire)
+		register(FactionNpcBuilder.buildEliteSoldier(empire).name("Empire Halberdier")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
 				.experienceDropped(30));
-		saveNpc(buildSoldier(empire)
+		register(FactionNpcBuilder.buildSoldier(empire).name("Empire Spearman")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildCavalry(empire)
+		register(FactionNpcBuilder.buildCavalry(empire).name("Empire Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(65));
-		saveNpc(buildLeader(empire)
+		register(FactionNpcBuilder.buildLeader(empire).name("Empire Captain")
 				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildFemaleCivilian(empire)
+		register(FactionNpcBuilder.buildFemaleCivilian(empire).name("Empire Goodwife")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(empire, 0)
+		register(FactionNpcBuilder.buildSpellcaster(empire, 0).name("Empire Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(empire, 1)
+		register(FactionNpcBuilder.buildSpellcaster(empire, 1).name("Empire Conjurer")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:thunderbolt"), Identifier.parse("ebwizardry:ignite"), Identifier.parse("ebwizardry:freeze"), Identifier.parse("ebwizardry:ward"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:smoke_bomb"))));
-		saveNpc(buildSpellcaster(empire, 2)
+		register(FactionNpcBuilder.buildSpellcaster(empire, 2).name("Empire Enchanter")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:frost_ray"), Identifier.parse("ebwizardry:flame_ray"), Identifier.parse("ebwizardry:lightning_ray"), Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:lightning_arrow"), Identifier.parse("ebwizardry:ward"), Identifier.parse("ebwizardry:oakflesh"))));
-		saveNpc(buildSpellcaster(empire, 3)
+		register(FactionNpcBuilder.buildSpellcaster(empire, 3).name("Empire Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:arcane_jammer"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:lightning_disc"), Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:summon_ice_wraith"), Identifier.parse("ebwizardry:summon_lightning_wraith"), Identifier.parse("ebwizardry:oakflesh"), Identifier.parse("ebwizardry:blink"))));
-		saveNpc(buildSpellcaster(empire, 4)
+		register(FactionNpcBuilder.buildSpellcaster(empire, 4).name("Empire Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:ice_statue"), Identifier.parse("ebwizardry:arcane_jammer"), Identifier.parse("ebwizardry:ring_of_fire"), Identifier.parse("ebwizardry:blizzard"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:lightning_disc"), Identifier.parse("ebwizardry:summon_storm_elemental"), Identifier.parse("ebwizardry:summon_phoenix"), Identifier.parse("ebwizardry:summon_ice_giant"), Identifier.parse("ebwizardry:greater_ward"), Identifier.parse("ebwizardry:diamondflesh"), Identifier.parse("ebwizardry:blink"), Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:paralysis"), Identifier.parse("ebwizardry:decoy"))));
-		saveNpc(buildSoldier(empire)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(empire)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
-				.experienceDropped(30));
-		saveNpc(buildArcher(empire));
-		saveNpc(buildEliteArcher(empire));
-		saveNpc(buildCavalry(empire)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.experienceDropped(65));
-		saveNpc(buildMountedArcher(empire));
-		saveNpc(buildLeader(empire)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteLeader(empire));
-		saveNpc(buildSiegeEngineer(empire));
-		saveNpc(buildPriest(empire));
-		saveNpc(buildBard(empire));
-		saveNpc(buildTrader(empire));
-		saveNpc(buildFemaleCivilian(empire)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(empire));
+		register(FactionNpcBuilder.buildArcher(empire).name("Empire Peasant"));
+		register(FactionNpcBuilder.buildEliteArcher(empire).name("Empire Archer"));
+		register(FactionNpcBuilder.buildMountedArcher(empire).name("Empire Retainer"));
+		register(FactionNpcBuilder.buildEliteLeader(empire).name("Empire Nobleman"));
+		register(FactionNpcBuilder.buildSiegeEngineer(empire).name("Empire Artificier"));
+		register(FactionNpcBuilder.buildPriest(empire).name("Empire Priest"));
+		register(FactionNpcBuilder.buildBard(empire).name("Empire Bard"));
+		register(FactionNpcBuilder.buildTrader(empire).name("Empire Merchant"));
+		register(FactionNpcBuilder.buildMaleCivilian(empire).name("Empire Serf"));
 
-		var ent = factionBuilder("ent")
+		var ent = FactionNpcBuilder.factionBuilder("ent")
 				.soundSet(AncientWarfare.id("ent"));
-		saveNpc(buildSoldier(ent)
+		register(FactionNpcBuilder.buildSoldier(ent).name("Spriggan")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildEliteSoldier(ent)
+		register(FactionNpcBuilder.buildEliteSoldier(ent).name("Entling")
 				.addAttribute(Attributes.MAX_HEALTH, 85)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 10)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildLeader(ent)
+		register(FactionNpcBuilder.buildLeader(ent).name("Ent Mother")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 20)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteLeader(ent)
+		register(FactionNpcBuilder.buildEliteLeader(ent).name("Ent Father")
 				.addAttribute(Attributes.MAX_HEALTH, 150)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 30)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildSoldier(ent)
-				.addAttribute(Attributes.MAX_HEALTH, 35)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildEliteSoldier(ent)
-				.addAttribute(Attributes.MAX_HEALTH, 85)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 10)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildArcher(ent));
-		saveNpc(buildLeader(ent)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 20)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteLeader(ent)
-				.addAttribute(Attributes.MAX_HEALTH, 150)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 30)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildPriest(ent));
-		saveNpc(buildTrader(ent));
+		register(FactionNpcBuilder.buildArcher(ent).name("Wosey"));
+		register(FactionNpcBuilder.buildPriest(ent).name("Druidess"));
+		register(FactionNpcBuilder.buildTrader(ent).name("Druid"));
 
-		var evil = factionBuilder("evil")
+		var evil = FactionNpcBuilder.factionBuilder("evil")
 				.soundSet(AncientWarfare.id("malice"));
-		saveNpc(buildSoldier(evil)
+		register(FactionNpcBuilder.buildSoldier(evil).name("Malice Guard")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(evil)
+		register(FactionNpcBuilder.buildEliteSoldier(evil).name("Malice Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("minecraft:iron_axe"), Identifier.parse("minecraft:iron_sword"))
 				.experienceDropped(60));
-		saveNpc(buildCavalry(evil)
+		register(FactionNpcBuilder.buildCavalry(evil).name("Malice Knight")
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("ancientwarfarenpc:diamond_lance"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildMountedArcher(evil)
+		register(FactionNpcBuilder.buildMountedArcher(evil).name("Malice Death Rider")
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0));
-		saveNpc(buildLeader(evil)
+		register(FactionNpcBuilder.buildLeader(evil).name("Malice Warlord")
 				.addAttribute(Attributes.MAX_HEALTH, 75)
 				.experienceDropped(75));
-		saveNpc(buildEliteLeader(evil)
+		register(FactionNpcBuilder.buildEliteLeader(evil).name("Malice Master")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.equipment(Identifier.parse("ancientwarfarenpc:diamond_halberd"), null)
 				.experienceDropped(100));
-		saveNpc(buildPriest(evil)
+		register(FactionNpcBuilder.buildPriest(evil).name("Malice Cult Hierarch")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(evil)
+		register(FactionNpcBuilder.buildFemaleCivilian(evil).name("Malice Concubine")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(evil, 0)
+		register(FactionNpcBuilder.buildSpellcaster(evil, 0).name("Malice Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"))));
-		saveNpc(buildSpellcaster(evil, 1)
+		register(FactionNpcBuilder.buildSpellcaster(evil, 1).name("Malice Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:smoke_bomb"))));
-		saveNpc(buildSpellcaster(evil, 2)
+		register(FactionNpcBuilder.buildSpellcaster(evil, 2).name("Malice Warlock")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:cobwebs"), Identifier.parse("ebwizardry:poison"))));
-		saveNpc(buildSpellcaster(evil, 3)
+		register(FactionNpcBuilder.buildSpellcaster(evil, 3).name("Malice Demonist")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:slime"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:wither"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(evil, 4)
+		register(FactionNpcBuilder.buildSpellcaster(evil, 4).name("Malice Sorceror")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(80)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:black_hole"), Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:darkness_orb"), Identifier.parse("ebwizardry:disintegration"), Identifier.parse("ebwizardry:summon_wither_skeleton"))));
-		saveNpc(buildSoldier(evil)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(evil)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("minecraft:iron_axe"), Identifier.parse("minecraft:iron_sword"))
-				.experienceDropped(60));
-		saveNpc(buildArcher(evil));
-		saveNpc(buildEliteArcher(evil));
-		saveNpc(buildCavalry(evil)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.equipment(Identifier.parse("ancientwarfarenpc:diamond_lance"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildMountedArcher(evil)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0));
-		saveNpc(buildLeader(evil)
-				.addAttribute(Attributes.MAX_HEALTH, 75)
-				.experienceDropped(75));
-		saveNpc(buildEliteLeader(evil)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.equipment(Identifier.parse("ancientwarfarenpc:diamond_halberd"), null)
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(evil));
-		saveNpc(buildPriest(evil)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(evil));
-		saveNpc(buildTrader(evil));
-		saveNpc(buildFemaleCivilian(evil)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(evil));
+		register(FactionNpcBuilder.buildArcher(evil).name("Malice Cultist"));
+		register(FactionNpcBuilder.buildEliteArcher(evil).name("Malice Sentry"));
+		register(FactionNpcBuilder.buildSiegeEngineer(evil).name("Malice Artificier"));
+		register(FactionNpcBuilder.buildBard(evil).name("Malice Spell Chanter"));
+		register(FactionNpcBuilder.buildTrader(evil).name("Malice Bargainer"));
+		register(FactionNpcBuilder.buildMaleCivilian(evil).name("Malice Slave"));
 
-		var giant = factionBuilder("giant")
+		var giant = FactionNpcBuilder.factionBuilder("giant")
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
 				.soundSet(AncientWarfare.id("giant"));
-		saveNpc(buildSoldier(giant)
+		register(FactionNpcBuilder.buildSoldier(giant).name("Hill Giant")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 7)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
-		saveNpc(buildEliteSoldier(giant)
+		register(FactionNpcBuilder.buildEliteSoldier(giant).name("Frost Giant")
 				.addAttribute(Attributes.MAX_HEALTH, 150)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 10)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null));
-		saveNpc(buildLeader(giant)
+		register(FactionNpcBuilder.buildLeader(giant).name("Fire Giant")
 				.addAttribute(Attributes.MAX_HEALTH, 150)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 15)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(giant)
-				.addAttribute(Attributes.MAX_HEALTH, 250)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 20)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
-				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
-		saveNpc(buildSoldier(giant)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 7)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
-		saveNpc(buildEliteSoldier(giant)
-				.addAttribute(Attributes.MAX_HEALTH, 150)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 10)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null));
-		saveNpc(buildLeader(giant)
-				.addAttribute(Attributes.MAX_HEALTH, 150)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 15)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(giant)
+		register(FactionNpcBuilder.buildEliteLeader(giant).name("Mountain Giant")
 				.addAttribute(Attributes.MAX_HEALTH, 250)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 20)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 6)
 				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
 
-		var gnome = factionBuilder("gnome")
+		var gnome = FactionNpcBuilder.factionBuilder("gnome")
 				.soundSet(AncientWarfare.id("gnome"));
-		saveNpc(buildArcher(gnome)
+		register(FactionNpcBuilder.buildArcher(gnome).name("Gnome Needler")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildSoldier(gnome)
+		register(FactionNpcBuilder.buildSoldier(gnome).name("Gnome Stickitupem")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), null));
-		saveNpc(buildEliteSoldier(gnome)
+		register(FactionNpcBuilder.buildEliteSoldier(gnome).name("Gnomepoleon")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null)
 				.experienceDropped(40));
-		saveNpc(buildCavalry(gnome)
+		register(FactionNpcBuilder.buildCavalry(gnome).name("Gnome Chicken Cuirassier")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(20)
 				.simpleMount(EntityType.CHICKEN));
-		saveNpc(buildMountedArcher(gnome)
+		register(FactionNpcBuilder.buildMountedArcher(gnome).name("Gnome Chicken Chassuer")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.simpleMount(EntityType.CHICKEN));
-		saveNpc(buildLeader(gnome)
+		register(FactionNpcBuilder.buildLeader(gnome).name("Gnome Mole Beast")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildEliteLeader(gnome)
+		register(FactionNpcBuilder.buildEliteLeader(gnome).name("Gnome Mole Rat")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildTrader(gnome)
+		register(FactionNpcBuilder.buildTrader(gnome).name("Gnome Collector")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
 				.equipment(Identifier.parse("minecraft:brown_mushroom"), null));
-		saveNpc(buildSoldier(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), null));
-		saveNpc(buildEliteSoldier(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null)
-				.experienceDropped(40));
-		saveNpc(buildArcher(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildCavalry(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.experienceDropped(20)
-				.simpleMount(EntityType.CHICKEN));
-		saveNpc(buildMountedArcher(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.simpleMount(EntityType.CHICKEN));
-		saveNpc(buildLeader(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildEliteLeader(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildPriest(gnome));
-		saveNpc(buildTrader(gnome)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.equipment(Identifier.parse("minecraft:brown_mushroom"), null));
+		register(FactionNpcBuilder.buildPriest(gnome).name("Gnome God Botherer"));
 
-		var good = factionBuilder("good")
+		var good = FactionNpcBuilder.factionBuilder("good")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(good)
+		register(FactionNpcBuilder.buildSoldier(good).name("Guardian Greenwood Ranger")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), null));
-		saveNpc(buildEliteSoldier(good)
+		register(FactionNpcBuilder.buildEliteSoldier(good).name("Guardian Druidic Construct")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.experienceDropped(70));
-		saveNpc(buildArcher(good)
+		register(FactionNpcBuilder.buildArcher(good).name("Guardian Archer")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildCavalry(good)
+		register(FactionNpcBuilder.buildCavalry(good).name("Guardian Questing Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), Identifier.parse("ancientwarfarenpc:diamond_shield"))
 				.experienceDropped(60));
-		saveNpc(buildEliteLeader(good)
+		register(FactionNpcBuilder.buildEliteLeader(good).name("Guardian Great Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.experienceDropped(100));
-		saveNpc(buildPriest(good)
+		register(FactionNpcBuilder.buildPriest(good).name("Guardian Druid")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(good)
+		register(FactionNpcBuilder.buildFemaleCivilian(good).name("Guardian Good Wife")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(good, 0)
+		register(FactionNpcBuilder.buildSpellcaster(good, 0).name("Guardian Conjurer")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(good, 1)
+		register(FactionNpcBuilder.buildSpellcaster(good, 1).name("Guardian Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(good, 2)
+		register(FactionNpcBuilder.buildSpellcaster(good, 2).name("Guardian Enchanter")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(good, 3)
+		register(FactionNpcBuilder.buildSpellcaster(good, 3).name("Guardian Sorcerer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(good, 4)
+		register(FactionNpcBuilder.buildSpellcaster(good, 4).name("Guardian Archimage")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(good)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), null));
-		saveNpc(buildEliteSoldier(good)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.experienceDropped(70));
-		saveNpc(buildArcher(good)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildEliteArcher(good));
-		saveNpc(buildCavalry(good)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), Identifier.parse("ancientwarfarenpc:diamond_shield"))
-				.experienceDropped(60));
-		saveNpc(buildMountedArcher(good));
-		saveNpc(buildLeader(good));
-		saveNpc(buildEliteLeader(good)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(good));
-		saveNpc(buildPriest(good)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(good));
-		saveNpc(buildTrader(good));
-		saveNpc(buildFemaleCivilian(good)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(good));
+		register(FactionNpcBuilder.buildEliteArcher(good).name("Guardian Lookout"));
+		register(FactionNpcBuilder.buildMountedArcher(good).name("Guardian Hooded Man"));
+		register(FactionNpcBuilder.buildLeader(good).name("Guardian Warlord"));
+		register(FactionNpcBuilder.buildSiegeEngineer(good).name("Guardian Weaponsmith"));
+		register(FactionNpcBuilder.buildBard(good).name("Guardian Fable Teller"));
+		register(FactionNpcBuilder.buildTrader(good).name("Guardian Fair Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(good).name("Guardian Good Man"));
 
-		var gremlin = factionBuilder("gremlin")
+		var gremlin = FactionNpcBuilder.factionBuilder("gremlin")
 				.soundSet(AncientWarfare.id("gremlin"));
-		saveNpc(buildArcher(gremlin)
+		register(FactionNpcBuilder.buildArcher(gremlin).name("Gremlin Shooter")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildSoldier(gremlin)
+		register(FactionNpcBuilder.buildSoldier(gremlin).name("Gremlin Slicer")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildCavalry(gremlin)
+		register(FactionNpcBuilder.buildCavalry(gremlin).name("Gremlin Spider Rider")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null)
 				.experienceDropped(20)
 				.simpleMount(EntityType.SPIDER));
-		saveNpc(buildMountedArcher(gremlin)
+		register(FactionNpcBuilder.buildMountedArcher(gremlin).name("Gremlin Raider")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
 				.simpleMount(EntityType.SPIDER));
-		saveNpc(buildLeader(gremlin)
+		register(FactionNpcBuilder.buildLeader(gremlin).name("Gremlin Stripey")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildEliteLeader(gremlin)
+		register(FactionNpcBuilder.buildEliteLeader(gremlin).name("Gremlin Mohawky")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.equipment(Identifier.parse("minecraft:diamond_sword"), null));
-		saveNpc(buildPriest(gremlin)
+		register(FactionNpcBuilder.buildPriest(gremlin).name("Gremlin Brains")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
 				.equipment(Identifier.parse("minecraft:torch"), null));
-		saveNpc(buildSpellcaster(gremlin, 0)
+		register(FactionNpcBuilder.buildSpellcaster(gremlin, 0).name("Gremlin Mischiever")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30));
-		saveNpc(buildSpellcaster(gremlin, 1)
+		register(FactionNpcBuilder.buildSpellcaster(gremlin, 1).name("Gremlin Mischiever")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:dart"), Identifier.parse("ebwizardry:snare"))));
-		saveNpc(buildSpellcaster(gremlin, 2)
+		register(FactionNpcBuilder.buildSpellcaster(gremlin, 2).name("Gremlin Mischiever")
 				.addAttribute(Attributes.MAX_HEALTH, 25)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:poison"), Identifier.parse("ebwizardry:blink"))));
-		saveNpc(buildSoldier(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildArcher(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildCavalry(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.equipment(Identifier.parse("minecraft:iron_axe"), null)
-				.experienceDropped(20)
-				.simpleMount(EntityType.SPIDER));
-		saveNpc(buildMountedArcher(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.simpleMount(EntityType.SPIDER));
-		saveNpc(buildLeader(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildEliteLeader(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), null));
-		saveNpc(buildPriest(gremlin)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.equipment(Identifier.parse("minecraft:torch"), null));
 
-		var guild = factionBuilder("guild");
-		saveNpc(buildSoldier(guild)
+		var guild = FactionNpcBuilder.factionBuilder("guild");
+		register(FactionNpcBuilder.buildSoldier(guild).name("Merchant Guild Guard")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildLeader(guild)
+		register(FactionNpcBuilder.buildLeader(guild).name("Merchant Guild Captain")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildSoldier(guild)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildArcher(guild));
-		saveNpc(buildEliteArcher(guild));
-		saveNpc(buildLeader(guild)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildTrader(guild));
+		register(FactionNpcBuilder.buildArcher(guild).name("Merchant Guild Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(guild).name("Merchant Guild Sentry"));
+		register(FactionNpcBuilder.buildTrader(guild).name("Merchant Guild Trader"));
 
-		var hobbit = factionBuilder("hobbit")
+		var hobbit = FactionNpcBuilder.factionBuilder("hobbit")
 				.soundSet(AncientWarfare.id("hobbit"));
-		saveNpc(buildArcher(hobbit)
+		register(FactionNpcBuilder.buildArcher(hobbit).name("Hobbit Gamekeeper")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildSoldier(hobbit)
+		register(FactionNpcBuilder.buildSoldier(hobbit).name("Hobbit Militiaman")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("ancientwarfarenpc:pitchfork"), null));
-		saveNpc(buildEliteSoldier(hobbit)
+		register(FactionNpcBuilder.buildEliteSoldier(hobbit).name("Hobbit Captain")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(60)
 				.equipment(Identifier.parse("ancientwarfarenpc:scythe"), null));
-		saveNpc(buildLeader(hobbit)
+		register(FactionNpcBuilder.buildLeader(hobbit).name("Hobbit Hero")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.experienceDropped(70)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildPriest(hobbit)
+		register(FactionNpcBuilder.buildPriest(hobbit).name("Hobbit Vicar")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(hobbit)
+		register(FactionNpcBuilder.buildFemaleCivilian(hobbit).name("Hobbit Goodwife")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(hobbit)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50)
-				.equipment(Identifier.parse("ancientwarfarenpc:pitchfork"), null));
-		saveNpc(buildEliteSoldier(hobbit)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.experienceDropped(60)
-				.equipment(Identifier.parse("ancientwarfarenpc:scythe"), null));
-		saveNpc(buildArcher(hobbit)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildEliteArcher(hobbit));
-		saveNpc(buildLeader(hobbit)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.experienceDropped(70)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildPriest(hobbit)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(hobbit));
-		saveNpc(buildTrader(hobbit));
-		saveNpc(buildFemaleCivilian(hobbit)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(hobbit));
+		register(FactionNpcBuilder.buildEliteArcher(hobbit).name("Hobbit Sentry"));
+		register(FactionNpcBuilder.buildBard(hobbit).name("Hobbit Tavern Singer"));
+		register(FactionNpcBuilder.buildTrader(hobbit).name("Hobbit Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(hobbit).name("Hobbit Goodman"));
 
-		var icelord = factionBuilder("icelord")
+		var icelord = FactionNpcBuilder.factionBuilder("icelord")
 				.soundSet(AncientWarfare.id("zombie"));
-		saveNpc(buildSoldier(icelord));
-		saveNpc(buildEliteSoldier(icelord)
+		register(FactionNpcBuilder.buildSoldier(icelord).name("Icelord Draugr"));
+		register(FactionNpcBuilder.buildEliteSoldier(icelord).name("Icelord Winter Walker")
 				.addAttribute(Attributes.MAX_HEALTH, 45)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildCavalry(icelord)
+		register(FactionNpcBuilder.buildCavalry(icelord).name("Icelord Revenant")
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildLeader(icelord)
+		register(FactionNpcBuilder.buildLeader(icelord).name("Icelord Beast")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildEliteLeader(icelord)
+		register(FactionNpcBuilder.buildEliteLeader(icelord).name("Icelord Winter King")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 10)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildPriest(icelord));
-		saveNpc(buildSpellcaster(icelord, 0)
+		register(FactionNpcBuilder.buildPriest(icelord).name("Icelord Liche"));
+		register(FactionNpcBuilder.buildSpellcaster(icelord, 0).name("Icelord Spell Liche")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30));
-		saveNpc(buildSpellcaster(icelord, 1)
+		register(FactionNpcBuilder.buildSpellcaster(icelord, 1).name("Icelord Frost Prophet")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(60)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:frost_ray"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:ice_lance"), Identifier.parse("ebwizardry:ice_shroud"), Identifier.parse("ebwizardry:ironflesh"))));
-		saveNpc(buildSpellcaster(icelord, 2)
+		register(FactionNpcBuilder.buildSpellcaster(icelord, 2).name("Icelord Coldbringer")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:ice_lance"), Identifier.parse("ebwizardry:ice_shroud"), Identifier.parse("ebwizardry:blizzard"), Identifier.parse("ebwizardry:hailstorm"), Identifier.parse("ebwizardry:diamondflesh"))));
-		saveNpc(buildSoldier(icelord));
-		saveNpc(buildEliteSoldier(icelord)
-				.addAttribute(Attributes.MAX_HEALTH, 45)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildArcher(icelord));
-		saveNpc(buildEliteArcher(icelord));
-		saveNpc(buildCavalry(icelord)
-				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildLeader(icelord)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildEliteLeader(icelord)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 10)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildPriest(icelord));
+		register(FactionNpcBuilder.buildArcher(icelord).name("Icelord Zombie"));
+		register(FactionNpcBuilder.buildEliteArcher(icelord).name("Icelord Sentinel"));
 
-		var ishtari = factionBuilder("ishtari")
+		var ishtari = FactionNpcBuilder.factionBuilder("ishtari")
 				.soundSet(AncientWarfare.id("ishtari_mummy"));
-		saveNpc(buildSoldier(ishtari));
-		saveNpc(buildEliteSoldier(ishtari)
+		register(FactionNpcBuilder.buildSoldier(ishtari).name("Ishtari Mummy"));
+		register(FactionNpcBuilder.buildEliteSoldier(ishtari).name("Ishtari Zombie")
 				.equipment(Identifier.parse("minecraft:golden_sword"), null)
 				.soundSet(AncientWarfare.id("zombie")));
-		saveNpc(buildLeader(ishtari)
+		register(FactionNpcBuilder.buildLeader(ishtari).name("Ishtari Anubite")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 5)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.soundSet(AncientWarfare.id("ishtari_anubite"))
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(ishtari)
+		register(FactionNpcBuilder.buildEliteLeader(ishtari).name("Ishtari Pharoah")
 				.soundSet(AncientWarfare.id("ishtari_pharoah"))
 				.equipment(Identifier.parse("minecraft:diamond_sword"), null));
-		saveNpc(buildSoldier(ishtari));
-		saveNpc(buildEliteSoldier(ishtari)
-				.equipment(Identifier.parse("minecraft:golden_sword"), null)
-				.soundSet(AncientWarfare.id("zombie")));
-		saveNpc(buildArcher(ishtari));
-		saveNpc(buildLeader(ishtari)
-				.addAttribute(Attributes.MAX_HEALTH, 80)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 5)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.soundSet(AncientWarfare.id("ishtari_anubite"))
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(ishtari)
-				.soundSet(AncientWarfare.id("ishtari_pharoah"))
-				.equipment(Identifier.parse("minecraft:diamond_sword"), null));
+		register(FactionNpcBuilder.buildArcher(ishtari).name("Ishtari High Priest"));
 
-		var klown = factionBuilder("klown");
-		saveNpc(buildSoldier(klown)
+		var klown = FactionNpcBuilder.factionBuilder("klown");
+		register(FactionNpcBuilder.buildSoldier(klown).name("Klown Rag Doll")
 				.addAttribute(Attributes.MAX_HEALTH, 6)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteSoldier(klown)
+		register(FactionNpcBuilder.buildEliteSoldier(klown).name("Killer Klown")
 				.soundSet(AncientWarfare.id("klown"))
 				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildCavalry(klown)
+		register(FactionNpcBuilder.buildCavalry(klown).name("Klown Harlequin")
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null)
 				.simpleMount(EntityType.ZOMBIE_HORSE)
 				.soundSet(AncientWarfare.id("norska")));
-		saveNpc(buildMountedArcher(klown)
+		register(FactionNpcBuilder.buildMountedArcher(klown).name("Klown Monkey")
 				.addAttribute(Attributes.MAX_HEALTH, 6)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.equipment(Identifier.parse("minecraft:bow"), null)
 				.simpleMount(EntityType.PIG));
-		saveNpc(buildLeader(klown)
+		register(FactionNpcBuilder.buildLeader(klown).name("Klown Strongman")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 2)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("norska"))
 				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
-		saveNpc(buildEliteLeader(klown)
+		register(FactionNpcBuilder.buildEliteLeader(klown).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 120)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.soundSet(AncientWarfare.id("klown"))
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildPriest(klown)
+		register(FactionNpcBuilder.buildPriest(klown).name("Klown Ringmaster")
 				.soundSet(AncientWarfare.id("human")));
-		saveNpc(buildSpellcaster(klown, 0)
+		register(FactionNpcBuilder.buildSpellcaster(klown, 0).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(klown, 1)
+		register(FactionNpcBuilder.buildSpellcaster(klown, 1).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(klown, 2)
+		register(FactionNpcBuilder.buildSpellcaster(klown, 2).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(klown, 3)
+		register(FactionNpcBuilder.buildSpellcaster(klown, 3).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(klown, 4)
+		register(FactionNpcBuilder.buildSpellcaster(klown, 4).name("IT")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(klown)
-				.addAttribute(Attributes.MAX_HEALTH, 6)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteSoldier(klown)
-				.soundSet(AncientWarfare.id("klown"))
-				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildCavalry(klown)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null)
-				.simpleMount(EntityType.ZOMBIE_HORSE)
-				.soundSet(AncientWarfare.id("norska")));
-		saveNpc(buildMountedArcher(klown)
-				.addAttribute(Attributes.MAX_HEALTH, 6)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.equipment(Identifier.parse("minecraft:bow"), null)
-				.simpleMount(EntityType.PIG));
-		saveNpc(buildLeader(klown)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 2)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("norska"))
-				.equipment(Identifier.parse("ancientwarfarenpc:giant_club"), null));
-		saveNpc(buildEliteLeader(klown)
-				.addAttribute(Attributes.MAX_HEALTH, 120)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.soundSet(AncientWarfare.id("klown"))
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildPriest(klown)
-				.soundSet(AncientWarfare.id("human")));
 
-		var kong = factionBuilder("kong")
+		var kong = FactionNpcBuilder.factionBuilder("kong")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(kong)
+		register(FactionNpcBuilder.buildSoldier(kong).name("Kong Stabber")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.equipment(Identifier.parse("ancientwarfarenpc:wooden_spear"), null)
 				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(kong)
+		register(FactionNpcBuilder.buildEliteSoldier(kong).name("Kong Blood Spirit")
 				.equipment(Identifier.parse("minecraft:wooden_axe"), null));
-		saveNpc(buildArcher(kong)
+		register(FactionNpcBuilder.buildArcher(kong).name("Kong Sneaker")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildEliteArcher(kong)
+		register(FactionNpcBuilder.buildEliteArcher(kong).name("Kong lookout")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildLeader(kong)
+		register(FactionNpcBuilder.buildLeader(kong).name("Kong Ape")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(kong)
+		register(FactionNpcBuilder.buildEliteLeader(kong).name("Kong Great Chief")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), null)
 				.experienceDropped(60));
-		saveNpc(buildPriest(kong)
+		register(FactionNpcBuilder.buildPriest(kong).name("Kong Pot Chief")
 				.equipment(Identifier.parse("minecraft:rotten_flesh"), null));
-		saveNpc(buildTrader(kong)
+		register(FactionNpcBuilder.buildTrader(kong).name("Kong Swapper")
 				.equipment(Identifier.parse("minecraft:bone"), null));
-		saveNpc(buildFemaleCivilian(kong)
+		register(FactionNpcBuilder.buildFemaleCivilian(kong).name("Kong Woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(kong)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.equipment(Identifier.parse("ancientwarfarenpc:wooden_spear"), null)
-				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(kong)
-				.equipment(Identifier.parse("minecraft:wooden_axe"), null));
-		saveNpc(buildArcher(kong)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildEliteArcher(kong)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildLeader(kong)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(kong)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), null)
-				.experienceDropped(60));
-		saveNpc(buildPriest(kong)
-				.equipment(Identifier.parse("minecraft:rotten_flesh"), null));
-		saveNpc(buildTrader(kong)
-				.equipment(Identifier.parse("minecraft:bone"), null));
-		saveNpc(buildFemaleCivilian(kong)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(kong));
+		register(FactionNpcBuilder.buildMaleCivilian(kong).name("Kong Slave"));
 
-		var lizardman = factionBuilder("lizardman")
+		var lizardman = FactionNpcBuilder.factionBuilder("lizardman")
 				.soundSet(AncientWarfare.id("lizardman"));
-		saveNpc(buildSoldier(lizardman)
+		register(FactionNpcBuilder.buildSoldier(lizardman).name("Lizardman Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:stone_cleaver"), null));
-		saveNpc(buildEliteSoldier(lizardman)
+		register(FactionNpcBuilder.buildEliteSoldier(lizardman).name("Lizardman Battlebeast")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 8)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildLeader(lizardman)
+		register(FactionNpcBuilder.buildLeader(lizardman).name("Lizardman Chief")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 5)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteLeader(lizardman)
+		register(FactionNpcBuilder.buildEliteLeader(lizardman).name("Lizardman Brood Mother")
 				.addAttribute(Attributes.MAX_HEALTH, 120)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildPriest(lizardman)
+		register(FactionNpcBuilder.buildPriest(lizardman).name("Lizardman Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 2)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
-		saveNpc(buildSpellcaster(lizardman, 0)
+		register(FactionNpcBuilder.buildSpellcaster(lizardman, 0).name("Serpentman Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.experienceDropped(30));
-		saveNpc(buildSpellcaster(lizardman, 1)
+		register(FactionNpcBuilder.buildSpellcaster(lizardman, 1).name("Serpentman Deceiver")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:poison"), Identifier.parse("ebwizardry:snare"))));
-		saveNpc(buildSoldier(lizardman)
-				.equipment(Identifier.parse("ancientwarfarenpc:stone_cleaver"), null));
-		saveNpc(buildEliteSoldier(lizardman)
-				.addAttribute(Attributes.MAX_HEALTH, 80)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 8)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildArcher(lizardman));
-		saveNpc(buildLeader(lizardman)
-				.addAttribute(Attributes.MAX_HEALTH, 80)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 5)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteLeader(lizardman)
-				.addAttribute(Attributes.MAX_HEALTH, 120)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildPriest(lizardman)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 2)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2));
+		register(FactionNpcBuilder.buildArcher(lizardman).name("Lizardman Archer"));
 
-		var mindflayer = factionBuilder("mindflayer");
-		saveNpc(buildSoldier(mindflayer)
+		var mindflayer = FactionNpcBuilder.factionBuilder("mindflayer");
+		register(FactionNpcBuilder.buildSoldier(mindflayer).name("Cavern Lurker")
 				.addAttribute(Attributes.MAX_HEALTH, 10)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.soundSet(AncientWarfare.id("kobold"))
 				.equipment(Identifier.parse("minecraft:stone_axe"), null));
-		saveNpc(buildEliteSoldier(mindflayer)
+		register(FactionNpcBuilder.buildEliteSoldier(mindflayer).name("Wererat")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("gargoyle"))
 				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildLeader(mindflayer)
+		register(FactionNpcBuilder.buildLeader(mindflayer).name("Cavern Growler")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("owlbear")));
-		saveNpc(buildEliteLeader(mindflayer)
+		register(FactionNpcBuilder.buildEliteLeader(mindflayer).name("Cavern Troll")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 16)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.soundSet(AncientWarfare.id("ent")));
-		saveNpc(buildSpellcaster(mindflayer, 0)
+		register(FactionNpcBuilder.buildSpellcaster(mindflayer, 0).name("Mindflayer Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"))));
-		saveNpc(buildSpellcaster(mindflayer, 1)
+		register(FactionNpcBuilder.buildSpellcaster(mindflayer, 1).name("Mindflayer Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:smoke_bomb"))));
-		saveNpc(buildSpellcaster(mindflayer, 2)
+		register(FactionNpcBuilder.buildSpellcaster(mindflayer, 2).name("Mindflayer Water Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:cobwebs"), Identifier.parse("ebwizardry:poison"))));
-		saveNpc(buildSpellcaster(mindflayer, 3)
+		register(FactionNpcBuilder.buildSpellcaster(mindflayer, 3).name("Mindflayer Fire Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:slime"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:wither"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(mindflayer, 4)
+		register(FactionNpcBuilder.buildSpellcaster(mindflayer, 4).name("Mindflayer Archi Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(80)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:black_hole"), Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:darkness_orb"), Identifier.parse("ebwizardry:disintegration"), Identifier.parse("ebwizardry:summon_wither_skeleton"))));
-		saveNpc(buildSoldier(mindflayer)
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.soundSet(AncientWarfare.id("kobold"))
-				.equipment(Identifier.parse("minecraft:stone_axe"), null));
-		saveNpc(buildEliteSoldier(mindflayer)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("gargoyle"))
-				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildLeader(mindflayer)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("owlbear")));
-		saveNpc(buildEliteLeader(mindflayer)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 16)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.soundSet(AncientWarfare.id("ent")));
 
-		var minossian = factionBuilder("minossian");
-		saveNpc(buildSoldier(minossian)
+		var minossian = FactionNpcBuilder.factionBuilder("minossian");
+		register(FactionNpcBuilder.buildSoldier(minossian).name("Talos")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 4)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteSoldier(minossian)
+		register(FactionNpcBuilder.buildEliteSoldier(minossian).name("Minossian Warrior")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 2)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildLeader(minossian)
+		register(FactionNpcBuilder.buildLeader(minossian).name("Minossian Bull Golem")
 				.addAttribute(Attributes.MAX_HEALTH, 75)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 3)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteLeader(minossian)
+		register(FactionNpcBuilder.buildEliteLeader(minossian).name("Minossian Chief")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 4)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildSpellcaster(minossian, 0)
+		register(FactionNpcBuilder.buildSpellcaster(minossian, 0).name("Minossian Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(minossian, 1)
+		register(FactionNpcBuilder.buildSpellcaster(minossian, 1).name("Minossian Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(40)
 				.spells(Set.of(Identifier.parse("ebwizardry:smoke_bomb"), Identifier.parse("ebwizardry:dart"), Identifier.parse("ebwizardry:poison_bomb"), Identifier.parse("ebwizardry:snare"))));
-		saveNpc(buildSpellcaster(minossian, 2)
+		register(FactionNpcBuilder.buildSpellcaster(minossian, 2).name("Minossian Water Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(50)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(minossian, 3)
+		register(FactionNpcBuilder.buildSpellcaster(minossian, 3).name("Minossian Fire Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(60)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:cobwebs"), Identifier.parse("ebwizardry:poison"), Identifier.parse("ebwizardry:spider_swarm"))));
-		saveNpc(buildSpellcaster(minossian, 4)
+		register(FactionNpcBuilder.buildSpellcaster(minossian, 4).name("Minossian Archi Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(80)
 				.spells(Set.of(Identifier.parse("ebwizardry:lightning_web"), Identifier.parse("ebwizardry:entrapment"), Identifier.parse("ebwizardry:greater_ward"), Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:summon_shadow_wraith"), Identifier.parse("ebwizardry:curse_of_undeath"))));
-		saveNpc(buildSoldier(minossian)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 4)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteSoldier(minossian)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 2)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.equipment(Identifier.parse("minecraft:iron_axe"), null));
-		saveNpc(buildLeader(minossian)
-				.addAttribute(Attributes.MAX_HEALTH, 75)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 3)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1));
-		saveNpc(buildEliteLeader(minossian)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 4)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), null));
-		saveNpc(buildPriest(minossian));
+		register(FactionNpcBuilder.buildPriest(minossian).name("Minossian Priest"));
 
-		var monster = factionBuilder("monster")
+		var monster = FactionNpcBuilder.factionBuilder("monster")
 				.soundSet(AncientWarfare.id("monster"));
-		saveNpc(buildSoldier(monster)
+		register(FactionNpcBuilder.buildSoldier(monster).name("Horrible Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 4)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildEliteSoldier(monster)
+		register(FactionNpcBuilder.buildEliteSoldier(monster).name("Savage Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 85)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 8)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildLeader(monster)
+		register(FactionNpcBuilder.buildLeader(monster).name("Ravenous Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 12)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(monster)
-				.addAttribute(Attributes.MAX_HEALTH, 150)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 16)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 6));
-		saveNpc(buildSoldier(monster)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 4)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
-		saveNpc(buildEliteSoldier(monster)
-				.addAttribute(Attributes.MAX_HEALTH, 85)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 8)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4));
-		saveNpc(buildLeader(monster)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 12)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5));
-		saveNpc(buildEliteLeader(monster)
+		register(FactionNpcBuilder.buildEliteLeader(monster).name("Horrific Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 150)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 16)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 6));
 
-		var nogg = factionBuilder("nogg")
+		var nogg = FactionNpcBuilder.factionBuilder("nogg")
 				.soundSet(AncientWarfare.id("norska"));
-		saveNpc(buildSoldier(nogg)
+		register(FactionNpcBuilder.buildSoldier(nogg).name("Nogg Militiaman")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
 				.experienceDropped(30));
-		saveNpc(buildEliteSoldier(nogg)
+		register(FactionNpcBuilder.buildEliteSoldier(nogg).name("Nogg Adventurer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildArcher(nogg)
+		register(FactionNpcBuilder.buildArcher(nogg).name("Nogg Forester")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildEliteArcher(nogg)
+		register(FactionNpcBuilder.buildEliteArcher(nogg).name("Nogg Archer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildCavalry(nogg)
+		register(FactionNpcBuilder.buildCavalry(nogg).name("Nogg Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:shield_round_5"))
 				.experienceDropped(65));
-		saveNpc(buildSiegeEngineer(nogg)
+		register(FactionNpcBuilder.buildSiegeEngineer(nogg).name("Nogg Tinkerer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildPriest(nogg)
+		register(FactionNpcBuilder.buildPriest(nogg).name("Nogg Healer")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(nogg)
+		register(FactionNpcBuilder.buildFemaleCivilian(nogg).name("Nogg Woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
-				.experienceDropped(30));
-		saveNpc(buildEliteSoldier(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildArcher(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildEliteArcher(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildCavalry(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:shield_round_5"))
-				.experienceDropped(65));
-		saveNpc(buildMountedArcher(nogg));
-		saveNpc(buildLeader(nogg));
-		saveNpc(buildEliteLeader(nogg));
-		saveNpc(buildSiegeEngineer(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildPriest(nogg)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(nogg));
-		saveNpc(buildTrader(nogg));
-		saveNpc(buildFemaleCivilian(nogg)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(nogg));
+		register(FactionNpcBuilder.buildMountedArcher(nogg).name("Nogg Retainer"));
+		register(FactionNpcBuilder.buildLeader(nogg).name("Nogg Captain"));
+		register(FactionNpcBuilder.buildEliteLeader(nogg).name("Nogg Lord"));
+		register(FactionNpcBuilder.buildBard(nogg).name("Nogg Songsmith"));
+		register(FactionNpcBuilder.buildTrader(nogg).name("Nogg Fairtrader"));
+		register(FactionNpcBuilder.buildMaleCivilian(nogg).name("Nogg Man"));
 
-		var norska = factionBuilder("norska")
+		var norska = FactionNpcBuilder.factionBuilder("norska")
 				.soundSet(AncientWarfare.id("norska"));
-		saveNpc(buildSoldier(norska)
+		register(FactionNpcBuilder.buildSoldier(norska).name("Norska Warrior")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("ancientwarfarenpc:shield_round_2"))
 				.experienceDropped(30));
-		saveNpc(buildEliteSoldier(norska)
+		register(FactionNpcBuilder.buildEliteSoldier(norska).name("Norska Berserker")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("minecraft:iron_axe"), Identifier.parse("minecraft:iron_axe"))
 				.experienceDropped(50));
-		saveNpc(buildCavalry(norska)
+		register(FactionNpcBuilder.buildCavalry(norska).name("Norska Bear Master")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
 				.simpleMount(EntityType.POLAR_BEAR));
-		saveNpc(buildLeader(norska)
+		register(FactionNpcBuilder.buildLeader(norska).name("Norska Jarl")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
 				.experienceDropped(70));
-		saveNpc(buildEliteLeader(norska)
+		register(FactionNpcBuilder.buildEliteLeader(norska).name("Norska Blood Jarl")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:shield_round_4"))
 				.experienceDropped(100));
-		saveNpc(buildFemaleCivilian(norska)
+		register(FactionNpcBuilder.buildFemaleCivilian(norska).name("Norska Matron")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(norska, 0)
+		register(FactionNpcBuilder.buildSpellcaster(norska, 0).name("Norska Runecaster")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(norska, 1)
+		register(FactionNpcBuilder.buildSpellcaster(norska, 1).name("Norska Runecaster")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40)
 				.spells(Set.of(Identifier.parse("ebwizardry:fire_sigil"), Identifier.parse("ebwizardry:frost_sigil"), Identifier.parse("ebwizardry:ironflesh"), Identifier.parse("ebwizardry:ring_of_fire"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:font_of_vitality"))));
-		saveNpc(buildSpellcaster(norska, 2)
+		register(FactionNpcBuilder.buildSpellcaster(norska, 2).name("Norska Seidhr")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.soundSet(AncientWarfare.id("human_female"))
 				.experienceDropped(50)
 				.spells(Set.of(Identifier.parse("ebwizardry:whirlwind"), Identifier.parse("ebwizardry:tornado"), Identifier.parse("ebwizardry:font_of_vitality"), Identifier.parse("ebwizardry:greater_ward"))));
-		saveNpc(buildSpellcaster(norska, 3)
+		register(FactionNpcBuilder.buildSpellcaster(norska, 3).name("Norska Goddi")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(60)
 				.spells(Set.of(Identifier.parse("ebwizardry:arc"), Identifier.parse("ebwizardry:ironflesh"), Identifier.parse("ebwizardry:thunderstorm"), Identifier.parse("ebwizardry:lightning_bolt"), Identifier.parse("ebwizardry:lightning_hammer"))));
-		saveNpc(buildSpellcaster(norska, 4)
+		register(FactionNpcBuilder.buildSpellcaster(norska, 4).name("Norska Varulfur")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.experienceDropped(80)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireskin"))));
-		saveNpc(buildSoldier(norska)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("ancientwarfarenpc:shield_round_2"))
-				.experienceDropped(30));
-		saveNpc(buildEliteSoldier(norska)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("minecraft:iron_axe"), Identifier.parse("minecraft:iron_axe"))
-				.experienceDropped(50));
-		saveNpc(buildArcher(norska));
-		saveNpc(buildEliteArcher(norska));
-		saveNpc(buildCavalry(norska)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
-				.simpleMount(EntityType.POLAR_BEAR));
-		saveNpc(buildMountedArcher(norska));
-		saveNpc(buildLeader(norska)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
-				.experienceDropped(70));
-		saveNpc(buildEliteLeader(norska)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:shield_round_4"))
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(norska));
-		saveNpc(buildPriest(norska));
-		saveNpc(buildBard(norska));
-		saveNpc(buildTrader(norska));
-		saveNpc(buildFemaleCivilian(norska)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(norska));
+		register(FactionNpcBuilder.buildArcher(norska).name("Norska Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(norska).name("Norska Swiftshooter"));
+		register(FactionNpcBuilder.buildMountedArcher(norska).name("Norska Raider"));
+		register(FactionNpcBuilder.buildSiegeEngineer(norska).name("Norska Floki"));
+		register(FactionNpcBuilder.buildPriest(norska).name("Norska Rune Priest"));
+		register(FactionNpcBuilder.buildBard(norska).name("Norska Saga Teller"));
+		register(FactionNpcBuilder.buildTrader(norska).name("Norska Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(norska).name("Norska Farmer"));
 
-		var orc = factionBuilder("orc")
+		var orc = FactionNpcBuilder.factionBuilder("orc")
 				.soundSet(AncientWarfare.id("orc"));
-		saveNpc(buildSoldier(orc)
+		register(FactionNpcBuilder.buildSoldier(orc).name("Orc")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.equipment(null, Identifier.parse("ancientwarfarenpc:wooden_shield"))
 				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(orc)
+		register(FactionNpcBuilder.buildEliteSoldier(orc).name("Orc Uruk")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.soundSet(AncientWarfare.id("orc_uruk"))
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), Identifier.parse("ancientwarfarenpc:iron_cleaver"))
 				.experienceDropped(50));
-		saveNpc(buildArcher(orc)
+		register(FactionNpcBuilder.buildArcher(orc).name("Orc Arrow lobber")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildCavalry(orc)
+		register(FactionNpcBuilder.buildCavalry(orc).name("Orc Warlord")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), null)
 				.experienceDropped(50));
-		saveNpc(buildMountedArcher(orc)
+		register(FactionNpcBuilder.buildMountedArcher(orc).name("Orc Ravager")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildLeader(orc)
+		register(FactionNpcBuilder.buildLeader(orc).name("Orc Clan Lord")
 				.soundSet(AncientWarfare.id("orc_uruk"))
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteLeader(orc)
+		register(FactionNpcBuilder.buildEliteLeader(orc).name("Orc Warlord")
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.soundSet(AncientWarfare.id("orc_uruk")));
-		saveNpc(buildPriest(orc)
+		register(FactionNpcBuilder.buildPriest(orc).name("Orc Shaman")
 				.equipment(Identifier.parse("minecraft:skull"), null));
-		saveNpc(buildTrader(orc)
+		register(FactionNpcBuilder.buildTrader(orc).name("Orc Cheater")
 				.equipment(Identifier.parse("minecraft:feather"), null));
-		saveNpc(buildSpellcaster(orc, 0)
+		register(FactionNpcBuilder.buildSpellcaster(orc, 0).name("Orc Corrupter")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(orc, 1)
+		register(FactionNpcBuilder.buildSpellcaster(orc, 1).name("Orc Corrupter")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:whirlwind"), Identifier.parse("ebwizardry:oakflesh"))));
-		saveNpc(buildSpellcaster(orc, 2)
+		register(FactionNpcBuilder.buildSpellcaster(orc, 2).name("Orc Stormcaller")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:lightning_arrow"), Identifier.parse("ebwizardry:chain_lightning"), Identifier.parse("ebwizardry:paralysis"), Identifier.parse("ebwizardry:summon_lightning_wraith"), Identifier.parse("ebwizardry:static_aura"))));
-		saveNpc(buildSpellcaster(orc, 3)
+		register(FactionNpcBuilder.buildSpellcaster(orc, 3).name("Orc Soulwalker")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:darkness_orb"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:mind_trick"), Identifier.parse("ebwizardry:summon_skeleton"), Identifier.parse("ebwizardry:intimidate"))));
-		saveNpc(buildSoldier(orc)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.equipment(null, Identifier.parse("ancientwarfarenpc:wooden_shield"))
-				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(orc)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.soundSet(AncientWarfare.id("orc_uruk"))
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), Identifier.parse("ancientwarfarenpc:iron_cleaver"))
-				.experienceDropped(50));
-		saveNpc(buildArcher(orc)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildEliteArcher(orc));
-		saveNpc(buildCavalry(orc)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), null)
-				.experienceDropped(50));
-		saveNpc(buildMountedArcher(orc)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildLeader(orc)
-				.soundSet(AncientWarfare.id("orc_uruk"))
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null));
-		saveNpc(buildEliteLeader(orc)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.soundSet(AncientWarfare.id("orc_uruk")));
-		saveNpc(buildSiegeEngineer(orc));
-		saveNpc(buildPriest(orc)
-				.equipment(Identifier.parse("minecraft:skull"), null));
-		saveNpc(buildBard(orc));
-		saveNpc(buildTrader(orc)
-				.equipment(Identifier.parse("minecraft:feather"), null));
-		saveNpc(buildFemaleCivilian(orc));
-		saveNpc(buildMaleCivilian(orc));
+		register(FactionNpcBuilder.buildEliteArcher(orc).name("Orc Lookout"));
+		register(FactionNpcBuilder.buildSiegeEngineer(orc).name("Bugbear Bigshot"));
+		register(FactionNpcBuilder.buildBard(orc).name("Orc Braggart"));
+		register(FactionNpcBuilder.buildFemaleCivilian(orc).name("Orc Breeder"));
+		register(FactionNpcBuilder.buildMaleCivilian(orc).name("Orc Runt"));
 
-		var pirate = factionBuilder("pirate")
+		var pirate = FactionNpcBuilder.factionBuilder("pirate")
 				.soundSet(AncientWarfare.id("pirate"));
-		saveNpc(buildSoldier(pirate)
+		register(FactionNpcBuilder.buildSoldier(pirate).name("Pirate")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildArcher(pirate)
+		register(FactionNpcBuilder.buildArcher(pirate).name("Pirate Bowman")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildEliteArcher(pirate)
+		register(FactionNpcBuilder.buildEliteArcher(pirate).name("Pirate Lookout")
 				.addAttribute(Attributes.MAX_HEALTH, 15)
 				.experienceDropped(15));
-		saveNpc(buildCavalry(pirate)
+		register(FactionNpcBuilder.buildCavalry(pirate).name("Smuggler Nightrider")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildMountedArcher(pirate)
+		register(FactionNpcBuilder.buildMountedArcher(pirate).name("Smuggler Raider")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20));
-		saveNpc(buildLeader(pirate)
+		register(FactionNpcBuilder.buildLeader(pirate).name("Pirate Captain")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildEliteLeader(pirate)
+		register(FactionNpcBuilder.buildEliteLeader(pirate).name("Pirate Admiral")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(60));
-		saveNpc(buildFemaleCivilian(pirate)
+		register(FactionNpcBuilder.buildFemaleCivilian(pirate).name("Pirate Strumpet")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(pirate, 0)
+		register(FactionNpcBuilder.buildSpellcaster(pirate, 0).name("Voodoo Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(pirate, 1)
+		register(FactionNpcBuilder.buildSpellcaster(pirate, 1).name("Voodoo Zombie Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(pirate, 2)
+		register(FactionNpcBuilder.buildSpellcaster(pirate, 2).name("Voodoo Bone Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(pirate, 3)
+		register(FactionNpcBuilder.buildSpellcaster(pirate, 3).name("Voodoo Death Bringer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(pirate, 4)
+		register(FactionNpcBuilder.buildSpellcaster(pirate, 4).name("Baron Samedi")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildEliteSoldier(pirate));
-		saveNpc(buildArcher(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildEliteArcher(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 15)
-				.experienceDropped(15));
-		saveNpc(buildCavalry(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildMountedArcher(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20));
-		saveNpc(buildLeader(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildEliteLeader(pirate)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.experienceDropped(60));
-		saveNpc(buildSiegeEngineer(pirate));
-		saveNpc(buildPriest(pirate));
-		saveNpc(buildBard(pirate));
-		saveNpc(buildTrader(pirate));
-		saveNpc(buildFemaleCivilian(pirate)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(pirate));
+		register(FactionNpcBuilder.buildEliteSoldier(pirate).name("Pirate Ravager"));
+		register(FactionNpcBuilder.buildSiegeEngineer(pirate).name("Pirate Gunner"));
+		register(FactionNpcBuilder.buildPriest(pirate).name("Pirate Voodoo Healer"));
+		register(FactionNpcBuilder.buildBard(pirate).name("Pirate Shantyman"));
+		register(FactionNpcBuilder.buildTrader(pirate).name("Smuggler Dealer"));
+		register(FactionNpcBuilder.buildMaleCivilian(pirate).name("Pirate Drunkard"));
 
-		var rakshasa = factionBuilder("rakshasa");
-		saveNpc(buildEliteSoldier(rakshasa)
+		var rakshasa = FactionNpcBuilder.factionBuilder("rakshasa");
+		register(FactionNpcBuilder.buildEliteSoldier(rakshasa).name("Rakshasa Tiger Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteLeader(rakshasa)
+		register(FactionNpcBuilder.buildEliteLeader(rakshasa).name("Rakshasa Lord")
 				.addAttribute(Attributes.MAX_HEALTH, 75)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), null));
-		saveNpc(buildSpellcaster(rakshasa, 0)
+		register(FactionNpcBuilder.buildSpellcaster(rakshasa, 0).name("Rakshasa Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(rakshasa, 1)
+		register(FactionNpcBuilder.buildSpellcaster(rakshasa, 1).name("Rakshasa Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(rakshasa, 2)
+		register(FactionNpcBuilder.buildSpellcaster(rakshasa, 2).name("Rakshasa Sorcerer")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(rakshasa, 3)
+		register(FactionNpcBuilder.buildSpellcaster(rakshasa, 3).name("Rakshasa Warlock")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(rakshasa, 4)
+		register(FactionNpcBuilder.buildSpellcaster(rakshasa, 4).name("Rakshasa Demi-God")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildEliteSoldier(rakshasa)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteLeader(rakshasa)
-				.addAttribute(Attributes.MAX_HEALTH, 75)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_cleaver"), null));
 
-		var reiksgard = factionBuilder("reiksgard")
+		var reiksgard = FactionNpcBuilder.factionBuilder("reiksgard")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildEliteSoldier(reiksgard)
+		register(FactionNpcBuilder.buildEliteSoldier(reiksgard).name("Reiksgard Doppelsoldner")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
 				.experienceDropped(30));
-		saveNpc(buildSoldier(reiksgard)
+		register(FactionNpcBuilder.buildSoldier(reiksgard).name("Reiksgard Soldner")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildCavalry(reiksgard)
+		register(FactionNpcBuilder.buildCavalry(reiksgard).name("Reiksgard Reiter")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(65));
-		saveNpc(buildLeader(reiksgard)
+		register(FactionNpcBuilder.buildLeader(reiksgard).name("Reiksgard Kapitan")
 				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildFemaleCivilian(reiksgard)
+		register(FactionNpcBuilder.buildFemaleCivilian(reiksgard).name("Reiksgard Trossfrau")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(reiksgard, 0)
+		register(FactionNpcBuilder.buildSpellcaster(reiksgard, 0).name("Reiksgard Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(reiksgard, 1)
+		register(FactionNpcBuilder.buildSpellcaster(reiksgard, 1).name("Reiksgard Water Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:thunderbolt"), Identifier.parse("ebwizardry:ignite"), Identifier.parse("ebwizardry:freeze"), Identifier.parse("ebwizardry:ward"), Identifier.parse("ebwizardry:snare"), Identifier.parse("ebwizardry:smoke_bomb"))));
-		saveNpc(buildSpellcaster(reiksgard, 2)
+		register(FactionNpcBuilder.buildSpellcaster(reiksgard, 2).name("Reiksgard Earth Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:frost_ray"), Identifier.parse("ebwizardry:flame_ray"), Identifier.parse("ebwizardry:lightning_ray"), Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:lightning_arrow"), Identifier.parse("ebwizardry:ward"), Identifier.parse("ebwizardry:oakflesh"))));
-		saveNpc(buildSpellcaster(reiksgard, 3)
+		register(FactionNpcBuilder.buildSpellcaster(reiksgard, 3).name("Reiksgard Air Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 35)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:arcane_jammer"), Identifier.parse("ebwizardry:fireball"), Identifier.parse("ebwizardry:lightning_disc"), Identifier.parse("ebwizardry:iceball"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:summon_ice_wraith"), Identifier.parse("ebwizardry:summon_lightning_wraith"), Identifier.parse("ebwizardry:oakflesh"), Identifier.parse("ebwizardry:blink"))));
-		saveNpc(buildSpellcaster(reiksgard, 4)
+		register(FactionNpcBuilder.buildSpellcaster(reiksgard, 4).name("Reiksgard Fire Wizard")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:ice_statue"), Identifier.parse("ebwizardry:arcane_jammer"), Identifier.parse("ebwizardry:ring_of_fire"), Identifier.parse("ebwizardry:blizzard"), Identifier.parse("ebwizardry:greater_fireball"), Identifier.parse("ebwizardry:ice_charge"), Identifier.parse("ebwizardry:lightning_disc"), Identifier.parse("ebwizardry:summon_storm_elemental"), Identifier.parse("ebwizardry:summon_phoenix"), Identifier.parse("ebwizardry:summon_ice_giant"), Identifier.parse("ebwizardry:greater_ward"), Identifier.parse("ebwizardry:diamondflesh"), Identifier.parse("ebwizardry:blink"), Identifier.parse("ebwizardry:banish"), Identifier.parse("ebwizardry:paralysis"), Identifier.parse("ebwizardry:decoy"))));
-		saveNpc(buildSoldier(reiksgard)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(reiksgard)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
-				.experienceDropped(30));
-		saveNpc(buildArcher(reiksgard));
-		saveNpc(buildEliteArcher(reiksgard));
-		saveNpc(buildCavalry(reiksgard)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.experienceDropped(65));
-		saveNpc(buildMountedArcher(reiksgard));
-		saveNpc(buildLeader(reiksgard)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteLeader(reiksgard));
-		saveNpc(buildSiegeEngineer(reiksgard));
-		saveNpc(buildPriest(reiksgard));
-		saveNpc(buildBard(reiksgard));
-		saveNpc(buildTrader(reiksgard));
-		saveNpc(buildFemaleCivilian(reiksgard)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(reiksgard));
+		register(FactionNpcBuilder.buildArcher(reiksgard).name("Reiksgard Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(reiksgard).name("Elite Reiksgard Sentry"));
+		register(FactionNpcBuilder.buildMountedArcher(reiksgard).name("Reiksgard Borderer"));
+		register(FactionNpcBuilder.buildEliteLeader(reiksgard).name("Reiksgard Edelman"));
+		register(FactionNpcBuilder.buildSiegeEngineer(reiksgard).name("Reiksgard Cannoneer"));
+		register(FactionNpcBuilder.buildPriest(reiksgard).name("Reiksgard Priest"));
+		register(FactionNpcBuilder.buildBard(reiksgard).name("Reiksgard Drummer"));
+		register(FactionNpcBuilder.buildTrader(reiksgard).name("Reiksgard Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(reiksgard).name("Reiksgard Trossmann"));
 
-		var sarkonid = factionBuilder("sarkonid")
+		var sarkonid = FactionNpcBuilder.factionBuilder("sarkonid")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(sarkonid)
+		register(FactionNpcBuilder.buildSoldier(sarkonid).name("Sarkonid Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(sarkonid)
+		register(FactionNpcBuilder.buildEliteSoldier(sarkonid).name("Sarkonid Palace Guard")
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("minecraft:golden_sword")));
-		saveNpc(buildCavalry(sarkonid)
+		register(FactionNpcBuilder.buildCavalry(sarkonid).name("Sarkonid Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), null)
 				.experienceDropped(50));
-		saveNpc(buildLeader(sarkonid)
+		register(FactionNpcBuilder.buildLeader(sarkonid).name("Sarkonid Warlord")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(sarkonid)
+		register(FactionNpcBuilder.buildEliteLeader(sarkonid).name("Sarkonid Noble")
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildFemaleCivilian(sarkonid)
+		register(FactionNpcBuilder.buildFemaleCivilian(sarkonid).name("Sarkonid woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(sarkonid, 0)
+		register(FactionNpcBuilder.buildSpellcaster(sarkonid, 0).name("Sarkonid Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(sarkonid, 1)
+		register(FactionNpcBuilder.buildSpellcaster(sarkonid, 1).name("Sarkonid Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(sarkonid, 2)
+		register(FactionNpcBuilder.buildSpellcaster(sarkonid, 2).name("Sarkonid Conjurer")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(sarkonid, 3)
+		register(FactionNpcBuilder.buildSpellcaster(sarkonid, 3).name("Sarkonid Sorcerer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(sarkonid, 4)
+		register(FactionNpcBuilder.buildSpellcaster(sarkonid, 4).name("Sarkonid Archimagi")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(sarkonid)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(sarkonid)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("minecraft:golden_sword")));
-		saveNpc(buildArcher(sarkonid));
-		saveNpc(buildEliteArcher(sarkonid));
-		saveNpc(buildCavalry(sarkonid)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), null)
-				.experienceDropped(50));
-		saveNpc(buildMountedArcher(sarkonid));
-		saveNpc(buildLeader(sarkonid)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(sarkonid)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildSiegeEngineer(sarkonid));
-		saveNpc(buildPriest(sarkonid));
-		saveNpc(buildBard(sarkonid));
-		saveNpc(buildTrader(sarkonid));
-		saveNpc(buildFemaleCivilian(sarkonid)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(sarkonid));
+		register(FactionNpcBuilder.buildArcher(sarkonid).name("Sarkonid Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(sarkonid).name("Sarkonid Guard"));
+		register(FactionNpcBuilder.buildMountedArcher(sarkonid).name("Sarkonid Horse Archer"));
+		register(FactionNpcBuilder.buildSiegeEngineer(sarkonid).name("Sarkonid Cannoneer"));
+		register(FactionNpcBuilder.buildPriest(sarkonid).name("Sarkonid Fire Priest"));
+		register(FactionNpcBuilder.buildBard(sarkonid).name("Sarkonid Storyteller"));
+		register(FactionNpcBuilder.buildTrader(sarkonid).name("Sarkonid Bazaari"));
+		register(FactionNpcBuilder.buildMaleCivilian(sarkonid).name("Sarkonid man"));
 
-		var sealsker = factionBuilder("sealsker")
+		var sealsker = FactionNpcBuilder.factionBuilder("sealsker")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(sealsker)
+		register(FactionNpcBuilder.buildSoldier(sealsker).name("Sealsker Walrusser")
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null));
-		saveNpc(buildEliteSoldier(sealsker)
+		register(FactionNpcBuilder.buildEliteSoldier(sealsker).name("Sealsker Harpooner")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null)
 				.experienceDropped(50));
-		saveNpc(buildEliteArcher(sealsker)
+		register(FactionNpcBuilder.buildEliteArcher(sealsker).name("Sealsker Lookout")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildLeader(sealsker)
+		register(FactionNpcBuilder.buildLeader(sealsker).name("Sealsker Chieftain")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null)
 				.experienceDropped(80));
-		saveNpc(buildEliteLeader(sealsker)
+		register(FactionNpcBuilder.buildEliteLeader(sealsker).name("Sealsker Snow Fox")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
 				.experienceDropped(40));
-		saveNpc(buildPriest(sealsker)
+		register(FactionNpcBuilder.buildPriest(sealsker).name("Sealsker Shaman")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(sealsker)
+		register(FactionNpcBuilder.buildFemaleCivilian(sealsker).name("Sealsker Huntress")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(sealsker, 0)
+		register(FactionNpcBuilder.buildSpellcaster(sealsker, 0).name("Sealsker Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(sealsker, 1)
+		register(FactionNpcBuilder.buildSpellcaster(sealsker, 1).name("Sealsker Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(sealsker, 2)
+		register(FactionNpcBuilder.buildSpellcaster(sealsker, 2).name("Sealsker Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(sealsker, 3)
+		register(FactionNpcBuilder.buildSpellcaster(sealsker, 3).name("Sealsker Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(sealsker, 4)
+		register(FactionNpcBuilder.buildSpellcaster(sealsker, 4).name("Sealsker Magician")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(sealsker)
-				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null));
-		saveNpc(buildEliteSoldier(sealsker)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null)
-				.experienceDropped(50));
-		saveNpc(buildArcher(sealsker));
-		saveNpc(buildEliteArcher(sealsker)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildLeader(sealsker)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), null)
-				.experienceDropped(80));
-		saveNpc(buildEliteLeader(sealsker)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.experienceDropped(40));
-		saveNpc(buildPriest(sealsker)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildTrader(sealsker));
-		saveNpc(buildFemaleCivilian(sealsker)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(sealsker));
+		register(FactionNpcBuilder.buildArcher(sealsker).name("Sealsker Hunter"));
+		register(FactionNpcBuilder.buildTrader(sealsker).name("Sealsker Gatherer"));
+		register(FactionNpcBuilder.buildMaleCivilian(sealsker).name("Sealsker Fisher"));
 
-		var shakayana = factionBuilder("shakayana")
+		var shakayana = FactionNpcBuilder.factionBuilder("shakayana")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(shakayana)
+		register(FactionNpcBuilder.buildSoldier(shakayana).name("Shakayana Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(shakayana)
+		register(FactionNpcBuilder.buildEliteSoldier(shakayana).name("Shakayana Palace Guard")
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("minecraft:golden_axe")));
-		saveNpc(buildCavalry(shakayana)
+		register(FactionNpcBuilder.buildCavalry(shakayana).name("Shakayana Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), null)
 				.experienceDropped(50));
-		saveNpc(buildLeader(shakayana)
+		register(FactionNpcBuilder.buildLeader(shakayana).name("Shakayana Warlord")
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(shakayana)
+		register(FactionNpcBuilder.buildEliteLeader(shakayana).name("Shakayana King")
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildFemaleCivilian(shakayana)
+		register(FactionNpcBuilder.buildFemaleCivilian(shakayana).name("Shakayana woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(shakayana, 0)
+		register(FactionNpcBuilder.buildSpellcaster(shakayana, 0).name("Shakayana Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(shakayana, 1)
+		register(FactionNpcBuilder.buildSpellcaster(shakayana, 1).name("Shakayana Air Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(shakayana, 2)
+		register(FactionNpcBuilder.buildSpellcaster(shakayana, 2).name("Shakayana Earth Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(shakayana, 3)
+		register(FactionNpcBuilder.buildSpellcaster(shakayana, 3).name("Shakayana Water Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(shakayana, 4)
+		register(FactionNpcBuilder.buildSpellcaster(shakayana, 4).name("Shakayana Fire Magi")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(shakayana)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(shakayana)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("minecraft:golden_axe")));
-		saveNpc(buildArcher(shakayana));
-		saveNpc(buildEliteArcher(shakayana));
-		saveNpc(buildCavalry(shakayana)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_lance"), null)
-				.experienceDropped(50));
-		saveNpc(buildMountedArcher(shakayana));
-		saveNpc(buildLeader(shakayana)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteLeader(shakayana)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildSiegeEngineer(shakayana));
-		saveNpc(buildPriest(shakayana));
-		saveNpc(buildBard(shakayana));
-		saveNpc(buildTrader(shakayana));
-		saveNpc(buildFemaleCivilian(shakayana)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(shakayana));
+		register(FactionNpcBuilder.buildArcher(shakayana).name("Shakayana Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(shakayana).name("Shakayana Guard"));
+		register(FactionNpcBuilder.buildMountedArcher(shakayana).name("Shakayana Swift Rider"));
+		register(FactionNpcBuilder.buildSiegeEngineer(shakayana).name("Shakayana Cannoneer"));
+		register(FactionNpcBuilder.buildPriest(shakayana).name("Shakayana Brahma"));
+		register(FactionNpcBuilder.buildBard(shakayana).name("Shakayana Harpist"));
+		register(FactionNpcBuilder.buildTrader(shakayana).name("Shakayana Merchant"));
+		register(FactionNpcBuilder.buildMaleCivilian(shakayana).name("Shakayana man"));
 
-		var smingol = factionBuilder("smingol");
-		saveNpc(buildEliteSoldier(smingol)
+		var smingol = FactionNpcBuilder.factionBuilder("smingol");
+		register(FactionNpcBuilder.buildEliteSoldier(smingol).name("Smingol Mangudai")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("minecraft:iron_sword"))
 				.experienceDropped(30));
-		saveNpc(buildSoldier(smingol)
+		register(FactionNpcBuilder.buildSoldier(smingol).name("Smingol Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildCavalry(smingol)
+		register(FactionNpcBuilder.buildCavalry(smingol).name("Smingol Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 65)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(65));
-		saveNpc(buildLeader(smingol)
+		register(FactionNpcBuilder.buildLeader(smingol).name("Smingol Warlord")
 				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildPriest(smingol)
+		register(FactionNpcBuilder.buildPriest(smingol).name("Smingol Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(smingol)
+		register(FactionNpcBuilder.buildFemaleCivilian(smingol).name("Smingol woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(smingol, 0)
+		register(FactionNpcBuilder.buildSpellcaster(smingol, 0).name("Smingol Magus")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(smingol, 1)
+		register(FactionNpcBuilder.buildSpellcaster(smingol, 1).name("Smingol Magus")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(smingol, 2)
+		register(FactionNpcBuilder.buildSpellcaster(smingol, 2).name("Smingol Lesser Magus")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(smingol, 3)
+		register(FactionNpcBuilder.buildSpellcaster(smingol, 3).name("Smingol Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(smingol, 4)
+		register(FactionNpcBuilder.buildSpellcaster(smingol, 4).name("Smingol Great Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(smingol)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(smingol)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("minecraft:iron_sword"))
-				.experienceDropped(30));
-		saveNpc(buildArcher(smingol));
-		saveNpc(buildEliteArcher(smingol));
-		saveNpc(buildCavalry(smingol)
-				.addAttribute(Attributes.MAX_HEALTH, 65)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.experienceDropped(65));
-		saveNpc(buildMountedArcher(smingol));
-		saveNpc(buildLeader(smingol)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteLeader(smingol));
-		saveNpc(buildSiegeEngineer(smingol));
-		saveNpc(buildPriest(smingol)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(smingol));
-		saveNpc(buildTrader(smingol));
-		saveNpc(buildFemaleCivilian(smingol)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(smingol));
+		register(FactionNpcBuilder.buildArcher(smingol).name("Smingol Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(smingol).name("Smingol Lookout"));
+		register(FactionNpcBuilder.buildMountedArcher(smingol).name("Smingol Raider"));
+		register(FactionNpcBuilder.buildEliteLeader(smingol).name("Smingol Khan"));
+		register(FactionNpcBuilder.buildSiegeEngineer(smingol).name("Smingol Cannoneer"));
+		register(FactionNpcBuilder.buildBard(smingol).name("Smingol Throat Singer"));
+		register(FactionNpcBuilder.buildTrader(smingol).name("Smingol Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(smingol).name("Smingol man"));
 
-		var undead = factionBuilder("undead")
+		var undead = FactionNpcBuilder.factionBuilder("undead")
 				.soundSet(AncientWarfare.id("zombie"));
-		saveNpc(buildSoldier(undead)
+		register(FactionNpcBuilder.buildSoldier(undead).name("Undead Zombie")
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildEliteSoldier(undead)
+		register(FactionNpcBuilder.buildEliteSoldier(undead).name("Undead Spectre")
 				.equipment(Identifier.parse("ancientwarfarenpc:scythe"), null)
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildArcher(undead)
+		register(FactionNpcBuilder.buildArcher(undead).name("Undead Skeleton")
 				.burnsInSun(true)
 				.soundSet(AncientWarfare.id("zombie"))
 				.undead(true));
-		saveNpc(buildEliteArcher(undead)
+		register(FactionNpcBuilder.buildEliteArcher(undead).name("Undead Lich")
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildCavalry(undead)
+		register(FactionNpcBuilder.buildCavalry(undead).name("Undead Wraith Rider")
 				.burnsInSun(true)
 				.undead(true)
 				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildMountedArcher(undead)
+		register(FactionNpcBuilder.buildMountedArcher(undead).name("Undead Ghost Rider")
 				.burnsInSun(true)
 				.undead(true)
 				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildLeader(undead)
+		register(FactionNpcBuilder.buildLeader(undead).name("Undead Death Knight")
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildEliteLeader(undead)
+		register(FactionNpcBuilder.buildEliteLeader(undead).name("Undead Liche Lord")
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
 				.equipment(Identifier.parse("ancientwarfarenpc:death_scythe"), null)
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildSiegeEngineer(undead)
+		register(FactionNpcBuilder.buildSiegeEngineer(undead).name("Undead Death Sender")
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildPriest(undead)
+		register(FactionNpcBuilder.buildPriest(undead).name("Undead Liche")
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildBard(undead)
+		register(FactionNpcBuilder.buildBard(undead).name("Banshee")
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildTrader(undead)
+		register(FactionNpcBuilder.buildTrader(undead).name("Undead Death Bargainer")
 				.equipment(Identifier.parse("minecraft:bone"), null)
 				.burnsInSun(true)
 				.undead(true));
-		saveNpc(buildSpellcaster(undead, 0)
+		register(FactionNpcBuilder.buildSpellcaster(undead, 0).name("Undead Skull Lord")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.burnsInSun(true)
 				.undead(true)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(undead, 1)
+		register(FactionNpcBuilder.buildSpellcaster(undead, 1).name("Undead Summoner")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(40)
 				.spells(Set.of(Identifier.parse("ebwizardry:lightning_arrow"), Identifier.parse("ebwizardry:summon_zombie"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(undead, 2)
+		register(FactionNpcBuilder.buildSpellcaster(undead, 2).name("Undead Necromancer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.spells(Set.of(Identifier.parse("ebwizardry:wither"), Identifier.parse("ebwizardry:poison"), Identifier.parse("ebwizardry:reversal"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_zombie"), Identifier.parse("ebwizardry:summon_skeleton"))));
-		saveNpc(buildSpellcaster(undead, 3)
+		register(FactionNpcBuilder.buildSpellcaster(undead, 3).name("Undead Liche")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(60)
 				.spells(Set.of(Identifier.parse("ebwizardry:darkness_orb"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:decay"), Identifier.parse("ebwizardry:blink"), Identifier.parse("ebwizardry:summon_wither_skeleton"))));
-		saveNpc(buildSpellcaster(undead, 4)
+		register(FactionNpcBuilder.buildSpellcaster(undead, 4).name("Liche Master")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(80)
 				.spells(Set.of(Identifier.parse("ebwizardry:darkness_orb"), Identifier.parse("ebwizardry:wither_skull"), Identifier.parse("ebwizardry:decay"), Identifier.parse("ebwizardry:summon_skeleton_legion"), Identifier.parse("ebwizardry:summon_shadow_wraith"))));
-		saveNpc(buildSoldier(undead)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildEliteSoldier(undead)
-				.equipment(Identifier.parse("ancientwarfarenpc:scythe"), null)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildArcher(undead)
-				.burnsInSun(true)
-				.soundSet(AncientWarfare.id("zombie"))
-				.undead(true));
-		saveNpc(buildEliteArcher(undead)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildCavalry(undead)
-				.burnsInSun(true)
-				.undead(true)
-				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildMountedArcher(undead)
-				.burnsInSun(true)
-				.undead(true)
-				.simpleMount(EntityType.SKELETON_HORSE));
-		saveNpc(buildLeader(undead)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildEliteLeader(undead)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.equipment(Identifier.parse("ancientwarfarenpc:death_scythe"), null)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildSiegeEngineer(undead)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildPriest(undead)
-				.equipment(Identifier.parse("minecraft:skull"), null)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildBard(undead)
-				.burnsInSun(true)
-				.undead(true));
-		saveNpc(buildTrader(undead)
-				.equipment(Identifier.parse("minecraft:bone"), null)
-				.burnsInSun(true)
-				.undead(true));
 
-		var vampire = factionBuilder("vampire");
-		saveNpc(buildSoldier(vampire)
+		var vampire = FactionNpcBuilder.factionBuilder("vampire");
+		register(FactionNpcBuilder.buildSoldier(vampire).name("Frankenstein Monster")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 6)
@@ -2500,7 +1654,7 @@ public class FactionNpcProvider implements DataProvider {
 				.burnsInSun(false)
 				.canSwim(false)
 				.soundSet(AncientWarfare.id("monster")));
-		saveNpc(buildEliteSoldier(vampire)
+		register(FactionNpcBuilder.buildEliteSoldier(vampire).name("Vampire Bride")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ARMOR, 1)
@@ -2509,23 +1663,23 @@ public class FactionNpcProvider implements DataProvider {
 				.canSwim(false)
 				.undead(true)
 				.soundSet(AncientWarfare.id("vampire_bride")));
-		saveNpc(buildArcher(vampire)
+		register(FactionNpcBuilder.buildArcher(vampire).name("Vampire Szygany Guard")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildEliteArcher(vampire)
+		register(FactionNpcBuilder.buildEliteArcher(vampire).name("Vampire Szygany Watcher")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildCavalry(vampire)
+		register(FactionNpcBuilder.buildCavalry(vampire).name("Vampire Death Dealer")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.addAttribute(Attributes.ARMOR, 1)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("minecraft:diamond_sword"), null)
 				.experienceDropped(80)
 				.burnsInSun(false));
-		saveNpc(buildMountedArcher(vampire)
+		register(FactionNpcBuilder.buildMountedArcher(vampire).name("Vampire Szygany Blood Hunter")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildLeader(vampire)
+		register(FactionNpcBuilder.buildLeader(vampire).name("Vampire Nosferatu")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.addAttribute(Attributes.ARMOR, 2)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
@@ -2534,7 +1688,7 @@ public class FactionNpcProvider implements DataProvider {
 				.canSwim(false)
 				.undead(true)
 				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildEliteLeader(vampire)
+		register(FactionNpcBuilder.buildEliteLeader(vampire).name("Vampire Drakul")
 				.addAttribute(Attributes.MAX_HEALTH, 120)
 				.addAttribute(Attributes.ARMOR, 4)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
@@ -2544,27 +1698,27 @@ public class FactionNpcProvider implements DataProvider {
 				.undead(true)
 				.soundSet(AncientWarfare.id("vampire_boss"))
 				.canSwim(false));
-		saveNpc(buildSiegeEngineer(vampire)
+		register(FactionNpcBuilder.buildSiegeEngineer(vampire).name("Vampire Szygany Warcrafter")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildPriest(vampire)
+		register(FactionNpcBuilder.buildPriest(vampire).name("Vampire Blood Priest")
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.burnsInSun(true)
 				.undead(true)
 				.canSwim(false)
 				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildTrader(vampire)
+		register(FactionNpcBuilder.buildTrader(vampire).name("Vampire Blood Bargainer")
 				.equipment(Identifier.parse("minecraft:bone"), null)
 				.burnsInSun(true)
 				.undead(true)
 				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildFemaleCivilian(vampire)
+		register(FactionNpcBuilder.buildFemaleCivilian(vampire).name("Vampire Blood Slave")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(vampire)
+		register(FactionNpcBuilder.buildMaleCivilian(vampire).name("Vampire Thrall")
 				.burnsInSun(false)
 				.soundSet(AncientWarfare.id("human")));
-		saveNpc(buildSpellcaster(vampire, 0)
+		register(FactionNpcBuilder.buildSpellcaster(vampire, 0).name("Vampire Strigoi")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.burnsInSun(true)
 				.undead(true)
@@ -2572,724 +1726,329 @@ public class FactionNpcProvider implements DataProvider {
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(vampire, 1)
+		register(FactionNpcBuilder.buildSpellcaster(vampire, 1).name("Vampire Strigoi")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(40)
 				.spells(Set.of(Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:invisibility"), Identifier.parse("ebwizardry:blink"))));
-		saveNpc(buildSpellcaster(vampire, 2)
+		register(FactionNpcBuilder.buildSpellcaster(vampire, 2).name("Vampire Mesmerist")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(50)
 				.spells(Set.of(Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:blink"), Identifier.parse("ebwizardry:decoy"), Identifier.parse("ebwizardry:oakflesh"))));
-		saveNpc(buildSpellcaster(vampire, 3)
+		register(FactionNpcBuilder.buildSpellcaster(vampire, 3).name("Vampire Blood Mage")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(60)
 				.spells(Set.of(Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:ironflesh"), Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:font_of_vitality"))));
-		saveNpc(buildSpellcaster(vampire, 4)
+		register(FactionNpcBuilder.buildSpellcaster(vampire, 4).name("Vampire Ancient")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.experienceDropped(80)
 				.spells(Set.of(Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:diamondflesh"), Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:font_of_vitality"))));
-		saveNpc(buildSoldier(vampire)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 6)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.burnsInSun(false)
-				.canSwim(false)
-				.soundSet(AncientWarfare.id("monster")));
-		saveNpc(buildEliteSoldier(vampire)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ARMOR, 1)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.burnsInSun(true)
-				.canSwim(false)
-				.undead(true)
-				.soundSet(AncientWarfare.id("vampire_bride")));
-		saveNpc(buildArcher(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildEliteArcher(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildCavalry(vampire)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.addAttribute(Attributes.ARMOR, 1)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), null)
-				.experienceDropped(80)
-				.burnsInSun(false));
-		saveNpc(buildMountedArcher(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildLeader(vampire)
-				.addAttribute(Attributes.MAX_HEALTH, 80)
-				.addAttribute(Attributes.ARMOR, 2)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.experienceDropped(80)
-				.burnsInSun(true)
-				.canSwim(false)
-				.undead(true)
-				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildEliteLeader(vampire)
-				.addAttribute(Attributes.MAX_HEALTH, 120)
-				.addAttribute(Attributes.ARMOR, 4)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 5)
-				.experienceDropped(120)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), null)
-				.burnsInSun(true)
-				.undead(true)
-				.soundSet(AncientWarfare.id("vampire_boss"))
-				.canSwim(false));
-		saveNpc(buildSiegeEngineer(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("malice")));
-		saveNpc(buildPriest(vampire)
-				.equipment(Identifier.parse("minecraft:skull"), null)
-				.burnsInSun(true)
-				.undead(true)
-				.canSwim(false)
-				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildTrader(vampire)
-				.equipment(Identifier.parse("minecraft:bone"), null)
-				.burnsInSun(true)
-				.undead(true)
-				.soundSet(AncientWarfare.id("vampire")));
-		saveNpc(buildFemaleCivilian(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(vampire)
-				.burnsInSun(false)
-				.soundSet(AncientWarfare.id("human")));
 
-		var vyncan = factionBuilder("vyncan")
+		var vyncan = FactionNpcBuilder.factionBuilder("vyncan")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(vyncan)
+		register(FactionNpcBuilder.buildSoldier(vyncan).name("Vyncan Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:stone_shield")));
-		saveNpc(buildEliteSoldier(vyncan)
+		register(FactionNpcBuilder.buildEliteSoldier(vyncan).name("Vyncan Blood Warrior")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null)
 				.experienceDropped(50));
-		saveNpc(buildEliteArcher(vyncan)
+		register(FactionNpcBuilder.buildEliteArcher(vyncan).name("Vyncan Guard")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildLeader(vyncan)
+		register(FactionNpcBuilder.buildLeader(vyncan).name("Vyncan Summoned Beast")
 				.addAttribute(Attributes.MAX_HEALTH, 80)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
 				.experienceDropped(80));
-		saveNpc(buildPriest(vyncan)
+		register(FactionNpcBuilder.buildPriest(vyncan).name("Vyncan Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(vyncan)
+		register(FactionNpcBuilder.buildFemaleCivilian(vyncan).name("Vyncan Woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(vyncan, 0)
+		register(FactionNpcBuilder.buildSpellcaster(vyncan, 0).name("Vyncan Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(vyncan, 1)
+		register(FactionNpcBuilder.buildSpellcaster(vyncan, 1).name("Vyncan Spellweaver")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(vyncan, 2)
+		register(FactionNpcBuilder.buildSpellcaster(vyncan, 2).name("Vyncan Spellbinder")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(vyncan, 3)
+		register(FactionNpcBuilder.buildSpellcaster(vyncan, 3).name("Vyncan Spellcharmer")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(vyncan, 4)
+		register(FactionNpcBuilder.buildSpellcaster(vyncan, 4).name("Vyncan Spellmaster")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(vyncan)
-				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:stone_shield")));
-		saveNpc(buildEliteSoldier(vyncan)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null)
-				.experienceDropped(50));
-		saveNpc(buildArcher(vyncan));
-		saveNpc(buildEliteArcher(vyncan)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildLeader(vyncan)
-				.addAttribute(Attributes.MAX_HEALTH, 80)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.experienceDropped(80));
-		saveNpc(buildEliteLeader(vyncan));
-		saveNpc(buildPriest(vyncan)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildTrader(vyncan));
-		saveNpc(buildFemaleCivilian(vyncan)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(vyncan));
+		register(FactionNpcBuilder.buildArcher(vyncan).name("Vyncan Archer"));
+		register(FactionNpcBuilder.buildEliteLeader(vyncan).name("Vyncan Chieftain"));
+		register(FactionNpcBuilder.buildTrader(vyncan).name("Vyncan Maiden"));
+		register(FactionNpcBuilder.buildMaleCivilian(vyncan).name("Vyncan Slave"));
 
-		var witchbane = factionBuilder("witchbane")
+		var witchbane = FactionNpcBuilder.factionBuilder("witchbane")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(witchbane)
+		register(FactionNpcBuilder.buildSoldier(witchbane).name("Witchbane Spearman")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_witchbane_1"))
 				.experienceDropped(40));
-		saveNpc(buildEliteSoldier(witchbane)
+		register(FactionNpcBuilder.buildEliteSoldier(witchbane).name("Witchbane Sergeant")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
 				.experienceDropped(60));
-		saveNpc(buildCavalry(witchbane)
+		register(FactionNpcBuilder.buildCavalry(witchbane).name("Witchbane Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
 				.experienceDropped(60));
-		saveNpc(buildLeader(witchbane)
+		register(FactionNpcBuilder.buildLeader(witchbane).name("Witchbane Master")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
 				.experienceDropped(70));
-		saveNpc(buildEliteLeader(witchbane)
+		register(FactionNpcBuilder.buildEliteLeader(witchbane).name("Witchbane Grandmaster")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
 				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(witchbane)
+		register(FactionNpcBuilder.buildSiegeEngineer(witchbane).name("Witchbane Artificier")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildPriest(witchbane)
+		register(FactionNpcBuilder.buildPriest(witchbane).name("Witchbane Priest")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(witchbane)
+		register(FactionNpcBuilder.buildFemaleCivilian(witchbane).name("Witchbane Nun")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_witchbane_1"))
-				.experienceDropped(40));
-		saveNpc(buildEliteSoldier(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null)
-				.experienceDropped(60));
-		saveNpc(buildArcher(witchbane));
-		saveNpc(buildEliteArcher(witchbane));
-		saveNpc(buildCavalry(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_lance"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
-				.experienceDropped(60));
-		saveNpc(buildMountedArcher(witchbane));
-		saveNpc(buildLeader(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
-				.experienceDropped(70));
-		saveNpc(buildEliteLeader(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:shield_witchbane_2"))
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildPriest(witchbane)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(witchbane));
-		saveNpc(buildTrader(witchbane));
-		saveNpc(buildFemaleCivilian(witchbane)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(witchbane));
+		register(FactionNpcBuilder.buildArcher(witchbane).name("Witchbane Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(witchbane).name("Witchbane Sentry"));
+		register(FactionNpcBuilder.buildMountedArcher(witchbane).name("Witchbane Retainer"));
+		register(FactionNpcBuilder.buildBard(witchbane).name("Witchbane Hymn Singer"));
+		register(FactionNpcBuilder.buildTrader(witchbane).name("Witchbane Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(witchbane).name("Witchbane Monk"));
 
-		var wizardly = factionBuilder("wizardly")
+		var wizardly = FactionNpcBuilder.factionBuilder("wizardly")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(wizardly)
+		register(FactionNpcBuilder.buildSoldier(wizardly).name("Wizardly Guard")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteSoldier(wizardly)
+		register(FactionNpcBuilder.buildEliteSoldier(wizardly).name("Wizardly Guardian")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildArcher(wizardly)
+		register(FactionNpcBuilder.buildArcher(wizardly).name("Wizardly Archer")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.experienceDropped(30));
-		saveNpc(buildLeader(wizardly)
+		register(FactionNpcBuilder.buildLeader(wizardly).name("Wizardly Teacher")
 				.addAttribute(Attributes.MAX_HEALTH, 55)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.experienceDropped(55));
-		saveNpc(buildEliteLeader(wizardly)
+		register(FactionNpcBuilder.buildEliteLeader(wizardly).name("Wizardly Groundkeeper")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null)
 				.experienceDropped(70));
-		saveNpc(buildPriest(wizardly)
+		register(FactionNpcBuilder.buildPriest(wizardly).name("Wizardly Healer")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.equipment(Identifier.parse("minecraft:golden_apple"), null)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(wizardly)
+		register(FactionNpcBuilder.buildFemaleCivilian(wizardly).name("Wizardly Girl Student")
 				.addAttribute(Attributes.MAX_HEALTH, 10)
 				.soundSet(AncientWarfare.id("human_female"))
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.experienceDropped(10));
-		saveNpc(buildMaleCivilian(wizardly)
+		register(FactionNpcBuilder.buildMaleCivilian(wizardly).name("Wizardly Boy Student")
 				.addAttribute(Attributes.MAX_HEALTH, 10)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.experienceDropped(10));
-		saveNpc(buildSpellcaster(wizardly, 0)
+		register(FactionNpcBuilder.buildSpellcaster(wizardly, 0).name("Wizardly Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(wizardly, 1)
+		register(FactionNpcBuilder.buildSpellcaster(wizardly, 1).name("Wizardly Spell Teacher")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(wizardly, 2)
+		register(FactionNpcBuilder.buildSpellcaster(wizardly, 2).name("Wizardly Spell Master")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(wizardly, 3)
+		register(FactionNpcBuilder.buildSpellcaster(wizardly, 3).name("Wizardly Spell Binder")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(wizardly, 4)
+		register(FactionNpcBuilder.buildSpellcaster(wizardly, 4).name("Wizardly Archimage")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30)
-				.equipment(Identifier.parse("ancientwarfarenpc:golden_halberd"), null));
-		saveNpc(buildEliteSoldier(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildArcher(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30));
-		saveNpc(buildEliteArcher(wizardly));
-		saveNpc(buildLeader(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 55)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.equipment(Identifier.parse("minecraft:stick"), null)
-				.experienceDropped(55));
-		saveNpc(buildEliteLeader(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 70)
-				.addAttribute(Attributes.KNOCKBACK_RESISTANCE, 1)
-				.equipment(Identifier.parse("minecraft:iron_axe"), null)
-				.experienceDropped(70));
-		saveNpc(buildSiegeEngineer(wizardly));
-		saveNpc(buildPriest(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.equipment(Identifier.parse("minecraft:golden_apple"), null)
-				.experienceDropped(50));
-		saveNpc(buildBard(wizardly));
-		saveNpc(buildTrader(wizardly));
-		saveNpc(buildFemaleCivilian(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.soundSet(AncientWarfare.id("human_female"))
-				.equipment(Identifier.parse("minecraft:book"), null)
-				.experienceDropped(10));
-		saveNpc(buildMaleCivilian(wizardly)
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.equipment(Identifier.parse("minecraft:book"), null)
-				.experienceDropped(10));
+		register(FactionNpcBuilder.buildEliteArcher(wizardly).name("Wizardly Sentinel"));
+		register(FactionNpcBuilder.buildSiegeEngineer(wizardly).name("Wizardly Artificier"));
+		register(FactionNpcBuilder.buildBard(wizardly).name("Wizardly Spellsinger"));
+		register(FactionNpcBuilder.buildTrader(wizardly).name("Wizardly Apprentice"));
 
-		var xoltec = factionBuilder("xoltec")
+		var xoltec = FactionNpcBuilder.factionBuilder("xoltec")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(xoltec)
+		register(FactionNpcBuilder.buildSoldier(xoltec).name("Xoltec Spearman")
 				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(xoltec)
+		register(FactionNpcBuilder.buildEliteSoldier(xoltec).name("Xoltec Jaguar Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null)
 				.experienceDropped(40));
-		saveNpc(buildEliteArcher(xoltec)
+		register(FactionNpcBuilder.buildEliteArcher(xoltec).name("Xoltec Eagle Knight")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(40));
-		saveNpc(buildCavalry(xoltec)
+		register(FactionNpcBuilder.buildCavalry(xoltec).name("Xoltec Temple Guard")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:gold_shield"))
 				.experienceDropped(60)
 				.simpleMount(EntityType.LLAMA));
-		saveNpc(buildMountedArcher(xoltec)
+		register(FactionNpcBuilder.buildMountedArcher(xoltec).name("Xoltec Falcon Knight")
 				.simpleMount(EntityType.LLAMA));
-		saveNpc(buildLeader(xoltec)
+		register(FactionNpcBuilder.buildLeader(xoltec).name("Xoltec Warlord")
 				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null));
-		saveNpc(buildEliteLeader(xoltec)
+		register(FactionNpcBuilder.buildEliteLeader(xoltec).name("Xoltec Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), Identifier.parse("ancientwarfarenpc:macuahuitl"))
 				.experienceDropped(100));
-		saveNpc(buildPriest(xoltec)
+		register(FactionNpcBuilder.buildPriest(xoltec).name("Xoltec Heart-Reaper")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.experienceDropped(50));
-		saveNpc(buildFemaleCivilian(xoltec)
+		register(FactionNpcBuilder.buildFemaleCivilian(xoltec).name("Xoltec Matron")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(xoltec, 0)
+		register(FactionNpcBuilder.buildSpellcaster(xoltec, 0).name("Xoltec Demonist")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(xoltec, 1)
+		register(FactionNpcBuilder.buildSpellcaster(xoltec, 1).name("Heart ripper")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(xoltec, 2)
+		register(FactionNpcBuilder.buildSpellcaster(xoltec, 2).name("Sacrificer")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(xoltec, 3)
+		register(FactionNpcBuilder.buildSpellcaster(xoltec, 3).name("Soul Ripper")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(xoltec, 4)
+		register(FactionNpcBuilder.buildSpellcaster(xoltec, 4).name("Demon Master")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(xoltec)
-				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildEliteSoldier(xoltec)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null)
-				.experienceDropped(40));
-		saveNpc(buildArcher(xoltec));
-		saveNpc(buildEliteArcher(xoltec)
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.experienceDropped(40));
-		saveNpc(buildCavalry(xoltec)
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:gold_shield"))
-				.experienceDropped(60)
-				.simpleMount(EntityType.LLAMA));
-		saveNpc(buildMountedArcher(xoltec)
-				.simpleMount(EntityType.LLAMA));
-		saveNpc(buildLeader(xoltec)
-				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null));
-		saveNpc(buildEliteLeader(xoltec)
-				.addAttribute(Attributes.MAX_HEALTH, 100)
-				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), Identifier.parse("ancientwarfarenpc:macuahuitl"))
-				.experienceDropped(100));
-		saveNpc(buildSiegeEngineer(xoltec));
-		saveNpc(buildPriest(xoltec)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.experienceDropped(50));
-		saveNpc(buildBard(xoltec));
-		saveNpc(buildTrader(xoltec));
-		saveNpc(buildFemaleCivilian(xoltec)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(xoltec));
+		register(FactionNpcBuilder.buildArcher(xoltec).name("Xoltec Archer"));
+		register(FactionNpcBuilder.buildSiegeEngineer(xoltec).name("Xoltec Artificier"));
+		register(FactionNpcBuilder.buildBard(xoltec).name("Xoltec Codex Keeper"));
+		register(FactionNpcBuilder.buildTrader(xoltec).name("Xoltec Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(xoltec).name("Xoltec Slave"));
 
-		var zamurai = factionBuilder("zamurai")
+		var zamurai = FactionNpcBuilder.factionBuilder("zamurai")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(zamurai)
+		register(FactionNpcBuilder.buildSoldier(zamurai).name("Zamurai Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(zamurai)
+		register(FactionNpcBuilder.buildEliteSoldier(zamurai).name("Zamurai Gem Warrior")
 				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildCavalry(zamurai)
+		register(FactionNpcBuilder.buildCavalry(zamurai).name("Zamurai Noble")
 				.addAttribute(Attributes.MAX_HEALTH, 50)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("minecraft:iron_sword"), null)
 				.experienceDropped(50));
-		saveNpc(buildLeader(zamurai)
+		register(FactionNpcBuilder.buildLeader(zamurai).name("Zamurai Warlord")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildEliteLeader(zamurai)
+		register(FactionNpcBuilder.buildEliteLeader(zamurai).name(" Zamurai Shogun")
 				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildFemaleCivilian(zamurai)
+		register(FactionNpcBuilder.buildFemaleCivilian(zamurai).name("Zamurai woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSpellcaster(zamurai, 0)
+		register(FactionNpcBuilder.buildSpellcaster(zamurai, 0).name("Zamurai Sorceror")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of()));
-		saveNpc(buildSpellcaster(zamurai, 1)
+		register(FactionNpcBuilder.buildSpellcaster(zamurai, 1).name("Zamurai Spellcaster")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(30)
 				.equipment(Identifier.parse("minecraft:book"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:fireball"))));
-		saveNpc(buildSpellcaster(zamurai, 2)
+		register(FactionNpcBuilder.buildSpellcaster(zamurai, 2).name("Zamurai Spellbinder")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.experienceDropped(40)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"))));
-		saveNpc(buildSpellcaster(zamurai, 3)
+		register(FactionNpcBuilder.buildSpellcaster(zamurai, 3).name("Zamurai Spellbreaker")
 				.addAttribute(Attributes.MAX_HEALTH, 40)
 				.experienceDropped(50)
 				.equipment(Identifier.parse("minecraft:stick"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:life_drain"), Identifier.parse("ebwizardry:summon_blaze"))));
-		saveNpc(buildSpellcaster(zamurai, 4)
+		register(FactionNpcBuilder.buildSpellcaster(zamurai, 4).name("Zamurai Spellmaster")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.experienceDropped(100)
 				.equipment(Identifier.parse("minecraft:skull"), null)
 				.spells(Set.of(Identifier.parse("ebwizardry:curse_of_enfeeblement"), Identifier.parse("ebwizardry:firebolt"), Identifier.parse("ebwizardry:summon_blaze"), Identifier.parse("ebwizardry:fireskin"), Identifier.parse("ebwizardry:ring_of_fire"))));
-		saveNpc(buildSoldier(zamurai)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield")));
-		saveNpc(buildEliteSoldier(zamurai)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null));
-		saveNpc(buildArcher(zamurai));
-		saveNpc(buildEliteArcher(zamurai));
-		saveNpc(buildCavalry(zamurai)
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.equipment(Identifier.parse("minecraft:iron_sword"), null)
-				.experienceDropped(50));
-		saveNpc(buildMountedArcher(zamurai));
-		saveNpc(buildLeader(zamurai)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_halberd"), null));
-		saveNpc(buildEliteLeader(zamurai)
-				.equipment(Identifier.parse("minecraft:golden_sword"), Identifier.parse("ancientwarfarenpc:gold_shield")));
-		saveNpc(buildSiegeEngineer(zamurai));
-		saveNpc(buildPriest(zamurai));
-		saveNpc(buildBard(zamurai));
-		saveNpc(buildTrader(zamurai));
-		saveNpc(buildFemaleCivilian(zamurai)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(zamurai));
+		register(FactionNpcBuilder.buildArcher(zamurai).name("Zamurai Archer"));
+		register(FactionNpcBuilder.buildEliteArcher(zamurai).name("Zamurai Guard"));
+		register(FactionNpcBuilder.buildMountedArcher(zamurai).name("Zamurai Retainer"));
+		register(FactionNpcBuilder.buildSiegeEngineer(zamurai).name("Zamurai Artificier"));
+		register(FactionNpcBuilder.buildPriest(zamurai).name("Zamurai Priest"));
+		register(FactionNpcBuilder.buildBard(zamurai).name("Zamurai Bard"));
+		register(FactionNpcBuilder.buildTrader(zamurai).name("Zamurai Trader"));
+		register(FactionNpcBuilder.buildMaleCivilian(zamurai).name("Zamurai man"));
 
-		var zimba = factionBuilder("zimba")
+		var zimba = FactionNpcBuilder.factionBuilder("zimba")
 				.soundSet(AncientWarfare.id("human"));
-		saveNpc(buildSoldier(zimba)
+		register(FactionNpcBuilder.buildSoldier(zimba).name("Zimba Warrior")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_tribal_1")));
-		saveNpc(buildEliteSoldier(zimba)
+		register(FactionNpcBuilder.buildEliteSoldier(zimba).name("Zimba Lionheart")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("ancientwarfarenpc:wooden_shield"))
 				.experienceDropped(30));
-		saveNpc(buildCavalry(zimba)
+		register(FactionNpcBuilder.buildCavalry(zimba).name("Zimba Hero")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_tribal_2")));
-		saveNpc(buildLeader(zimba)
+		register(FactionNpcBuilder.buildLeader(zimba).name("Zimba Chief")
 				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:shield_tribal_2")));
-		saveNpc(buildPriest(zimba)
+		register(FactionNpcBuilder.buildPriest(zimba).name("Zimba Witchdoctor")
 				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildTrader(zimba)
+		register(FactionNpcBuilder.buildTrader(zimba).name("Zimba Haggler")
 				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildFemaleCivilian(zimba)
+		register(FactionNpcBuilder.buildFemaleCivilian(zimba).name("Zimba Woman")
 				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildSoldier(zimba)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_tribal_1")));
-		saveNpc(buildEliteSoldier(zimba)
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.equipment(Identifier.parse("minecraft:iron_sword"), Identifier.parse("ancientwarfarenpc:wooden_shield"))
-				.experienceDropped(30));
-		saveNpc(buildArcher(zimba));
-		saveNpc(buildEliteArcher(zimba));
-		saveNpc(buildCavalry(zimba)
-				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_tribal_2")));
-		saveNpc(buildMountedArcher(zimba));
-		saveNpc(buildLeader(zimba)
-				.equipment(Identifier.parse("minecraft:diamond_sword"), Identifier.parse("ancientwarfarenpc:shield_tribal_2")));
-		saveNpc(buildEliteLeader(zimba));
-		saveNpc(buildSiegeEngineer(zimba));
-		saveNpc(buildPriest(zimba)
-				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildBard(zimba));
-		saveNpc(buildTrader(zimba)
-				.equipment(Identifier.parse("minecraft:stick"), null));
-		saveNpc(buildFemaleCivilian(zimba)
-				.soundSet(AncientWarfare.id("human_female")));
-		saveNpc(buildMaleCivilian(zimba));
+		register(FactionNpcBuilder.buildArcher(zimba).name("Zimba Bowman"));
+		register(FactionNpcBuilder.buildEliteArcher(zimba).name("Zimba Lookout"));
+		register(FactionNpcBuilder.buildMountedArcher(zimba).name("Zimba Scout"));
+		register(FactionNpcBuilder.buildEliteLeader(zimba).name("Zimba King"));
+		register(FactionNpcBuilder.buildSiegeEngineer(zimba).name("Zimba Farshooter"));
+		register(FactionNpcBuilder.buildBard(zimba).name("Zimba Chanter"));
+		register(FactionNpcBuilder.buildMaleCivilian(zimba).name("Zimba Man"));
+	}
+
+	private void register(FactionNpcBuilder builder) {
+		builders.add(builder);
 	}
 
 	@Override
-	public CompletableFuture<?> run(CachedOutput cache) {
-		generate(registries.join());
-		return CompletableFuture.completedFuture(null);
-	}
-
-	@Override
-	public String getName() {
-		return "Ancient Warfare Faction Npcs registry";
-	}
-
-
-	public void saveNpc(FactionNpcData.Builder dataBuilder) {
-		saveNpc(dataBuilder.buildAutoId());
-	}
-
-	public void saveNpc(FactionNpcData data) {
-		Identifier name = data.id();
-		Path file = output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(name.getNamespace() + "/npcs/" + name.getPath() + ".json");
-
-		var json = FactionNpcData.CODEC.encodeStart(JsonOps.INSTANCE, data)
-				.getOrThrow();
-		try {
-			Files.createDirectories(file.getParent());
-			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(json));
-		} catch (IOException e) {
-			System.out.println("Cannot save file for npc " + name);
-			log.error("exception: ", e);
-		}
-	}
-
-	public FactionNpcData.Builder buildCavalry(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("cavalry"))
-				.horseMount()
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.addAttribute(Attributes.MAX_HEALTH, 2)
-				.experienceDropped(40)
-				.equipment(Items.IRON_SWORD, null)
-				.lootTable(AncientWarfare.id("entities/cavalry"));
-	}
-
-	public FactionNpcData.Builder buildSoldier(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("soldier"))
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.experienceDropped(20)
-				.equipment(Items.IRON_SWORD, null)
-				.lootTable(AncientWarfare.id("entities/soldier"));
-	}
-
-	public FactionNpcData.Builder buildEliteSoldier(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("elite_soldier"))
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0.325)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 2)
-				.experienceDropped(30)
-				.equipment(Items.IRON_SWORD, null)
-				.lootTable(AncientWarfare.id("entities/elite_soldier"));
-	}
-
-	public FactionNpcData.Builder buildArcher(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("archer"))
-				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.addAttribute(Attributes.FOLLOW_RANGE, 60)
-				.experienceDropped(20)
-				.equipment(Items.BOW, null)
-				.lootTable(AncientWarfare.id("entities/archer"));
-	}
-
-	public FactionNpcData.Builder buildMountedArcher(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("mounted_archer"))
-				.horseMount()
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(30)
-				.equipment(Items.BOW, null)
-				.lootTable(AncientWarfare.id("entities/mounted_archer"));
-	}
-
-	public FactionNpcData.Builder buildEliteArcher(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("elite_archer"))
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.FOLLOW_RANGE, 80)
-				.experienceDropped(30)
-				.equipment(Items.BOW, null)
-				.lootTable(AncientWarfare.id("entities/elite_archer"));
-	}
-
-	public FactionNpcData.Builder buildLeader(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("leader"))
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 3)
-				.experienceDropped(50)
-				.equipment(Items.DIAMOND_SWORD, null)
-				.lootTable(AncientWarfare.id("entities/leader"));
-	}
-
-	public FactionNpcData.Builder buildEliteLeader(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("elite_leader"))
-				.addAttribute(Attributes.MAX_HEALTH, 60)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 4)
-				.experienceDropped(60)
-				.equipment(Items.DIAMOND_SWORD, null)
-				.lootTable(AncientWarfare.id("entities/elite_leader"));
-	}
-
-	public FactionNpcData.Builder buildSiegeEngineer(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("siege_engineer"))
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.addAttribute(Attributes.FOLLOW_RANGE, 120)
-				.experienceDropped(30)
-				.lootTable(AncientWarfare.id("entities/siege_engineer"));
-	}
-
-	public FactionNpcData.Builder buildPriest(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("priest"))
-				.addAttribute(Attributes.MAX_HEALTH, 40)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0.375)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 0)
-				.experienceDropped(40)
-				.healPerTry(0.5)
-				.equipment(Items.BOOK, null)
-				.lootTable(AncientWarfare.id("entities/priest"));
-	}
-
-	public FactionNpcData.Builder buildTrader(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("trader"))
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 0)
-				.experienceDropped(40)
-				.equipment(Items.BOOK, null)
-				.lootTable(Identifier.withDefaultNamespace("empty"));
-	}
-
-	public FactionNpcData.Builder buildSpellcaster(FactionNpcData.Builder builder, int variant) {
-		return builder.copy()
-				.npcType(AncientWarfare.id(variant > 0 ? "spell_caster_" + variant : "spell_caster"))
-				.addAttribute(Attributes.MAX_HEALTH, 30)
-				.experienceDropped(40)
-				.lootTable(AncientWarfare.id("entities/soldier"))
-				.spells(Set.of(Identifier.parse("ebwizardry:magic_missile")));
-	}
-
-	public FactionNpcData.Builder buildBard(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("bard"))
-				.addAttribute(Attributes.ATTACK_DAMAGE, 0)
-				.experienceDropped(40)
-				.equipment(AWItems.STEEL_INGOT, null);
-	}
-
-	public FactionNpcData.Builder buildMaleCivilian(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("male_civilian"))
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 0);
-	}
-
-	public FactionNpcData.Builder buildFemaleCivilian(FactionNpcData.Builder builder) {
-		return builder.copy()
-				.npcType(AncientWarfare.id("female_civilian"))
-				.addAttribute(Attributes.MAX_HEALTH, 10)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 0);
-	}
-
-	/**
-	 * Default npc parameters for any faction
-	 */
-	public FactionNpcData.Builder factionBuilder(String faction) {
-		return FactionNpcData.builder()
-				.faction(AncientWarfare.id(faction))
-				.soundSet(AncientWarfare.id("human_male"))
-				.addAttribute(Attributes.MAX_HEALTH, 50)
-				.addAttribute(Attributes.MOVEMENT_SPEED, 0.3)
-				.addAttribute(Attributes.FOLLOW_RANGE, 35)
-				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
-				.experienceDropped(30)
-				.navigation(true, false, true)
-				.burnsInSun(false)
-				.undead(false)
-				.lootTable(Identifier.withDefaultNamespace("empty"));
+	public @NonNull Iterator<FactionNpcBuilder> iterator() {
+		return builders.iterator();
 	}
 }

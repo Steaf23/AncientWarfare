@@ -1,4 +1,4 @@
-package io.github.steaf23.ancientwarfare.client.datagen;
+package io.github.steaf23.ancientwarfare.client.datagen.faction;
 
 import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.npc.faction.Faction;

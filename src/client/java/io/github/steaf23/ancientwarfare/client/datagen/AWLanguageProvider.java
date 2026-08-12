@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
+import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionNpcDefinitions;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
@@ -22,8 +23,11 @@ import java.util.function.Function;
 
 public class AWLanguageProvider extends FabricLanguageProvider {
 
-	protected AWLanguageProvider(FabricPackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
+	private final FactionNpcDefinitions npcs;
+
+	protected AWLanguageProvider(FactionNpcDefinitions npcs, FabricPackOutput packOutput, CompletableFuture<HolderLookup.Provider> registryLookup) {
 		super(packOutput, registryLookup);
+		this.npcs = npcs;
 	}
 
 	@Override
@@ -43,11 +47,21 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 				.custom("metal.ancientwarfare." + CoinMetal.COPPER.getSerializedName(), "Copper")
 				.custom("metal.ancientwarfare." + CoinMetal.GOLD.getSerializedName(), "Gold")
 				.custom("metal.ancientwarfare." + CoinMetal.ANCIENT.getSerializedName(), "Ancient")
-				.custom("npc.ancientwarfare.empire.soldier", "Empire Spearman")
 				.custom("generator.ancientwarfare.structure_debug", "AW Structure Debug")
 				.custom("item.ancientwarfare.faction_banner", "%s Banner")
 				.custom("item.ancientwarfare.research_book", "Treatise on the Principles of Ruling")
 		;
+
+		npcs.factions().forEach(faction -> {
+			switch (faction.id().getPath()) {
+				case "coven" -> builder.custom(faction.getDescription(), "Witch's Coven");
+				case "guild" -> builder.custom(faction.getDescription(), "Merchant Guild");
+				default -> {
+					builder.custom(faction.getDescription(), ConventionText.snakeCaseToTitleCase(faction.id().getPath()));
+				}
+			}
+		});
+		npcs.forEach(npc -> builder.custom(npc.getTranslationKey(), npc.getName()));
 	}
 
 	static class AWTranslationBuilder {

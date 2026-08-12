@@ -2,6 +2,7 @@ package io.github.steaf23.ancientwarfare.client.datagen;
 
 import com.google.gson.JsonObject;
 import com.mojang.math.Quadrant;
+import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionTintSource;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner.FactionBannerSpecialRenderer;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
@@ -34,7 +35,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

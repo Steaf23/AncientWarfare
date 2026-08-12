@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
+import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionTintSource;
 import io.github.steaf23.ancientwarfare.client.structure.gui.render.block.factionbanner.FactionBannerSpecialRenderer;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import net.minecraft.client.color.item.ItemTintSources;
