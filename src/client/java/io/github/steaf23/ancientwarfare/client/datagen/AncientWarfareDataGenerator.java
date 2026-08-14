@@ -4,6 +4,7 @@ package io.github.steaf23.ancientwarfare.client.datagen;
 import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionNpcDefinitions;
 import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionNpcProvider;
 import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionProvider;
+import io.github.steaf23.ancientwarfare.client.datagen.faction.NpcModelProvider;
 import io.github.steaf23.ancientwarfare.client.datagen.structure.StructureConversionProvider;
 import io.github.steaf23.ancientwarfare.core.registry.AWStructures;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -25,6 +26,7 @@ public class AncientWarfareDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider((output, registriesFuture) -> new AWLanguageProvider(npcs, output, registriesFuture));
 		pack.addProvider((output, registriesFuture) -> new FactionProvider(npcs.factions(), output, registriesFuture));
 		pack.addProvider((output, registriesFuture) -> new FactionNpcProvider(npcs, output, registriesFuture));
+		pack.addProvider(NpcModelProvider::new);
 		pack.addProvider(AWSoundProvider::new);
 		pack.addProvider((output, registriesFuture) ->
 				new FabricDynamicRegistryProvider(output, registriesFuture) {

@@ -1,0 +1,3140 @@
+package io.github.steaf23.ancientwarfare.client.datagen.faction;
+
+import com.google.gson.GsonBuilder;
+import com.mojang.serialization.JsonOps;
+import io.github.steaf23.ancientwarfare.client.npc.render.entity.NpcModel;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.CachedOutput;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.PackOutput;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+
+public class NpcModelProvider implements DataProvider {
+
+	private static final Logger log = LogManager.getLogger(FactionNpcProvider.class);
+	private final FabricPackOutput output;
+	private final CompletableFuture<HolderLookup.Provider> registries;
+
+	public NpcModelProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		this.output = output;
+		this.registries = registries;
+	}
+
+	@Override
+	public CompletableFuture<?> run(CachedOutput cache) {
+		registries.join();
+
+		generate("worker/researcher", NpcModel.usingSkinPack(List.of(
+				"po_worker_researcher_1",
+				"po_worker_researcher_2",
+				"po_worker_researcher_3",
+				"po_worker_researcher_4",
+				"po_worker_researcher_5",
+				"po_worker_researcher_6",
+				"po_worker_researcher_7")));
+		generate("worker/craftsman", NpcModel.usingSkinPack(List.of(
+				"po_worker_craftsman_1",
+				"po_worker_craftsman_2",
+				"po_worker_craftsman_3",
+				"po_worker_craftsman_4",
+				"po_worker_craftsman_5")));
+		generate("worker/farmer", NpcModel.usingSkinPack(List.of(
+				"po_worker_farmer_1",
+				"po_worker_farmer_2",
+				"po_worker_farmer_3",
+				"po_worker_farmer_4",
+				"po_worker_farmer_5",
+				"po_worker_farmer_6",
+				"po_worker_farmer_7")));
+		generate("worker/miner", NpcModel.usingSkinPack(List.of(
+				"po_worker_miner_1",
+				"po_worker_miner_2",
+				"po_worker_miner_3",
+				"po_worker_miner_4",
+				"po_worker_miner_5")));
+		generate("worker/lumberjack", NpcModel.usingSkinPack(List.of(
+				"po_worker_lumberjack_1",
+				"po_worker_lumberjack_2")));
+		generate("combat/soldier", NpcModel.usingSkinPack(List.of(
+				"po_soldier_1",
+				"po_soldier_2",
+				"po_soldier_3",
+				"po_soldier_4")));
+		generate("combat/archer", NpcModel.usingSkinPack("po_archer"));
+		generate("combat/medic", NpcModel.usingSkinPack("po_medic"));
+		generate("combat/engineer", NpcModel.usingSkinPack("po_engineer"));
+		generate("combat/commander", NpcModel.usingSkinPack(List.of(
+				"po_commander_1",
+				"po_commander_2",
+				"po_commander_3")));
+		generate("amazon/elite_archer", NpcModel.usingSkinPack(List.of(
+				"amazon_sentry_archer_1",
+				"amazon_sentry_archer_2")));
+		generate("amazon/archer", NpcModel.usingSkinPack(List.of(
+				"amazon_archer_1",
+				"amazon_archer_2",
+				"amazon_archer_3")));
+		generate("amazon/bard", NpcModel.usingSkinPack("amazon_singer"));
+		generate("amazon/cavalry", NpcModel.usingSkinPack(List.of(
+				"amazon_cataphract_1",
+				"amazon_cataphract_2",
+				"amazon_cataphract_3",
+				"amazon_cataphract_4",
+				"amazon_cataphract_5")));
+		generate("amazon/civilian_female", NpcModel.usingSkinPack(List.of(
+				"amazon_childbearer_1",
+				"amazon_childbearer_2")));
+		generate("amazon/civilian_male", NpcModel.usingSkinPack(List.of(
+				"amazon_male_slave_1",
+				"amazon_male_slave_2")));
+		generate("amazon/elite_leader", NpcModel.usingSkinPack(List.of(
+				"amazon_queen_1",
+				"amazon_queen_2",
+				"amazon_queen_3",
+				"amazon_queen_4")));
+		generate("amazon/leader", NpcModel.usingSkinPack(List.of(
+				"amazon_chief_1",
+				"amazon_chief_2",
+				"amazon_princess")));
+		generate("amazon/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"amazon_archer",
+				"amazon_cavalry_1",
+				"amazon_rider")));
+		generate("amazon/priest", NpcModel.usingSkinPack(List.of(
+				"amazon_healer_1",
+				"amazon_healer_2",
+				"amazon_priestess")));
+		generate("amazon/siege_engineer", NpcModel.usingSkinPack("amazon_weapon_tinker"));
+		generate("amazon/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"amazon_swordsmistress_1",
+				"amazon_swordsmistress_2",
+				"amazon_swordsmistress_3")));
+		generate("amazon/soldier", NpcModel.usingSkinPack(List.of(
+				"amazon_warrior_1",
+				"amazon_warrior_2",
+				"amazon_warrior_3")));
+		generate("amazon/spell_caster_1", NpcModel.usingSkinPack("custom_enchantress_1"));
+		generate("amazon/spell_caster_2", NpcModel.usingSkinPack("custom_enchantress_2"));
+		generate("amazon/spell_caster_3", NpcModel.usingSkinPack("custom_enchantress_1"));
+		generate("amazon/spell_caster_4", NpcModel.usingSkinPack("custom_enchantress_2"));
+		generate("amazon/spell_caster", NpcModel.usingSkinPack("custom_adventurer_enchantress"));
+		generate("amazon/trader", NpcModel.usingSkinPack(List.of(
+				"amazon_trader_1",
+				"amazon_trader_2")));
+		generate("barbarian/archer", NpcModel.usingSkinPack(List.of(
+				"barbarian_archer_1",
+				"barbarian_archer_10",
+				"barbarian_archer_2",
+				"barbarian_archer_3",
+				"barbarian_archer_4",
+				"barbarian_archer_5",
+				"barbarian_archer_6",
+				"barbarian_archer_7",
+				"barbarian_archer_8",
+				"barbarian_archer_9")));
+		generate("barbarian/elite_leader", NpcModel.usingSkinPack(List.of(
+				"barbarian_warlord_1",
+				"barbarian_warlord_2",
+				"barbarian_warlord_3",
+				"barbarian_warlord_4",
+				"barbarian_warlord_5",
+				"barbarian_warlord_6",
+				"barbarian_warlord_7")));
+		generate("barbarian/leader", NpcModel.usingSkinPack(List.of(
+				"barbarian_chief_1",
+				"barbarian_chief_10",
+				"barbarian_chief_2",
+				"barbarian_chief_3",
+				"barbarian_chief_4",
+				"barbarian_chief_5",
+				"barbarian_chief_6",
+				"barbarian_chief_7",
+				"barbarian_chief_8",
+				"barbarian_chief_9",
+				"barbarian_lord_1",
+				"barbarian_lord_2",
+				"barbarian_lord_3",
+				"barbarian_lord_4")));
+		generate("barbarian/priest", NpcModel.usingSkinPack(List.of(
+				"barbarian_druidess",
+				"barbarian_shaman_1",
+				"barbarian_shaman_2",
+				"barbarian_shaman_3",
+				"barbarian_shaman_4",
+				"barbarian_shaman_5")));
+		generate("barbarian/soldier", NpcModel.usingSkinPack(List.of(
+				"barbarian_1",
+				"barbarian_10",
+				"barbarian_11",
+				"barbarian_12",
+				"barbarian_13",
+				"barbarian_14",
+				"barbarian_15",
+				"barbarian_16",
+				"barbarian_17",
+				"barbarian_18",
+				"barbarian_19",
+				"barbarian_2",
+				"barbarian_20",
+				"barbarian_3",
+				"barbarian_4",
+				"barbarian_5",
+				"barbarian_6",
+				"barbarian_7",
+				"barbarian_8",
+				"barbarian_9")));
+		generate("barbarian/spell_caster", NpcModel.usingSkinPack("barbarian_shaman_1"));
+		generate("beast/elite_leader", NpcModel.usingSkinPack("custom_monster_forest_possessed_tree_2"));
+		generate("beast/leader", NpcModel.usingSkinPack("custom_monster_owlbear_1"));
+		generate("beast/elite_soldier", NpcModel.usingSkinPack("custom_monster_gargoyle"));
+		generate("beast/soldier", NpcModel.usingSkinPack("custom_monster_kobold"));
+		generate("beast/spell_caster", NpcModel.usingSkinPack("custom_monster_troll_grendel_troll"));
+		generate("brigand/elite_archer", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/archer", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/bard", NpcModel.usingSkinPack(List.of(
+				"brigand_man_1",
+				"brigand_man_2")));
+		generate("brigand/cavalry", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/civilian_female", NpcModel.usingSkinPack(List.of(
+				"brigand_woman_1",
+				"brigand_woman_2")));
+		generate("brigand/civilian_male", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_2")));
+		generate("brigand/elite_leader", NpcModel.usingSkinPack(List.of(
+				"brigand_chief_2",
+				"brigand_chief_3",
+				"brigand_chief_4",
+				"brigand_chief_5",
+				"brigand_chief_6")));
+		generate("brigand/leader", NpcModel.usingSkinPack(List.of(
+				"brigand_armoured_1",
+				"brigand_armoured_2",
+				"brigand_chief_1")));
+		generate("brigand/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/priest", NpcModel.usingSkinPack("brigand_heretic_priest"));
+		generate("brigand/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4")));
+		generate("brigand/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/soldier", NpcModel.usingSkinPack(List.of(
+				"brigand_1",
+				"brigand_10",
+				"brigand_11",
+				"brigand_2",
+				"brigand_3",
+				"brigand_4",
+				"brigand_5",
+				"brigand_6",
+				"brigand_7",
+				"brigand_8",
+				"brigand_9")));
+		generate("brigand/spell_caster", NpcModel.usingSkinPack("brigand_evil_dark_sorceror"));
+		generate("brigand/trader", NpcModel.usingSkinPack("brigand_trader"));
+		generate("buffloka/elite_archer", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_15",
+				"buffloka_16",
+				"buffloka_17",
+				"buffloka_18",
+				"buffloka_19",
+				"buffloka_2",
+				"buffloka_20",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/archer", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_15",
+				"buffloka_16",
+				"buffloka_17",
+				"buffloka_18",
+				"buffloka_19",
+				"buffloka_2",
+				"buffloka_20",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/bard", NpcModel.usingSkinPack(List.of(
+				"buffloka_spirit_creature_1",
+				"buffloka_spirit_creature_2",
+				"buffloka_spirit_creature_3",
+				"buffloka_spirit_creature_4",
+				"buffloka_spirit_creature_5",
+				"buffloka_totem_spirit",
+				"buffloka_totem_spirit_2")));
+		generate("buffloka/cavalry", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_2",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/civilian_female", NpcModel.usingSkinPack(List.of(
+				"buffloka_woman_1",
+				"buffloka_woman_2",
+				"buffloka_woman_3",
+				"buffloka_woman_4",
+				"buffloka_woman_5")));
+		generate("buffloka/civilian_male", NpcModel.usingSkinPack(List.of(
+				"buffloka_man_1",
+				"buffloka_man_2",
+				"buffloka_man_3",
+				"buffloka_man_4",
+				"buffloka_man_5")));
+		generate("buffloka/elite_leader", NpcModel.usingSkinPack(List.of(
+				"buffloka_chief_1",
+				"buffloka_chief_2",
+				"buffloka_chief_3",
+				"buffloka_chief_4",
+				"buffloka_chief_5",
+				"buffloka_chief_6",
+				"buffloka_chief_7")));
+		generate("buffloka/leader", NpcModel.usingSkinPack(List.of(
+				"buffloka_chief_1",
+				"buffloka_chief_2",
+				"buffloka_chief_3",
+				"buffloka_chief_4",
+				"buffloka_chief_5",
+				"buffloka_chief_6",
+				"buffloka_chief_7")));
+		generate("buffloka/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_2",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/priest", NpcModel.usingSkinPack(List.of(
+				"buffloka_shaman_1",
+				"buffloka_shaman_2",
+				"buffloka_shaman_3",
+				"buffloka_shaman_4",
+				"buffloka_shaman_5",
+				"buffloka_shaman_6",
+				"buffloka_shaman_7",
+				"buffloka_shaman_8")));
+		generate("buffloka/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_2",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5")));
+		generate("buffloka/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_15",
+				"buffloka_16",
+				"buffloka_17",
+				"buffloka_18",
+				"buffloka_19",
+				"buffloka_2",
+				"buffloka_20",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/soldier", NpcModel.usingSkinPack(List.of(
+				"buffloka_1",
+				"buffloka_10",
+				"buffloka_11",
+				"buffloka_12",
+				"buffloka_13",
+				"buffloka_14",
+				"buffloka_15",
+				"buffloka_16",
+				"buffloka_17",
+				"buffloka_18",
+				"buffloka_19",
+				"buffloka_2",
+				"buffloka_20",
+				"buffloka_3",
+				"buffloka_4",
+				"buffloka_5",
+				"buffloka_6",
+				"buffloka_7",
+				"buffloka_8",
+				"buffloka_9")));
+		generate("buffloka/spell_caster_1", NpcModel.usingSkinPack("buffloka_totem_spirit"));
+		generate("buffloka/spell_caster_2", NpcModel.usingSkinPack("buffloka_totem_spirit_2"));
+		generate("buffloka/spell_caster_3", NpcModel.usingSkinPack("buffloka_animal_spirit"));
+		generate("buffloka/spell_caster_4", NpcModel.usingSkinPack("buffloka_totem_spirit_1"));
+		generate("buffloka/spell_caster", NpcModel.usingSkinPack("buffloka_totem_spirit"));
+		generate("buffloka/trader", NpcModel.usingSkinPack(List.of(
+				"buffloka_trader_1",
+				"buffloka_trader_2",
+				"buffloka_trader_3")));
+		generate("coven/elite_archer", NpcModel.usingSkinPack(List.of(
+				"coven_dryad_1",
+				"coven_dryad_2",
+				"coven_dryad_3",
+				"coven_faun")));
+		generate("coven/archer", NpcModel.usingSkinPack(List.of(
+				"coven_satyr_1",
+				"coven_satyr_2",
+				"coven_satyr_3",
+				"coven_satyr_4",
+				"coven_satyr_5")));
+		generate("coven/cavalry", NpcModel.usingSkinPack(List.of(
+				"coven_headless_horseman_1",
+				"coven_headless_horseman_2",
+				"coven_headless_horseman_3",
+				"coven_headless_horseman_4")));
+		generate("coven/elite_leader", NpcModel.usingSkinPack(List.of(
+				"coven_count_pumpkin",
+				"coven_halloween_lord",
+				"coven_pumpkin_king_1",
+				"coven_pumpkin_king_2",
+				"coven_warlock",
+				"coven_warlock_king",
+				"coven_werewolf")));
+		generate("coven/leader", NpcModel.usingSkinPack(List.of(
+				"coven_beast_black_and_white_cat_familiar",
+				"coven_beast_black_cat",
+				"coven_cheshire_cat",
+				"coven_familiar_cat",
+				"coven_familiar_cat_2",
+				"coven_garfield_familiar")));
+		generate("coven/priest", NpcModel.usingSkinPack(List.of(
+				"coven_frost_witch",
+				"coven_nasty_witch",
+				"coven_night_witch",
+				"coven_town_witch",
+				"coven_witch_1",
+				"coven_witch_3",
+				"coven_witch_woods")));
+		generate("coven/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"coven_witch_golem_1",
+				"coven_witch_golem_2",
+				"coven_witch_golem_3",
+				"coven_witch_puppet_1",
+				"coven_witch_puppet_2",
+				"coven_witch_puppet_3",
+				"coven_witch_puppet_4")));
+		generate("coven/soldier", NpcModel.usingSkinPack(List.of(
+				"coven_scarecrow_1",
+				"coven_scarecrow_2",
+				"coven_scarecrow_3",
+				"coven_scarecrow_4",
+				"coven_scarecrow_5",
+				"coven_scarecrow_6",
+				"coven_scarecrow_7",
+				"coven_scarecrow_8")));
+		generate("coven/spell_caster_1", NpcModel.usingSkinPack("coven_witch_3"));
+		generate("coven/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"coven_hag",
+				"coven_old_hag")));
+		generate("coven/spell_caster_3", NpcModel.usingSkinPack("coven_witch_2"));
+		generate("coven/spell_caster_4", NpcModel.usingSkinPack("coven_enchantress"));
+		generate("coven/spell_caster", NpcModel.usingSkinPack("coven_warlock_king"));
+		generate("coven/trader", NpcModel.usingSkinPack(List.of(
+				"coven_enchantress",
+				"coven_fair_witch",
+				"coven_nymph",
+				"coven_old_hag")));
+		generate("demon/elite_archer", NpcModel.usingSkinPack("demon_guard"));
+		generate("demon/archer", NpcModel.usingSkinPack("demon_goatkin"));
+		generate("demon/bard", NpcModel.usingSkinPack(List.of(
+				"demon_jester",
+				"demonc_bard")));
+		generate("demon/cavalry", NpcModel.usingSkinPack(List.of(
+				"demon_chevalier_dlenfer",
+				"demon_infernal_horseman",
+				"demon_possessed_witchbane")));
+		generate("demon/civilian_female", NpcModel.usingSkinPack("demon_succubus"));
+		generate("demon/civilian_male", NpcModel.usingSkinPack("demon_damned_soul"));
+		generate("demon/elite_leader", NpcModel.usingSkinPack(List.of(
+				"demon_archfiend_baphomet",
+				"demon_archfiend_mephistopheles",
+				"demon_archfiend_prince_of_darkness",
+				"demon_prince")));
+		generate("demon/leader", NpcModel.usingSkinPack(List.of(
+				"demon_king",
+				"demon_lord_1",
+				"demon_lord_2",
+				"demon_lord_3")));
+		generate("demon/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"demon_warrior_1",
+				"demon_warrior_2",
+				"demon_warrior_3")));
+		generate("demon/priest", NpcModel.usingSkinPack(List.of(
+				"demon_fire_queen",
+				"demon_liche")));
+		generate("demon/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"demoness_1",
+				"demoness_2")));
+		generate("demon/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"demon_1",
+				"demon_2",
+				"demon_beast",
+				"demon_guardian",
+				"demon_horror")));
+		generate("demon/soldier", NpcModel.usingSkinPack(List.of(
+				"demon_devil_1",
+				"demon_devil_2",
+				"demon_devil_3")));
+		generate("demon/spell_caster_1", NpcModel.usingSkinPack("demon_archfiend_baphomet"));
+		generate("demon/spell_caster_2", NpcModel.usingSkinPack("demon_archfiend_mephistopheles"));
+		generate("demon/spell_caster_3", NpcModel.usingSkinPack("demon_archfiend_prince_of_darkness"));
+		generate("demon/spell_caster_4", NpcModel.usingSkinPack("demon_prince"));
+		generate("demon/spell_caster", NpcModel.usingSkinPack("demon_archfiend_baphomet"));
+		generate("demon/trader", NpcModel.usingSkinPack("demon_soul_thief"));
+		generate("dwarf/elite_archer", NpcModel.usingSkinPack(List.of(
+				"dwarf_warrior_1",
+				"dwarf_warrior_2",
+				"dwarf_warrior_3",
+				"dwarf_warrior_4",
+				"dwarf_warrior_5",
+				"dwarf_warrior_6",
+				"dwarf_warrior_7",
+				"dwarf_warrior_8")));
+		generate("dwarf/archer", NpcModel.usingSkinPack(List.of(
+				"dwarf_10",
+				"dwarf_11",
+				"dwarf_12",
+				"dwarf_4",
+				"dwarf_5",
+				"dwarf_6",
+				"dwarf_7",
+				"dwarf_8",
+				"dwarf_9")));
+		generate("dwarf/bard", NpcModel.usingSkinPack(List.of(
+				"dwarf_1",
+				"dwarf_2",
+				"dwarf_3")));
+		generate("dwarf/civilian_female", NpcModel.usingSkinPack(List.of(
+				"dwarf_woman_1",
+				"dwarf_woman_2",
+				"dwarf_woman_3")));
+		generate("dwarf/civilian_male", NpcModel.usingSkinPack(List.of(
+				"dwarf_1",
+				"dwarf_11",
+				"dwarf_12",
+				"dwarf_13",
+				"dwarf_14",
+				"dwarf_15",
+				"dwarf_16",
+				"dwarf_17",
+				"dwarf_2",
+				"dwarf_3")));
+		generate("dwarf/elite_leader", NpcModel.usingSkinPack(List.of(
+				"dwarf_king_1",
+				"dwarf_king_2",
+				"dwarf_king_3",
+				"dwarf_queen")));
+		generate("dwarf/leader", NpcModel.usingSkinPack(List.of(
+				"dwarf_berserker",
+				"dwarf_berserker_2",
+				"dwarf_berserker_3",
+				"dwarf_guard",
+				"dwarf_heavy_armour",
+				"dwarf_kings_guard",
+				"dwarf_palace_guard",
+				"dwarf_palace_guard_2")));
+		generate("dwarf/priest", NpcModel.usingSkinPack(List.of(
+				"dwarf_mage",
+				"dwarf_priest",
+				"dwarf_priest_old")));
+		generate("dwarf/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"dwarf_miner_1",
+				"dwarf_miner_2")));
+		generate("dwarf/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"dwarf_hero_balin",
+				"dwarf_hero_bifur",
+				"dwarf_hero_bofur",
+				"dwarf_hero_bombur",
+				"dwarf_hero_dori",
+				"dwarf_hero_dwalin",
+				"dwarf_hero_fili",
+				"dwarf_hero_gimli",
+				"dwarf_hero_gloin",
+				"dwarf_hero_kili",
+				"dwarf_hero_nori",
+				"dwarf_hero_oin",
+				"dwarf_hero_ori",
+				"dwarf_hero_thorin")));
+		generate("dwarf/soldier", NpcModel.usingSkinPack(List.of(
+				"dwarf_warrior_1",
+				"dwarf_warrior_2",
+				"dwarf_warrior_3",
+				"dwarf_warrior_4",
+				"dwarf_warrior_5",
+				"dwarf_warrior_6",
+				"dwarf_warrior_7",
+				"dwarf_warrior_8")));
+		generate("dwarf/spell_caster", NpcModel.usingSkinPack("dwarf_wizard"));
+		generate("dwarf/trader", NpcModel.usingSkinPack(List.of(
+				"dwarf_blacksmith",
+				"dwarf_goldsmith",
+				"dwarf_miner_1",
+				"dwarf_miner_2",
+				"dwarf_trader_1",
+				"dwarf_trader_2",
+				"dwarf_trader_3")));
+		generate("elf/elite_archer", NpcModel.usingSkinPack(List.of(
+				"elf_archer_1",
+				"elf_archer_2",
+				"elf_archer_3",
+				"elf_archer_4",
+				"elf_archer_5",
+				"elf_archer_6",
+				"elf_archer_7",
+				"elf_archer_8",
+				"elf_archeress")));
+		generate("elf/archer", NpcModel.usingSkinPack(List.of(
+				"elf_archer_1",
+				"elf_archer_2",
+				"elf_archer_3",
+				"elf_archer_4",
+				"elf_archer_5",
+				"elf_archer_6",
+				"elf_archer_7",
+				"elf_archer_8",
+				"elf_archeress")));
+		generate("elf/bard", NpcModel.usingSkinPack(List.of(
+				"elf_rogue_1",
+				"elf_rogue_2")));
+		generate("elf/cavalry", NpcModel.usingSkinPack("elf_lancer"));
+		generate("elf/civilian_female", NpcModel.usingSkinPack(List.of(
+				"elf_maiden_1",
+				"elf_maiden_2",
+				"elf_maiden_3",
+				"elf_woman_1",
+				"elf_woman_2",
+				"elf_woman_3",
+				"elf_woman_4")));
+		generate("elf/civilian_male", NpcModel.usingSkinPack(List.of(
+				"elf_archer_1",
+				"elf_archer_2",
+				"elf_archer_3",
+				"elf_archer_4",
+				"elf_archer_5",
+				"elf_archer_6",
+				"elf_archer_7",
+				"elf_archer_8")));
+		generate("elf/elite_leader", NpcModel.usingSkinPack(List.of(
+				"elf_enchantress",
+				"elf_mage_1",
+				"elf_mage_2",
+				"elf_mage_3",
+				"elf_oracle")));
+		generate("elf/leader", NpcModel.usingSkinPack(List.of(
+				"elf_king_1",
+				"elf_king_2",
+				"elf_noble_1",
+				"elf_noble_2",
+				"elf_noble_3",
+				"elf_princess",
+				"elf_warrioress")));
+		generate("elf/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"elf_warrior_1",
+				"elf_warrior_2")));
+		generate("elf/priest", NpcModel.usingSkinPack(List.of(
+				"elf_druid",
+				"elf_healer",
+				"elf_priestess",
+				"elf_priestess")));
+		generate("elf/siege_engineer", NpcModel.usingSkinPack("elf_blacksmith"));
+		generate("elf/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"elf_lord_1",
+				"elf_lord_2",
+				"elf_lord_3",
+				"elf_lord_4",
+				"elf_ranger")));
+		generate("elf/soldier", NpcModel.usingSkinPack(List.of(
+				"elf_warrior_1",
+				"elf_warrior_2",
+				"elf_warrior_3",
+				"elf_warrior_4",
+				"elf_warrior_5",
+				"elf_warrior_6",
+				"elf_warrior_7",
+				"elf_warrioress")));
+		generate("elf/spell_caster_1", NpcModel.usingSkinPack("elf_mage_1"));
+		generate("elf/spell_caster_2", NpcModel.usingSkinPack("elf_mage_2"));
+		generate("elf/spell_caster_3", NpcModel.usingSkinPack("elf_mage_3"));
+		generate("elf/spell_caster_4", NpcModel.usingSkinPack("elf_oracle"));
+		generate("elf/spell_caster", NpcModel.usingSkinPack("elf_enchantress"));
+		generate("elf/trader", NpcModel.usingSkinPack(List.of(
+				"elf_blacksmith",
+				"elf_trader_1",
+				"elf_trader_2")));
+		generate("empire/elite_archer", NpcModel.usingSkinPack(List.of(
+				"empire_archer_1",
+				"empire_archer_2",
+				"empire_archer_3",
+				"empire_archer_4")));
+		generate("empire/archer", NpcModel.usingSkinPack(List.of(
+				"empire_peasant_1",
+				"empire_peasant_2",
+				"empire_peasant_3",
+				"empire_peasant_4",
+				"empire_peasant_5",
+				"empire_peasant_6")));
+		generate("empire/bard", NpcModel.usingSkinPack(List.of(
+				"empire_peasant_1",
+				"empire_peasant_2",
+				"empire_peasant_3",
+				"empire_peasant_4",
+				"empire_peasant_5",
+				"empire_peasant_6")));
+		generate("empire/cavalry", NpcModel.usingSkinPack(List.of(
+				"empire_knight_1",
+				"empire_knight_2",
+				"empire_knight_3",
+				"empire_knight_4",
+				"empire_knight_5",
+				"empire_knight_6",
+				"empire_knight_7",
+				"empire_knight_8")));
+		generate("empire/civilian_female", NpcModel.usingSkinPack(List.of(
+				"empire_woman_1",
+				"empire_woman_2",
+				"empire_woman_3",
+				"empire_woman_4",
+				"empire_woman_5",
+				"princess")));
+		generate("empire/civilian_male", NpcModel.usingSkinPack(List.of(
+				"empire_peasant_1",
+				"empire_peasant_2",
+				"empire_peasant_3",
+				"empire_peasant_4",
+				"empire_peasant_5",
+				"empire_peasant_6")));
+		generate("empire/elite_leader", NpcModel.usingSkinPack(List.of(
+				"empire_champion_1",
+				"empire_champion_2")));
+		generate("empire/leader", NpcModel.usingSkinPack(List.of(
+				"empire_noble_1",
+				"empire_noble_2",
+				"empire_noble_3")));
+		generate("empire/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"empire_archer_1",
+				"empire_archer_2",
+				"empire_archer_3",
+				"empire_archer_4")));
+		generate("empire/priest", NpcModel.usingSkinPack(List.of(
+				"empire_priest_1",
+				"empire_priest_2")));
+		generate("empire/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"empire_soldier_1",
+				"empire_soldier_2",
+				"empire_soldier_3",
+				"empire_soldier_4",
+				"empire_soldier_5")));
+		generate("empire/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"empire_foot_knight_1",
+				"empire_foot_knight_2",
+				"empire_foot_knight_3",
+				"empire_foot_knight_4",
+				"empire_knight_1",
+				"empire_knight_10",
+				"empire_knight_11",
+				"empire_knight_2",
+				"empire_knight_3",
+				"empire_knight_4",
+				"empire_knight_5",
+				"empire_knight_6",
+				"empire_knight_7",
+				"empire_knight_8",
+				"empire_knight_9")));
+		generate("empire/soldier", NpcModel.usingSkinPack(List.of(
+				"empire_soldier_1",
+				"empire_soldier_10",
+				"empire_soldier_2",
+				"empire_soldier_3",
+				"empire_soldier_4",
+				"empire_soldier_5",
+				"empire_soldier_6",
+				"empire_soldier_7",
+				"empire_soldier_8",
+				"empire_soldier_9")));
+		generate("empire/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"empire_conjurer_1",
+				"empire_conjurer_2")));
+		generate("empire/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"empire_enchanter_1",
+				"empire_enchanter_2",
+				"empire_enchanter_3")));
+		generate("empire/spell_caster_3", NpcModel.usingSkinPack(List.of(
+				"empire_magician_1",
+				"empire_magician_2",
+				"empire_magician_3",
+				"empire_magician_4")));
+		generate("empire/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"empire_wizard_1",
+				"empire_wizard_2",
+				"empire_wizard_3",
+				"empire_wizard_4")));
+		generate("empire/spell_caster", NpcModel.usingSkinPack("empire_magician_2"));
+		generate("empire/trader", NpcModel.usingSkinPack(List.of(
+				"empire_trader_1",
+				"empire_trader_10",
+				"empire_trader_11",
+				"empire_trader_12",
+				"empire_trader_13",
+				"empire_trader_14",
+				"empire_trader_15",
+				"empire_trader_16",
+				"empire_trader_2",
+				"empire_trader_3",
+				"empire_trader_4",
+				"empire_trader_5",
+				"empire_trader_6",
+				"empire_trader_7",
+				"empire_trader_8",
+				"empire_trader_9")));
+		generate("ent/archer", NpcModel.usingSkinPack("ent_wosey"));
+		generate("ent/elite_leader", NpcModel.usingSkinPack(List.of(
+				"ent_ent_father_1",
+				"ent_ent_father_10",
+				"ent_ent_father_11",
+				"ent_ent_father_12",
+				"ent_ent_father_2",
+				"ent_ent_father_3",
+				"ent_ent_father_4",
+				"ent_ent_father_5",
+				"ent_ent_father_6",
+				"ent_ent_father_7",
+				"ent_ent_father_8",
+				"ent_ent_father_9")));
+		generate("ent/leader", NpcModel.usingSkinPack(List.of(
+				"ent_ent_mother_1",
+				"ent_ent_mother_2",
+				"ent_ent_mother_3",
+				"ent_ent_mother_4",
+				"ent_ent_mother_5",
+				"ent_ent_mother_6")));
+		generate("ent/priest", NpcModel.usingSkinPack("ent_druidess"));
+		generate("ent/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"ent_entling_1",
+				"ent_entling_2",
+				"ent_entling_3",
+				"ent_entling_4",
+				"ent_entling_5",
+				"ent_entling_6",
+				"ent_entling_7")));
+		generate("ent/soldier", NpcModel.usingSkinPack(List.of(
+				"ent_spriggan_1",
+				"ent_spriggan_2",
+				"ent_spriggan_3",
+				"ent_spriggan_4",
+				"ent_spriggan_5")));
+		generate("ent/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"ent_ent_father_10",
+				"ent_ent_father_3")));
+		generate("ent/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"ent_ent_father_11",
+				"ent_ent_father_4")));
+		generate("ent/spell_caster_3", NpcModel.usingSkinPack(List.of(
+				"ent_ent_father_12",
+				"ent_ent_father_5")));
+		generate("ent/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"ent_ent_father_2",
+				"ent_ent_father_6")));
+		generate("ent/spell_caster", NpcModel.usingSkinPack("ent_ent_father_1"));
+		generate("ent/trader", NpcModel.usingSkinPack(List.of(
+				"ent_ancient_forest_druid",
+				"ent_druid_1",
+				"ent_druid_2",
+				"ent_druid_3")));
+		generate("evil/elite_archer", NpcModel.usingSkinPack(List.of(
+				"evil_servant_of_evil_1",
+				"evil_servant_of_evil_2",
+				"evil_servant_of_evil_3")));
+		generate("evil/archer", NpcModel.usingSkinPack(List.of(
+				"evil_chaos_warrior_1",
+				"evil_creeper_worshipper",
+				"evil_foot_knight_3",
+				"evil_guard_2")));
+		generate("evil/bard", NpcModel.usingSkinPack(List.of(
+				"evil_banshee",
+				"evil_shadow_queen",
+				"evil_witch")));
+		generate("evil/cavalry", NpcModel.usingSkinPack(List.of(
+				"evil_black_knight",
+				"evil_knight_1",
+				"evil_knight_2",
+				"evil_knight_3",
+				"evil_knight_4",
+				"evil_knight_5",
+				"evil_knight_black",
+				"evil_knight_ghost",
+				"evil_knight_ice_dragon")));
+		generate("evil/civilian_female", NpcModel.usingSkinPack("evil_dame_blanche"));
+		generate("evil/civilian_male", NpcModel.usingSkinPack(List.of(
+				"evil_servant_of_evil_1",
+				"evil_servant_of_evil_2",
+				"evil_servant_of_evil_3")));
+		generate("evil/elite_leader", NpcModel.usingSkinPack(List.of(
+				"evil_beetlejuice",
+				"evil_chaos_lord",
+				"evil_cthuloid",
+				"evil_dark_lord",
+				"evil_dark_sorceror")));
+		generate("evil/leader_elite", NpcModel.usingSkinPack("evil_king"));
+		generate("evil/leader", NpcModel.usingSkinPack(List.of(
+				"evil_bringer",
+				"evil_bringer",
+				"evil_bringer",
+				"evil_death",
+				"evil_death_knight",
+				"evil_death_knight_2",
+				"evil_death_knight_3",
+				"evil_death_knight_4",
+				"evil_death_knight_red",
+				"evil_death_knight_yellow",
+				"evil_gold_knight",
+				"evil_knight",
+				"evil_lord")));
+		generate("evil/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"evil_horse_archer_1",
+				"evil_horse_archer_2",
+				"evil_horse_archer_3",
+				"evil_horse_archer_4")));
+		generate("evil/priest", NpcModel.usingSkinPack(List.of(
+				"evil_dark_priest",
+				"evil_death_priest",
+				"evil_robed_priest")));
+		generate("evil/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"evil_blacksmith",
+				"evil_executioner",
+				"evil_torturer")));
+		generate("evil/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"evil_flesh_golem",
+				"evil_flesh_golem_2")));
+		generate("evil/soldier", NpcModel.usingSkinPack(List.of(
+				"evil_chaos_warrior_1",
+				"evil_chaos_warrior_2",
+				"evil_foot_knight_1",
+				"evil_foot_knight_2",
+				"evil_foot_knight_3",
+				"evil_foot_knight_4",
+				"evil_grave_ghoul",
+				"evil_guard_1",
+				"evil_guard_2")));
+		generate("evil/spell_caster_1", NpcModel.usingSkinPack("malice_mage"));
+		generate("evil/spell_caster_2", NpcModel.usingSkinPack("malice_warlock"));
+		generate("evil/spell_caster_3", NpcModel.usingSkinPack("malice_demonist"));
+		generate("evil/spell_caster_4", NpcModel.usingSkinPack("malice_sorceror"));
+		generate("evil/spell_caster", NpcModel.usingSkinPack(List.of(
+				"evil_beetlejuice",
+				"evil_chaos_lord",
+				"evil_cthuloid",
+				"evil_dark_lord",
+				"evil_dark_sorceror")));
+		generate("evil/trader", NpcModel.usingSkinPack(List.of(
+				"evil_shadow",
+				"evil_trader_2",
+				"evil_trader_3",
+				"evil_trader_4",
+				"evil_trader_5")));
+		generate("giant/elite_leader", NpcModel.usingSkinPack("mountain_giant"));
+		generate("giant/leader", NpcModel.usingSkinPack(List.of(
+				"fire_giant_1",
+				"fire_giant_2",
+				"fire_giant_king")));
+		generate("giant/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"frost_giant_1",
+				"frost_giant_2",
+				"frost_giant_3",
+				"frost_giant_4",
+				"frost_giant_5",
+				"frost_giant_6",
+				"frost_giant_king",
+				"ice_giant")));
+		generate("giant/soldier", NpcModel.usingSkinPack(List.of(
+				"hill_giant_1",
+				"hill_giant_2",
+				"hill_giant_3",
+				"hill_giant_4",
+				"hill_giant_5",
+				"hill_giant_6",
+				"hill_giant_7",
+				"hill_giant_8")));
+		generate("giant/spell_caster", NpcModel.usingSkinPack("custom_monster_ogre_magi"));
+		generate("gnome/archer", NpcModel.usingSkinPack(List.of(
+				"gnome_1",
+				"gnome_2",
+				"gnome_3",
+				"gnome_4",
+				"gnome_5",
+				"gnome_6")));
+		generate("gnome/cavalry", NpcModel.usingSkinPack(List.of(
+				"gnome_1",
+				"gnome_13",
+				"gnome_2")));
+		generate("gnome/elite_leader", NpcModel.usingSkinPack("gnome_mole_rat"));
+		generate("gnome/leader", NpcModel.usingSkinPack("gnome_mole_beast"));
+		generate("gnome/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"gnome_1",
+				"gnome_13",
+				"gnome_2")));
+		generate("gnome/priest", NpcModel.usingSkinPack("gnome_4"));
+		generate("gnome/elite_soldier", NpcModel.usingSkinPack("gnomepoleon"));
+		generate("gnome/soldier", NpcModel.usingSkinPack(List.of(
+				"gnome_10",
+				"gnome_11",
+				"gnome_12",
+				"gnome_7",
+				"gnome_8",
+				"gnome_9")));
+		generate("gnome/spell_caster", NpcModel.usingSkinPack("gnome_5"));
+		generate("gnome/trader", NpcModel.usingSkinPack("gnome_3"));
+		generate("good/elite_archer", NpcModel.usingSkinPack(List.of(
+				"good_ranger_1",
+				"good_ranger_2",
+				"good_ranger_3",
+				"good_ranger_4")));
+		generate("good/archer", NpcModel.usingSkinPack(List.of(
+				"good_greenwood_ranger_1",
+				"good_greenwood_ranger_2",
+				"good_greenwood_ranger_3",
+				"good_greenwood_ranger_4",
+				"good_greenwood_ranger_5",
+				"good_greenwood_ranger_6",
+				"good_greenwood_ranger_7",
+				"good_greenwood_ranger_8",
+				"good_greenwood_ranger_9")));
+		generate("good/bard", NpcModel.usingSkinPack("good_bard"));
+		generate("good/cavalry", NpcModel.usingSkinPack(List.of(
+				"good_knight_blue",
+				"good_knight_chequered",
+				"good_knight_gold",
+				"good_knight_purple",
+				"good_knight_red",
+				"good_knight_scarlet")));
+		generate("good/civilian_female", NpcModel.usingSkinPack(List.of(
+				"good_girl",
+				"good_wife_1",
+				"good_wife_2",
+				"good_wife_3",
+				"good_wife_4",
+				"good_woman_1",
+				"good_woman_2")));
+		generate("good/civilian_male", NpcModel.usingSkinPack(List.of(
+				"good_man_1",
+				"good_man_2",
+				"good_man_3",
+				"good_man_4",
+				"good_man_5",
+				"good_man_6")));
+		generate("good/elite_leader", NpcModel.usingSkinPack(List.of(
+				"good_guardian_wizard_1",
+				"good_guardian_wizard_2",
+				"good_guardian_wizard_3",
+				"good_guardian_wizard_4",
+				"good_guardian_wizard_5",
+				"good_guardian_wizard_6")));
+		generate("good/leader", NpcModel.usingSkinPack(List.of(
+				"good_knight_paladin",
+				"good_knight_questing",
+				"good_knight_veteran",
+				"good_ranger_captain_1",
+				"good_ranger_captain_2",
+				"good_ranger_captain_3")));
+		generate("good/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"good_greenwood_robin_hood",
+				"good_greenwood_robin_in_the_hood",
+				"good_greenwood_the_fox_outlaw",
+				"good_greenwood_the_hooded_man")));
+		generate("good/priest", NpcModel.usingSkinPack(List.of(
+				"custom_dw_granny_weatherwax",
+				"custom_dw_nanny_ogg",
+				"good_greenwood_druid_1",
+				"good_greenwood_druid_2",
+				"good_greenwood_druid_3",
+				"good_greenwood_druid_4",
+				"good_greenwood_druid_5",
+				"good_greenwood_druidess",
+				"good_healer_girl",
+				"good_priestess",
+				"good_questing_priest_1",
+				"good_questing_priest_2")));
+		generate("good/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"good_artificier_1",
+				"good_artificier_2")));
+		generate("good/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"good_guardian_druidbark",
+				"good_guardian_golem_ancient",
+				"good_guardian_golem_sand",
+				"good_guardian_golem_stone",
+				"good_guardian_golem_wood",
+				"good_guardian_greenwood_green_guard",
+				"good_guardian_puppet")));
+		generate("good/soldier", NpcModel.usingSkinPack(List.of(
+				"good_greenwood_ranger_1",
+				"good_greenwood_ranger_2",
+				"good_greenwood_ranger_3",
+				"good_greenwood_ranger_4",
+				"good_greenwood_ranger_5",
+				"good_greenwood_ranger_6",
+				"good_greenwood_ranger_7",
+				"good_greenwood_ranger_8",
+				"good_greenwood_ranger_9")));
+		generate("good/spell_caster_1", NpcModel.usingSkinPack("good_guardian_wizard_2"));
+		generate("good/spell_caster_2", NpcModel.usingSkinPack("good_guardian_wizard_3"));
+		generate("good/spell_caster_3", NpcModel.usingSkinPack("good_guardian_wizard_4"));
+		generate("good/spell_caster_4", NpcModel.usingSkinPack("good_guardian_wizard_5"));
+		generate("good/spell_caster", NpcModel.usingSkinPack("good_guardian_wizard_1"));
+		generate("good/trader", NpcModel.usingSkinPack(List.of(
+				"good_merchant_1",
+				"good_merchant_2",
+				"good_merchant_3",
+				"good_merchant_4",
+				"good_merchant_5",
+				"good_merchant_6",
+				"good_merchant_7")));
+		generate("gremlin/archer", NpcModel.usingSkinPack("gremlin_shooter"));
+		generate("gremlin/cavalry", NpcModel.usingSkinPack("gremlin_slicer"));
+		generate("gremlin/elite_leader", NpcModel.usingSkinPack("gremlin_boss_mohawky"));
+		generate("gremlin/leader", NpcModel.usingSkinPack("gremlin_boss_stripe"));
+		generate("gremlin/mounted_archer", NpcModel.usingSkinPack("gremlin_shooter"));
+		generate("gremlin/priest", NpcModel.usingSkinPack("gremlin_brains"));
+		generate("gremlin/soldier", NpcModel.usingSkinPack("gremlin_slicer"));
+		generate("gremlin/spell_caster", NpcModel.usingSkinPack("gremlin_boss_mohawky"));
+		generate("guild/elite_archer", NpcModel.usingSkinPack(List.of(
+				"guild_merchant_archer",
+				"guild_merchant_archer_2")));
+		generate("guild/archer", NpcModel.usingSkinPack(List.of(
+				"guild_merchant_archer_3",
+				"guild_merchant_archer_4",
+				"guild_merchant_archer_5")));
+		generate("guild/leader", NpcModel.usingSkinPack(List.of(
+				"guild_merchant_officer_1",
+				"guild_merchant_officer_2",
+				"guild_merchant_officer_2",
+				"guild_merchant_officer_2")));
+		generate("guild/soldier", NpcModel.usingSkinPack(List.of(
+				"guild_merchant_spearman_1",
+				"guild_merchant_spearman_2",
+				"guild_merchant_spearman_3")));
+		generate("guild/trader", NpcModel.usingSkinPack(List.of(
+				"guild_merchant_1",
+				"guild_merchant_10",
+				"guild_merchant_11",
+				"guild_merchant_12",
+				"guild_merchant_14",
+				"guild_merchant_15",
+				"guild_merchant_2",
+				"guild_merchant_3",
+				"guild_merchant_4",
+				"guild_merchant_5",
+				"guild_merchant_6",
+				"guild_merchant_7",
+				"guild_merchant_8",
+				"guild_merchant_9")));
+		generate("hobbit/elite_archer", NpcModel.usingSkinPack(List.of(
+				"hobbit_1",
+				"hobbit_10",
+				"hobbit_11",
+				"hobbit_12",
+				"hobbit_2",
+				"hobbit_3",
+				"hobbit_4",
+				"hobbit_5",
+				"hobbit_6",
+				"hobbit_7",
+				"hobbit_8",
+				"hobbit_9")));
+		generate("hobbit/archer", NpcModel.usingSkinPack(List.of(
+				"hobbit_1",
+				"hobbit_10",
+				"hobbit_11",
+				"hobbit_12",
+				"hobbit_2",
+				"hobbit_3",
+				"hobbit_4",
+				"hobbit_5",
+				"hobbit_6",
+				"hobbit_7",
+				"hobbit_8",
+				"hobbit_9")));
+		generate("hobbit/bard", NpcModel.usingSkinPack(List.of(
+				"hobbit_bard",
+				"hobbit_drunkard",
+				"hobbit_tavern_singer",
+				"hobbit_tavern_singer_2")));
+		generate("hobbit/civilian_female", NpcModel.usingSkinPack(List.of(
+				"hobbit_girl",
+				"hobbit_woman_1",
+				"hobbit_woman_2",
+				"hobbit_woman_pepper_puddifoot")));
+		generate("hobbit/civilian_male", NpcModel.usingSkinPack(List.of(
+				"hobbit_1",
+				"hobbit_10",
+				"hobbit_11",
+				"hobbit_12",
+				"hobbit_2",
+				"hobbit_3",
+				"hobbit_4",
+				"hobbit_5",
+				"hobbit_6",
+				"hobbit_7",
+				"hobbit_8",
+				"hobbit_9",
+				"hobbit_farmer_1",
+				"hobbit_farmer_2",
+				"hobbit_farmer_3",
+				"hobbit_farmer_4",
+				"hobbit_farmer_5")));
+		generate("hobbit/leader", NpcModel.usingSkinPack(List.of(
+				"hobbit_hero",
+				"hobbit_hero_bilbo",
+				"hobbit_hero_frodo",
+				"hobbit_hero_merry",
+				"hobbit_hero_pippin",
+				"hobbit_hero_sam")));
+		generate("hobbit/priest", NpcModel.usingSkinPack(List.of(
+				"hobbit_councillor",
+				"hobbit_mayor")));
+		generate("hobbit/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"hobbit_captain_1",
+				"hobbit_captain_2",
+				"hobbit_captain_3",
+				"hobbit_captain_4",
+				"hobbit_captain_5",
+				"hobbit_captain_6")));
+		generate("hobbit/soldier", NpcModel.usingSkinPack(List.of(
+				"hobbit_1",
+				"hobbit_10",
+				"hobbit_11",
+				"hobbit_12",
+				"hobbit_2",
+				"hobbit_3",
+				"hobbit_4",
+				"hobbit_5",
+				"hobbit_6",
+				"hobbit_7",
+				"hobbit_8",
+				"hobbit_9")));
+		generate("hobbit/trader", NpcModel.usingSkinPack(List.of(
+				"hobbit_farmer_1",
+				"hobbit_farmer_2",
+				"hobbit_farmer_3",
+				"hobbit_farmer_4",
+				"hobbit_farmer_6",
+				"hobbit_fisherman",
+				"hobbit_girl_rosie_cotton",
+				"hobbit_woman_barmaid",
+				"hobbit_woman_trader")));
+		generate("icelord/elite_archer", NpcModel.usingSkinPack(List.of(
+				"icelord_archer",
+				"icelord_skeleton_archer")));
+		generate("icelord/archer", NpcModel.usingSkinPack(List.of(
+				"icelord_zombie_1",
+				"icelord_zombie_2",
+				"icelord_zombie_3")));
+		generate("icelord/cavalry", NpcModel.usingSkinPack(List.of(
+				"icelord_leader",
+				"icelord_leader_2",
+				"icelord_leader_3",
+				"icelord_revenant_cavalry")));
+		generate("icelord/elite_leader", NpcModel.usingSkinPack(List.of(
+				"icelord_cold_king_1",
+				"icelord_cold_king_2",
+				"icelord_draugr_winter_king")));
+		generate("icelord/leader", NpcModel.usingSkinPack(List.of(
+				"icelord_beast",
+				"icelord_beast_cold_demon",
+				"icelord_beast_cold_walker",
+				"icelord_beast_wendigo",
+				"icelord_beast_yeti_1",
+				"icelord_beast_yeti_2",
+				"icelord_beast_yeti_3",
+				"icelord_frost_demon",
+				"icelord_frost_troll",
+				"icelord_snow_beast")));
+		generate("icelord/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"icelord_cold_warrior_1",
+				"icelord_cold_warrior_2",
+				"icelord_cold_warrior_3",
+				"icelord_cold_warrior_4",
+				"icelord_cold_warrior_5")));
+		generate("icelord/priest", NpcModel.usingSkinPack(List.of(
+				"icelord_cold_lich_1",
+				"icelord_cold_lich_2",
+				"icelord_cold_lich_3")));
+		generate("icelord/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"icelord_white_walker_1",
+				"icelord_white_walker_2",
+				"icelord_white_walker_3",
+				"icelord_white_walker_4",
+				"icelord_white_walker_5",
+				"icelord_white_walker_6")));
+		generate("icelord/soldier", NpcModel.usingSkinPack(List.of(
+				"icelord_draugr_1",
+				"icelord_draugr_10",
+				"icelord_draugr_2",
+				"icelord_draugr_3",
+				"icelord_draugr_4",
+				"icelord_draugr_5",
+				"icelord_draugr_6",
+				"icelord_draugr_7",
+				"icelord_draugr_8",
+				"icelord_draugr_9")));
+		generate("icelord/spell_caster_1", NpcModel.usingSkinPack("icelord_mage_1"));
+		generate("icelord/spell_caster_2", NpcModel.usingSkinPack("icelord_draugr_priest"));
+		generate("icelord/spell_caster_3", NpcModel.usingSkinPack("cold_lich_1"));
+		generate("icelord/spell_caster_4", NpcModel.usingSkinPack("cold_lich_2"));
+		generate("icelord/spell_caster", NpcModel.usingSkinPack("icelord_cold_lich_3"));
+		generate("ishtari/archer", NpcModel.usingSkinPack(List.of(
+				"ishtari_high_priest_1",
+				"ishtari_high_priest_2")));
+		generate("ishtari/elite_leader", NpcModel.usingSkinPack(List.of(
+				"ishtari_anubite_pharoah",
+				"ishtari_pharoah")));
+		generate("ishtari/leader", NpcModel.usingSkinPack(List.of(
+				"ishtari_anubite",
+				"ishtari_anubite_2",
+				"ishtari_anubite_3")));
+		generate("ishtari/priest", NpcModel.usingSkinPack(List.of(
+				"ishtari_priest_1",
+				"ishtari_priest_2")));
+		generate("ishtari/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"ishtari_warrior_1",
+				"ishtari_warrior_2",
+				"ishtari_zombie_1",
+				"ishtari_zombie_2")));
+		generate("ishtari/soldier", NpcModel.usingSkinPack(List.of(
+				"ishtari_mummy_1",
+				"ishtari_mummy_2",
+				"ishtari_mummy_3")));
+		generate("ishtari/spell_caster_1", NpcModel.usingSkinPack("ishtari_pharoah"));
+		generate("ishtari/spell_caster_2", NpcModel.usingSkinPack("ishtari_pharoah"));
+		generate("ishtari/spell_caster_3", NpcModel.usingSkinPack("ishtari_pharoah"));
+		generate("ishtari/spell_caster_4", NpcModel.usingSkinPack("ishtari_pharoah"));
+		generate("ishtari/spell_caster", NpcModel.usingSkinPack("ishtari_anubite_pharoah"));
+		generate("klown/cavalry", NpcModel.usingSkinPack("klown_harlequin"));
+		generate("klown/elite_leader", NpcModel.usingSkinPack(List.of(
+				"klown_it",
+				"klown_it_2")));
+		generate("klown/leader", NpcModel.usingSkinPack(List.of(
+				"klown_strongman_1",
+				"klown_strongman_2")));
+		generate("klown/mounted_archer", NpcModel.usingSkinPack("klown_monkey"));
+		generate("klown/priest", NpcModel.usingSkinPack(List.of(
+				"klown_ring_master",
+				"klown_ringmaster")));
+		generate("klown/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"klown_killer_klown_1",
+				"klown_killer_klown_10",
+				"klown_killer_klown_2",
+				"klown_killer_klown_3",
+				"klown_killer_klown_4",
+				"klown_killer_klown_5",
+				"klown_killer_klown_6",
+				"klown_killer_klown_7",
+				"klown_killer_klown_8",
+				"klown_killer_klown_9",
+				"klown_killer_klown_krusty")));
+		generate("klown/soldier", NpcModel.usingSkinPack("klown_rag_doll"));
+		generate("klown/spell_caster_1", NpcModel.usingSkinPack("klown_it_2"));
+		generate("klown/spell_caster_2", NpcModel.usingSkinPack("klown_it_2"));
+		generate("klown/spell_caster_3", NpcModel.usingSkinPack("klown_it_2"));
+		generate("klown/spell_caster_4", NpcModel.usingSkinPack("klown_it_2"));
+		generate("klown/spell_caster", NpcModel.usingSkinPack("klown_it"));
+		generate("kong/elite_archer", NpcModel.usingSkinPack(List.of(
+				"kong_1",
+				"kong_2",
+				"kong_3",
+				"kong_4",
+				"kong_5",
+				"kong_6",
+				"kong_7",
+				"kong_8")));
+		generate("kong/archer", NpcModel.usingSkinPack(List.of(
+				"kong_1",
+				"kong_2",
+				"kong_3",
+				"kong_4",
+				"kong_5",
+				"kong_6",
+				"kong_7",
+				"kong_8")));
+		generate("kong/civilian_female", NpcModel.usingSkinPack(List.of(
+				"kong_girl",
+				"kong_woman_1",
+				"kong_woman_2",
+				"kong_woman_3",
+				"kong_woman_4")));
+		generate("kong/civilian_male", NpcModel.usingSkinPack(List.of(
+				"kong_1",
+				"kong_2",
+				"kong_3")));
+		generate("kong/elite_leader", NpcModel.usingSkinPack(List.of(
+				"kong_chief_1",
+				"kong_chief_2",
+				"kong_chief_3",
+				"kong_chief_4",
+				"kong_chief_5",
+				"kong_chief_6",
+				"kong_high_chief_1",
+				"kong_high_chief_2",
+				"kong_high_chief_3",
+				"kong_high_chief_4")));
+		generate("kong/leader", NpcModel.usingSkinPack(List.of(
+				"kong_ape_1",
+				"kong_ape_2",
+				"kong_ape_3")));
+		generate("kong/priest", NpcModel.usingSkinPack(List.of(
+				"kong_shaman_1",
+				"kong_shaman_2",
+				"kong_shaman_3")));
+		generate("kong/elite_soldier", NpcModel.usingSkinPack("kong_blood_spirit"));
+		generate("kong/soldier", NpcModel.usingSkinPack(List.of(
+				"kong_1",
+				"kong_2",
+				"kong_3",
+				"kong_4",
+				"kong_5",
+				"kong_6",
+				"kong_7",
+				"kong_8",
+				"kong_9")));
+		generate("kong/spell_caster_1", NpcModel.usingSkinPack("kong_witchdoctor_1"));
+		generate("kong/spell_caster_2", NpcModel.usingSkinPack("kong_witchdoctor_2"));
+		generate("kong/spell_caster_3", NpcModel.usingSkinPack("kong_witchdoctor_1"));
+		generate("kong/spell_caster_4", NpcModel.usingSkinPack("kong_witchdoctor_2"));
+		generate("kong/spell_caster", NpcModel.usingSkinPack("kong_witchdoctor_1"));
+		generate("kong/trader", NpcModel.usingSkinPack("kong_7"));
+		generate("lizardman/archer", NpcModel.usingSkinPack("lizardman"));
+		generate("lizardman/elite_leader", NpcModel.usingSkinPack("lizardman_brood_mother"));
+		generate("lizardman/leader", NpcModel.usingSkinPack("lizardman_chief"));
+		generate("lizardman/priest", NpcModel.usingSkinPack("custom_monster_serpentman_priest"));
+		generate("lizardman/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"lizardman_berserker_1",
+				"lizardman_berserker_2",
+				"lizardman_berserker_3")));
+		generate("lizardman/soldier", NpcModel.usingSkinPack("lizardman"));
+		generate("lizardman/spell_caster_1", NpcModel.usingSkinPack("custom_monster_serpentman"));
+		generate("lizardman/spell_caster_2", NpcModel.usingSkinPack("custom_monster_serpentman"));
+		generate("lizardman/spell_caster_3", NpcModel.usingSkinPack("custom_monster_serpentman"));
+		generate("lizardman/spell_caster_4", NpcModel.usingSkinPack("custom_monster_serpentman"));
+		generate("lizardman/spell_caster", NpcModel.usingSkinPack("custom_monster_serpentman"));
+		generate("mindflayer/elite_leader", NpcModel.usingSkinPack("custom_monster_troll_cavern_troll_1"));
+		generate("mindflayer/leader", NpcModel.usingSkinPack("custom_monster_cave_growler"));
+		generate("mindflayer/priest", NpcModel.usingSkinPack(""));
+		generate("mindflayer/elite_soldier", NpcModel.usingSkinPack("custom_monster_wererat"));
+		generate("mindflayer/soldier", NpcModel.usingSkinPack("custom_monster_cave_gremlin"));
+		generate("mindflayer/spell_caster_1", NpcModel.usingSkinPack("custom_monster_mind_flayer_lord"));
+		generate("mindflayer/spell_caster_2", NpcModel.usingSkinPack("custom_monster_mind_flayer_lord"));
+		generate("mindflayer/spell_caster_3", NpcModel.usingSkinPack("custom_monster_mind_flayer_lord"));
+		generate("mindflayer/spell_caster_4", NpcModel.usingSkinPack("custom_monster_mind_flayer_lord"));
+		generate("mindflayer/spell_caster", NpcModel.usingSkinPack("custom_monster_mind_flayer_lord"));
+		generate("minossian/elite_leader", NpcModel.usingSkinPack(List.of(
+				"minossian_chief",
+				"minossian_chief_2",
+				"minossian_chief_3",
+				"minossian_chief_4",
+				"minossian_minotaur_lord")));
+		generate("minossian/leader", NpcModel.usingSkinPack("minossian_brazen_bull_golem"));
+		generate("minossian/priest", NpcModel.usingSkinPack(List.of(
+				"minossian_bull_priest_1",
+				"minossian_bull_priest_2",
+				"minossian_bull_priest_3")));
+		generate("minossian/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"minossian_warrior_1",
+				"minossian_warrior_2",
+				"minossian_warrior_3",
+				"minossian_warrior_4",
+				"minossian_warrior_5",
+				"minossian_warrior_6",
+				"minossian_warrior_7",
+				"minossian_warrior_8")));
+		generate("minossian/soldier", NpcModel.usingSkinPack("minossian_giant_talos"));
+		generate("minossian/spell_caster_1", NpcModel.usingSkinPack("minossian_mage"));
+		generate("minossian/spell_caster_2", NpcModel.usingSkinPack("minossian_mage"));
+		generate("minossian/spell_caster_3", NpcModel.usingSkinPack("minossian_mage"));
+		generate("minossian/spell_caster_4", NpcModel.usingSkinPack("minossian_mage"));
+		generate("minossian/spell_caster", NpcModel.usingSkinPack("minossian_mage"));
+		generate("monster/elite_leader", NpcModel.usingSkinPack("custom_monster_troll"));
+		generate("monster/leader", NpcModel.usingSkinPack("custom_monster_jabberwocky"));
+		generate("monster/elite_soldier", NpcModel.usingSkinPack("custom_monster_lizard_beast"));
+		generate("monster/soldier", NpcModel.usingSkinPack("custom_monster_aquatic_cthulhoid_deep_one"));
+		generate("monster/spell_caster", NpcModel.usingSkinPack("custom_monster_mindflayer_priest"));
+		generate("nogg/elite_archer", NpcModel.usingSkinPack(List.of(
+				"nogg_adventurer_archer_1",
+				"nogg_adventurer_archer_2",
+				"nogg_adventurer_archer_3",
+				"nogg_adventurer_archer_4",
+				"nogg_adventurer_archer_5",
+				"nogg_adventurer_archer_6",
+				"nogg_adventurer_archer_7",
+				"nogg_adventurer_archer_8")));
+		generate("nogg/archer", NpcModel.usingSkinPack(List.of(
+				"nogg_militia_1",
+				"nogg_militia_2",
+				"nogg_militia_3",
+				"nogg_militia_4",
+				"nogg_militia_5",
+				"nogg_militia_6",
+				"nogg_militia_7",
+				"nogg_militia_8")));
+		generate("nogg/bard", NpcModel.usingSkinPack(List.of(
+				"nogg_adventurer_bard",
+				"nogg_bard",
+				"nogg_princess")));
+		generate("nogg/cavalry", NpcModel.usingSkinPack(List.of(
+				"nogg_knight_1",
+				"nogg_knight_2",
+				"nogg_knight_3",
+				"nogg_knight_4",
+				"nogg_knight_5")));
+		generate("nogg/civilian_female", NpcModel.usingSkinPack(List.of(
+				"nogg_girl_1",
+				"nogg_girl_2",
+				"nogg_girl_3",
+				"nogg_girl_4",
+				"nogg_girl_5",
+				"nogg_girl_6",
+				"nogg_woman_1",
+				"nogg_woman_2",
+				"nogg_woman_3",
+				"nogg_woman_4",
+				"nogg_woman_5",
+				"nogg_woman_6",
+				"nogg_woman_7",
+				"nogg_woman_8")));
+		generate("nogg/civilian_male", NpcModel.usingSkinPack(List.of(
+				"nogg_villager_1",
+				"nogg_villager_10",
+				"nogg_villager_11",
+				"nogg_villager_12",
+				"nogg_villager_2",
+				"nogg_villager_3",
+				"nogg_villager_4",
+				"nogg_villager_5",
+				"nogg_villager_6",
+				"nogg_villager_7",
+				"nogg_villager_8",
+				"nogg_villager_9")));
+		generate("nogg/elite_leader", NpcModel.usingSkinPack(List.of(
+				"nogg_lord_1",
+				"nogg_lord_2",
+				"nogg_lord_3")));
+		generate("nogg/leader", NpcModel.usingSkinPack(List.of(
+				"nogg_knight_1",
+				"nogg_knight_2",
+				"nogg_knight_3",
+				"nogg_knight_4",
+				"nogg_knight_5")));
+		generate("nogg/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"nogg_militia_1",
+				"nogg_militia_2",
+				"nogg_militia_3",
+				"nogg_militia_4",
+				"nogg_militia_5",
+				"nogg_militia_6",
+				"nogg_militia_7",
+				"nogg_militia_8")));
+		generate("nogg/priest", NpcModel.usingSkinPack(List.of(
+				"nogg_priest_1",
+				"nogg_priest_2",
+				"nogg_priest_3",
+				"nogg_priest_4",
+				"nogg_priest_5",
+				"nogg_priest_6",
+				"nogg_priest_7",
+				"nogg_priest_8")));
+		generate("nogg/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"nogg_adventurer_1",
+				"nogg_adventurer_2",
+				"nogg_adventurer_3",
+				"nogg_adventurer_4")));
+		generate("nogg/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"nogg_adventurer_1",
+				"nogg_adventurer_10",
+				"nogg_adventurer_2",
+				"nogg_adventurer_3",
+				"nogg_adventurer_4",
+				"nogg_adventurer_5",
+				"nogg_adventurer_6",
+				"nogg_adventurer_7",
+				"nogg_adventurer_8",
+				"nogg_adventurer_9")));
+		generate("nogg/soldier", NpcModel.usingSkinPack(List.of(
+				"nogg_church_knight",
+				"nogg_militia_1",
+				"nogg_militia_2",
+				"nogg_militia_3",
+				"nogg_militia_4",
+				"nogg_militia_5",
+				"nogg_militia_6",
+				"nogg_militia_7",
+				"nogg_militia_8",
+				"nogg_militia_9")));
+		generate("nogg/spell_caster_1", NpcModel.usingSkinPack("custom_mage_2"));
+		generate("nogg/spell_caster_2", NpcModel.usingSkinPack("custom_mage_1"));
+		generate("nogg/spell_caster_3", NpcModel.usingSkinPack("custom_adventurer_elder_mage"));
+		generate("nogg/spell_caster_4", NpcModel.usingSkinPack("custom_nogg_royal_bird_graculus"));
+		generate("nogg/spell_caster", NpcModel.usingSkinPack("custom_adventurer_mage"));
+		generate("nogg/trader", NpcModel.usingSkinPack(List.of(
+				"nogg_blacksmith",
+				"nogg_merchant_1",
+				"nogg_merchant_2",
+				"nogg_merchant_3",
+				"nogg_merchant_4",
+				"nogg_merchant_5",
+				"nogg_trader_10",
+				"nogg_trader_6",
+				"nogg_trader_7",
+				"nogg_trader_8",
+				"nogg_trader_9")));
+		generate("norska/elite_archer", NpcModel.usingSkinPack(List.of(
+				"norska_bowman_2",
+				"norska_bowman_3",
+				"norska_bowman_4",
+				"norska_bowman_5",
+				"norska_bowman_6",
+				"norska_bowman_7",
+				"norska_bowman_8")));
+		generate("norska/archer", NpcModel.usingSkinPack(List.of(
+				"norska_bowman_2",
+				"norska_bowman_3",
+				"norska_bowman_4",
+				"norska_bowman_5",
+				"norska_bowman_6",
+				"norska_bowman_7",
+				"norska_bowman_8")));
+		generate("norska/bard", NpcModel.usingSkinPack(List.of(
+				"norska_man_1",
+				"norska_man_2",
+				"norska_man_3",
+				"norska_man_9")));
+		generate("norska/cavalry", NpcModel.usingSkinPack(List.of(
+				"norska_bear_master_1",
+				"norska_bear_master_2",
+				"norska_bear_master_3",
+				"norska_bear_master_4",
+				"norska_bear_master_5",
+				"norska_bear_master_6",
+				"norska_bear_master_7")));
+		generate("norska/civilian_female", NpcModel.usingSkinPack(List.of(
+				"norska_girl",
+				"norska_noblewoman",
+				"norska_princess",
+				"norska_princess_2",
+				"norska_queen",
+				"norska_woman_1",
+				"norska_woman_2",
+				"norska_woman_3",
+				"norska_woman_4",
+				"norska_woman_5",
+				"norska_woman_6",
+				"norska_woman_7",
+				"norska_woman_8",
+				"norska_woman_9")));
+		generate("norska/civilian_male", NpcModel.usingSkinPack(List.of(
+				"norska_man_1",
+				"norska_man_2",
+				"norska_man_3",
+				"norska_man_4",
+				"norska_man_5",
+				"norska_man_6",
+				"norska_man_7",
+				"norska_man_8")));
+		generate("norska/elite_leader", NpcModel.usingSkinPack(List.of(
+				"norska_blood_jarl_1",
+				"norska_blood_jarl_2",
+				"norska_blood_jarl_3",
+				"norska_blood_jarl_4",
+				"norska_blood_jarl_5",
+				"norska_chief_ragnar",
+				"norska_warrior_1",
+				"norska_warrior_2",
+				"norska_warrior_3")));
+		generate("norska/leader", NpcModel.usingSkinPack(List.of(
+				"norska_jarl_1",
+				"norska_jarl_2",
+				"norska_jarl_3",
+				"norska_jarl_4",
+				"norska_jarl_5",
+				"norska_jarl_6")));
+		generate("norska/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"norska_bowman_2",
+				"norska_bowman_3",
+				"norska_bowman_4",
+				"norska_bowman_5",
+				"norska_bowman_6",
+				"norska_bowman_7")));
+		generate("norska/priest", NpcModel.usingSkinPack(List.of(
+				"norska_runecaster_1",
+				"norska_runecaster_2",
+				"norska_runecaster_3",
+				"norska_runecaster_4",
+				"norska_runecaster_5")));
+		generate("norska/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"norska_1",
+				"norska_2",
+				"norska_3",
+				"norska_4",
+				"norska_5")));
+		generate("norska/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"norska_berserker_1",
+				"norska_berserker_10",
+				"norska_berserker_11",
+				"norska_berserker_12",
+				"norska_berserker_2",
+				"norska_berserker_3",
+				"norska_berserker_4",
+				"norska_berserker_5",
+				"norska_berserker_6",
+				"norska_berserker_7",
+				"norska_berserker_8",
+				"norska_berserker_9")));
+		generate("norska/soldier", NpcModel.usingSkinPack(List.of(
+				"norska_1",
+				"norska_10",
+				"norska_11",
+				"norska_12",
+				"norska_13",
+				"norska_14",
+				"norska_15",
+				"norska_16",
+				"norska_17",
+				"norska_18",
+				"norska_2",
+				"norska_3",
+				"norska_4",
+				"norska_5",
+				"norska_6",
+				"norska_7",
+				"norska_8",
+				"norska_9")));
+		generate("norska/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"norska_jarl_3",
+				"norska_rune_caster")));
+		generate("norska/spell_caster_2", NpcModel.usingSkinPack("norska_seidhr"));
+		generate("norska/spell_caster_3", NpcModel.usingSkinPack("norska_goddi"));
+		generate("norska/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"norska_varulfur_1",
+				"norska_varulfur_2",
+				"norska_varulfur_3")));
+		generate("norska/spell_caster", NpcModel.usingSkinPack("norska_rune_caster"));
+		generate("norska/trader", NpcModel.usingSkinPack(List.of(
+				"norska_trader_1",
+				"norska_trader_10",
+				"norska_trader_11",
+				"norska_trader_12",
+				"norska_trader_13",
+				"norska_trader_14",
+				"norska_trader_2",
+				"norska_trader_3",
+				"norska_trader_4",
+				"norska_trader_5",
+				"norska_trader_6",
+				"norska_trader_7",
+				"norska_trader_8",
+				"norska_trader_9")));
+		generate("orc/elite_archer", NpcModel.usingSkinPack(List.of(
+				"orc_1",
+				"orc_2",
+				"orc_3",
+				"orc_4",
+				"orc_5",
+				"orc_6",
+				"orc_7",
+				"orc_8",
+				"orc_archer_2",
+				"orc_archer_3")));
+		generate("orc/archer", NpcModel.usingSkinPack(List.of(
+				"orc_1",
+				"orc_2",
+				"orc_3",
+				"orc_4",
+				"orc_5",
+				"orc_6",
+				"orc_7",
+				"orc_8",
+				"orc_archer_2",
+				"orc_archer_3")));
+		generate("orc/bard", NpcModel.usingSkinPack(List.of(
+				"orc_bard_1",
+				"orc_bard_2")));
+		generate("orc/cavalry", NpcModel.usingSkinPack(List.of(
+				"orc_cavalry",
+				"orc_cavalry_2",
+				"orc_cavalry_3",
+				"orc_cavalry_4")));
+		generate("orc/civilian_female", NpcModel.usingSkinPack(List.of(
+				"orc_female_1",
+				"orc_female_10",
+				"orc_female_11",
+				"orc_female_12",
+				"orc_female_2",
+				"orc_female_3",
+				"orc_female_4",
+				"orc_female_5",
+				"orc_female_6",
+				"orc_female_7",
+				"orc_female_8",
+				"orc_female_9")));
+		generate("orc/civilian_male", NpcModel.usingSkinPack(List.of(
+				"orc_1",
+				"orc_2",
+				"orc_3")));
+		generate("orc/elite_leader", NpcModel.usingSkinPack(List.of(
+				"orc_chieftain",
+				"orc_chieftain_2",
+				"orc_king",
+				"orc_warlord",
+				"orc_warlord_2",
+				"orc_warlord_3",
+				"orc_warlord_4")));
+		generate("orc/leader", NpcModel.usingSkinPack(List.of(
+				"orc_chief_1",
+				"orc_chief_2",
+				"orc_chief_3",
+				"orc_chief_4",
+				"orc_chief_5",
+				"orc_chief_6")));
+		generate("orc/mounted_archer", NpcModel.usingSkinPack("orc_uruk_1"));
+		generate("orc/priest", NpcModel.usingSkinPack(List.of(
+				"orc_shaman_1",
+				"orc_shaman_2",
+				"orc_shaman_3",
+				"orc_shaman_4",
+				"orc_shaman_5",
+				"orc_shaman_6",
+				"orc_shaman_7",
+				"orc_shaman_8",
+				"orc_shaman_9",
+				"orc_witch")));
+		generate("orc/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"orc_bugbear_1",
+				"orc_bugbear_2",
+				"orc_bugbear_3",
+				"orc_bugbear_4",
+				"orc_bugbear_5")));
+		generate("orc/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"orc_berserker_1",
+				"orc_berserker_2",
+				"orc_berserker_3",
+				"orc_berserker_4",
+				"orc_berserker_5",
+				"orc_berserker_6",
+				"orc_berserker_7",
+				"orc_berserker_8",
+				"orc_cyclops",
+				"orc_uruk_1",
+				"orc_uruk_2",
+				"orc_uruk_3")));
+		generate("orc/soldier", NpcModel.usingSkinPack(List.of(
+				"orc_1",
+				"orc_10",
+				"orc_11",
+				"orc_12",
+				"orc_13",
+				"orc_14",
+				"orc_15",
+				"orc_16",
+				"orc_17",
+				"orc_18",
+				"orc_19",
+				"orc_2",
+				"orc_20",
+				"orc_21",
+				"orc_22",
+				"orc_3",
+				"orc_4",
+				"orc_5",
+				"orc_6",
+				"orc_7",
+				"orc_8",
+				"orc_9")));
+		generate("orc/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"orc_shaman_1",
+				"orc_shaman_2",
+				"orc_shaman_3",
+				"orc_shaman_4",
+				"orc_shaman_5")));
+		generate("orc/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"orc_shaman_6",
+				"orc_shaman_7")));
+		generate("orc/spell_caster_3", NpcModel.usingSkinPack(List.of(
+				"orc_shaman_2",
+				"orc_shaman_7")));
+		generate("orc/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"orc_shaman_2",
+				"orc_shaman_7")));
+		generate("orc/spell_caster", NpcModel.usingSkinPack(List.of(
+				"orc_chieftain",
+				"orc_chieftain_2",
+				"orc_king",
+				"orc_warlord",
+				"orc_warlord_2",
+				"orc_warlord_3",
+				"orc_warlord_4")));
+		generate("orc/trader", NpcModel.usingSkinPack(List.of(
+				"orc_trader_1",
+				"orc_trader_2",
+				"orc_trader_3",
+				"orc_trader_4",
+				"orc_trader_5",
+				"orc_trader_6",
+				"orc_trader_7",
+				"orc_trader_8",
+				"orc_trader_9")));
+		generate("pirate/elite_archer", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_10",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6",
+				"pirate_7",
+				"pirate_8",
+				"pirate_9")));
+		generate("pirate/archer", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_10",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6",
+				"pirate_7",
+				"pirate_8",
+				"pirate_9")));
+		generate("pirate/bard", NpcModel.usingSkinPack(List.of(
+				"pirate_man_1",
+				"pirate_man_2")));
+		generate("pirate/cavalry", NpcModel.usingSkinPack(List.of(
+				"pirate_smuggler_1",
+				"pirate_smuggler_2",
+				"pirate_smuggler_3",
+				"pirate_smuggler_4",
+				"pirate_smuggler_5",
+				"pirate_smuggler_6")));
+		generate("pirate/civilian_female", NpcModel.usingSkinPack(List.of(
+				"pirate_girl_1",
+				"pirate_girl_2",
+				"pirate_girl_3",
+				"pirate_girl_4",
+				"pirate_girl_5",
+				"pirate_woman_1",
+				"pirate_woman_2")));
+		generate("pirate/civilian_male", NpcModel.usingSkinPack(List.of(
+				"pirate_11",
+				"pirate_14",
+				"pirate_15",
+				"pirate_16",
+				"pirate_17",
+				"pirate_7")));
+		generate("pirate/elite_leader", NpcModel.usingSkinPack(List.of(
+				"pirate_boss_barbossa",
+				"pirate_boss_capn_jack_sparrow",
+				"pirate_boss_davy_jones_1",
+				"pirate_boss_davy_jones_2",
+				"pirate_captain_anne_bonney",
+				"pirate_captain_flint",
+				"pirate_captain_jack_rackham",
+				"pirate_captain_vane")));
+		generate("pirate/leader", NpcModel.usingSkinPack(List.of(
+				"pirate_captain_1",
+				"pirate_captain_2",
+				"pirate_captain_3",
+				"pirate_captain_4")));
+		generate("pirate/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"pirate_smuggler_1",
+				"pirate_smuggler_2",
+				"pirate_smuggler_3",
+				"pirate_smuggler_4",
+				"pirate_smuggler_5",
+				"pirate_smuggler_6")));
+		generate("pirate/priest", NpcModel.usingSkinPack(List.of(
+				"pirate_girl_syrena",
+				"pirate_voodoo_priest",
+				"pirate_voodoo_witch")));
+		generate("pirate/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6")));
+		generate("pirate/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_10",
+				"pirate_11",
+				"pirate_12",
+				"pirate_13",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6",
+				"pirate_7",
+				"pirate_8",
+				"pirate_9")));
+		generate("pirate/soldier", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_10",
+				"pirate_11",
+				"pirate_12",
+				"pirate_13",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6",
+				"pirate_7",
+				"pirate_8",
+				"pirate_9")));
+		generate("pirate/spell_caster_1", NpcModel.usingSkinPack("pirate_voodoo_caster"));
+		generate("pirate/spell_caster_2", NpcModel.usingSkinPack("pirate_voodoo_sorceror"));
+		generate("pirate/spell_caster_3", NpcModel.usingSkinPack("pirate_voodoo_priest"));
+		generate("pirate/spell_caster_4", NpcModel.usingSkinPack("pirate_voodoo_witch"));
+		generate("pirate/spell_caster", NpcModel.usingSkinPack("pirate_girl_syrena"));
+		generate("pirate/trader", NpcModel.usingSkinPack(List.of(
+				"pirate_1",
+				"pirate_2",
+				"pirate_3",
+				"pirate_4",
+				"pirate_5",
+				"pirate_6",
+				"pirate_7",
+				"pirate_old")));
+		generate("rakshasa/elite_leader", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("rakshasa/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"rakshasa_tigerman_1",
+				"rakshasa_tigerman_2")));
+		generate("rakshasa/spell_caster_1", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("rakshasa/spell_caster_2", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("rakshasa/spell_caster_3", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("rakshasa/spell_caster_4", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("rakshasa/spell_caster", NpcModel.usingSkinPack("rakshasa_lord"));
+		generate("reiksgard/elite_archer", NpcModel.usingSkinPack(List.of(
+				"reiksgard_sentry_1",
+				"reiksgard_sentry_2",
+				"reiksgard_sentry_3",
+				"reiksgard_sentry_4")));
+		generate("reiksgard/archer", NpcModel.usingSkinPack(List.of(
+				"reiksgard_archer_1",
+				"reiksgard_archer_2",
+				"reiksgard_archer_3")));
+		generate("reiksgard/bard", NpcModel.usingSkinPack(List.of(
+				"reiksgard_drummer_1",
+				"reiksgard_drummer_2",
+				"reiksgard_drummer_3")));
+		generate("reiksgard/cavalry", NpcModel.usingSkinPack(List.of(
+				"reiksgard_reiter_1",
+				"reiksgard_reiter_2",
+				"reiksgard_reiter_3",
+				"reiksgard_reiter_4")));
+		generate("reiksgard/civilian_female", NpcModel.usingSkinPack(List.of(
+				"reiksgard_trossfrau_1",
+				"reiksgard_trossfrau_2",
+				"reiksgard_trossfrau_3",
+				"reiksgard_trossfrau_4",
+				"reiksgard_trossfrau_5",
+				"reiksgard_trossfrau_6")));
+		generate("reiksgard/civilian_male", NpcModel.usingSkinPack(List.of(
+				"reiksgard_trossmann_1",
+				"reiksgard_trossmann_2",
+				"reiksgard_trossmann_3",
+				"reiksgard_trossmann_4")));
+		generate("reiksgard/elite_leader", NpcModel.usingSkinPack(List.of(
+				"reiksgard_hauptmann_1",
+				"reiksgard_hauptmann_2",
+				"reiksgard_hauptmann_3",
+				"reiksgard_hauptmann_4",
+				"reiksgard_hauptmann_5")));
+		generate("reiksgard/leader", NpcModel.usingSkinPack(List.of(
+				"reiksgard_feldweibel_1",
+				"reiksgard_feldweibel_2",
+				"reiksgard_feldweibel_3",
+				"reiksgard_feldweibel_4")));
+		generate("reiksgard/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"reiksgard_archer_1",
+				"reiksgard_archer_2",
+				"reiksgard_archer_3")));
+		generate("reiksgard/priest", NpcModel.usingSkinPack(List.of(
+				"reiksgard_friar_1",
+				"reiksgard_friar_2",
+				"reiksgard_friar_3")));
+		generate("reiksgard/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"reiksgard_cannoneer_1",
+				"reiksgard_cannoneer_2",
+				"reiksgard_cannoneer_3")));
+		generate("reiksgard/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"reiksgard_doppelsoldner_1",
+				"reiksgard_doppelsoldner_2",
+				"reiksgard_doppelsoldner_3",
+				"reiksgard_doppelsoldner_4")));
+		generate("reiksgard/soldier", NpcModel.usingSkinPack(List.of(
+				"reiksgard_soldner_1",
+				"reiksgard_soldner_2",
+				"reiksgard_soldner_3",
+				"reiksgard_soldner_4",
+				"reiksgard_soldner_5",
+				"reiksgard_soldner_6",
+				"reiksgard_soldner_7")));
+		generate("reiksgard/spell_caster_1", NpcModel.usingSkinPack("custom_adventurer_elder_mage"));
+		generate("reiksgard/spell_caster_2", NpcModel.usingSkinPack("custom_adventurer_veteran_mage"));
+		generate("reiksgard/spell_caster_3", NpcModel.usingSkinPack("custom_adventurer_village_wizard"));
+		generate("reiksgard/spell_caster_4", NpcModel.usingSkinPack("custom_adventurer_wizard_green"));
+		generate("reiksgard/spell_caster", NpcModel.usingSkinPack("custom_adventurer_blue_wizard"));
+		generate("reiksgard/trader", NpcModel.usingSkinPack(List.of(
+				"reiksgard_trader_1",
+				"reiksgard_trader_2",
+				"reiksgard_trader_3")));
+		generate("sarkonid/elite_archer", NpcModel.usingSkinPack(List.of(
+				"sarkonid_horse_archer_1",
+				"sarkonid_horse_archer_2",
+				"sarkonid_horse_archer_3",
+				"sarkonid_horse_archer_4",
+				"sarkonid_horse_archer_5",
+				"sarkonid_horse_archer_6",
+				"sarkonid_horse_archer_7",
+				"sarkonid_horse_archer_8",
+				"sarkonid_horse_archer_9")));
+		generate("sarkonid/archer", NpcModel.usingSkinPack(List.of(
+				"sarkonid_archer_1",
+				"sarkonid_archer_2",
+				"sarkonid_archer_3",
+				"sarkonid_archer_4",
+				"sarkonid_archer_5",
+				"sarkonid_archer_6",
+				"sarkonid_archer_7")));
+		generate("sarkonid/bard", NpcModel.usingSkinPack("sarkonid_bard"));
+		generate("sarkonid/cavalry", NpcModel.usingSkinPack(List.of(
+				"sarkonid_knight_1",
+				"sarkonid_knight_10",
+				"sarkonid_knight_11",
+				"sarkonid_knight_12",
+				"sarkonid_knight_2",
+				"sarkonid_knight_3",
+				"sarkonid_knight_4",
+				"sarkonid_knight_5",
+				"sarkonid_knight_6",
+				"sarkonid_knight_7",
+				"sarkonid_knight_8",
+				"sarkonid_knight_9")));
+		generate("sarkonid/civilian_female", NpcModel.usingSkinPack(List.of(
+				"sarkonid_princess",
+				"sarkonid_woman_1",
+				"sarkonid_woman_2",
+				"sarkonid_woman_3",
+				"sarkonid_woman_4",
+				"sarkonid_woman_5",
+				"sarkonid_woman_6",
+				"sarkonid_woman_7",
+				"sarkonid_woman_8")));
+		generate("sarkonid/civilian_male", NpcModel.usingSkinPack(List.of(
+				"sarkonid_man_1",
+				"sarkonid_man_10",
+				"sarkonid_man_11",
+				"sarkonid_man_2",
+				"sarkonid_man_3",
+				"sarkonid_man_4",
+				"sarkonid_man_5",
+				"sarkonid_man_6",
+				"sarkonid_man_7",
+				"sarkonid_man_8",
+				"sarkonid_man_9")));
+		generate("sarkonid/elite_leader", NpcModel.usingSkinPack(List.of(
+				"sarkonid_king",
+				"sarkonid_lord_1",
+				"sarkonid_lord_2",
+				"sarkonid_lord_3",
+				"sarkonid_lord_4",
+				"sarkonid_lord_5")));
+		generate("sarkonid/leader", NpcModel.usingSkinPack(List.of(
+				"sarkonid_emir_1",
+				"sarkonid_emir_2",
+				"sarkonid_emir_3",
+				"sarkonid_emir_4",
+				"sarkonid_emir_5",
+				"sarkonid_emir_6")));
+		generate("sarkonid/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"sarkonid_horse_archer_1",
+				"sarkonid_horse_archer_2",
+				"sarkonid_horse_archer_3",
+				"sarkonid_horse_archer_4",
+				"sarkonid_horse_archer_5",
+				"sarkonid_horse_archer_6",
+				"sarkonid_horse_archer_7",
+				"sarkonid_horse_archer_8")));
+		generate("sarkonid/priest", NpcModel.usingSkinPack(List.of(
+				"sarkonid_mage_1",
+				"sarkonid_mage_2",
+				"sarkonid_mage_3",
+				"sarkonid_mage_4",
+				"sarkonid_mage_5",
+				"sarkonid_mage_6")));
+		generate("sarkonid/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"sarkonid_siege_engineer_1",
+				"sarkonid_siege_engineer_2",
+				"sarkonid_siege_engineer_3",
+				"sarkonid_siege_engineer_4",
+				"sarkonid_siege_engineer_5")));
+		generate("sarkonid/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"sarkonid_halbardier_1",
+				"sarkonid_halbardier_2",
+				"sarkonid_knight_1",
+				"sarkonid_knight_2",
+				"sarkonid_knight_3",
+				"sarkonid_knight_4",
+				"sarkonid_knight_5",
+				"sarkonid_knight_6",
+				"sarkonid_knight_7",
+				"sarkonid_knight_8",
+				"sarkonid_spearman_1",
+				"sarkonid_spearman_2",
+				"sarkonid_spearman_3",
+				"sarkonid_spearman_4",
+				"sarkonid_warrior_1",
+				"sarkonid_warrior_2")));
+		generate("sarkonid/soldier", NpcModel.usingSkinPack(List.of(
+				"sarkonid_1",
+				"sarkonid_10",
+				"sarkonid_11",
+				"sarkonid_12",
+				"sarkonid_2",
+				"sarkonid_3",
+				"sarkonid_4",
+				"sarkonid_5",
+				"sarkonid_6",
+				"sarkonid_7",
+				"sarkonid_8",
+				"sarkonid_9")));
+		generate("sarkonid/spell_caster_1", NpcModel.usingSkinPack("sarkonid_mage_8"));
+		generate("sarkonid/spell_caster_2", NpcModel.usingSkinPack("sarkonid_mage_9"));
+		generate("sarkonid/spell_caster_3", NpcModel.usingSkinPack("sarkonid_mage_10"));
+		generate("sarkonid/spell_caster_4", NpcModel.usingSkinPack("sarkonid_mage_11"));
+		generate("sarkonid/spell_caster", NpcModel.usingSkinPack("sarkonid_mage_7"));
+		generate("sarkonid/trader", NpcModel.usingSkinPack(List.of(
+				"sarkonid_trader_1",
+				"sarkonid_trader_2",
+				"sarkonid_trader_3",
+				"sarkonid_trader_4",
+				"sarkonid_trader_5",
+				"sarkonid_trader_6",
+				"sarkonid_trader_7",
+				"sarkonid_trader_8",
+				"sarkonid_trader_9")));
+		generate("sealsker/elite_archer", NpcModel.usingSkinPack("sealsker_lookout"));
+		generate("sealsker/archer", NpcModel.usingSkinPack("sealsker_hunter"));
+		generate("sealsker/civilian_female", NpcModel.usingSkinPack("sealsker_huntress"));
+		generate("sealsker/civilian_male", NpcModel.usingSkinPack("sealsker_fisher"));
+		generate("sealsker/elite_leader", NpcModel.usingSkinPack("sealsker_snow_fox"));
+		generate("sealsker/leader", NpcModel.usingSkinPack(List.of(
+				"sealsker_chieftain",
+				"sealsker_wolf_warrior")));
+		generate("sealsker/priest", NpcModel.usingSkinPack("sealsker_shaman_1"));
+		generate("sealsker/elite_soldier", NpcModel.usingSkinPack("sealsker_harpooner"));
+		generate("sealsker/soldier", NpcModel.usingSkinPack("sealsker_walrusser"));
+		generate("sealsker/spell_caster", NpcModel.usingSkinPack("sealsker_mage"));
+		generate("sealsker/trader", NpcModel.usingSkinPack("sealsker_gatherer"));
+		generate("shakayana/elite_archer", NpcModel.usingSkinPack("shakayana_infantry"));
+		generate("shakayana/archer", NpcModel.usingSkinPack("shakayana_archer"));
+		generate("shakayana/bard", NpcModel.usingSkinPack("shakayana_bard"));
+		generate("shakayana/cavalry", NpcModel.usingSkinPack("shakayana_knight"));
+		generate("shakayana/civilian_female", NpcModel.usingSkinPack(List.of(
+				"shakayana_woman_1",
+				"shakayana_woman_2",
+				"shakayana_woman_3",
+				"shakayana_princess")));
+		generate("shakayana/civilian_male", NpcModel.usingSkinPack(List.of(
+				"shakayana_man_1",
+				"shakayana_man_2",
+				"shakayana_man_3")));
+		generate("shakayana/elite_leader", NpcModel.usingSkinPack(List.of(
+				"shakayana_noble_1",
+				"shakayana_noble_2")));
+		generate("shakayana/leader", NpcModel.usingSkinPack(List.of(
+				"shakayana_leader",
+				"shakayana_raja")));
+		generate("shakayana/mounted_archer", NpcModel.usingSkinPack("shakayana_cavalry"));
+		generate("shakayana/priest", NpcModel.usingSkinPack("shakayana_priest"));
+		generate("shakayana/siege_engineer", NpcModel.usingSkinPack("shakayana_soldier"));
+		generate("shakayana/elite_soldier", NpcModel.usingSkinPack("shakayana_soldier"));
+		generate("shakayana/soldier", NpcModel.usingSkinPack("shakayana_warrior"));
+		generate("shakayana/spell_caster_1", NpcModel.usingSkinPack("shakayana_mage"));
+		generate("shakayana/spell_caster_2", NpcModel.usingSkinPack("shakayana_mage"));
+		generate("shakayana/spell_caster_3", NpcModel.usingSkinPack("shakayana_mage"));
+		generate("shakayana/spell_caster_4", NpcModel.usingSkinPack("shakayana_mage"));
+		generate("shakayana/spell_caster", NpcModel.usingSkinPack("shakayana_mage"));
+		generate("shakayana/trader", NpcModel.usingSkinPack("shakayana_trader"));
+		generate("smingol/elite_archer", NpcModel.usingSkinPack(List.of(
+				"smingol_archer_1",
+				"smingol_archer_2",
+				"smingol_archer_3",
+				"smingol_archer_4")));
+		generate("smingol/archer", NpcModel.usingSkinPack(List.of(
+				"smingol_archer_5",
+				"smingol_archer_6",
+				"smingol_archer_7",
+				"smingol_archer_8")));
+		generate("smingol/bard", NpcModel.usingSkinPack("smingol_throatsinger"));
+		generate("smingol/cavalry", NpcModel.usingSkinPack(List.of(
+				"smingol_chief_1",
+				"smingol_chief_2",
+				"smingol_great_chief",
+				"smingol_high_chief",
+				"smingol_warrior_1",
+				"smingol_warrior_2",
+				"smingol_warrior_3",
+				"smingol_warrior_4",
+				"smingol_warrior_5",
+				"smingol_warrior_6")));
+		generate("smingol/civilian_female", NpcModel.usingSkinPack(List.of(
+				"smingol_woman_1",
+				"smingol_woman_2")));
+		generate("smingol/civilian_male", NpcModel.usingSkinPack(List.of(
+				"smingol_man_1",
+				"smingol_man_2",
+				"smingol_man_3",
+				"smingol_man_4")));
+		generate("smingol/elite_leader", NpcModel.usingSkinPack(List.of(
+				"smingol_great_chief",
+				"smingol_high_chief")));
+		generate("smingol/leader", NpcModel.usingSkinPack(List.of(
+				"smingol_chief_1",
+				"smingol_chief_2")));
+		generate("smingol/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"smingol_archer_1",
+				"smingol_archer_2",
+				"smingol_archer_3",
+				"smingol_archer_4",
+				"smingol_archer_5",
+				"smingol_archer_6",
+				"smingol_archer_7",
+				"smingol_archer_8")));
+		generate("smingol/priest", NpcModel.usingSkinPack("smingol_priestess"));
+		generate("smingol/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"smingol_cannoneer_1",
+				"smingol_cannoneer_2",
+				"smingol_cannoneer_3")));
+		generate("smingol/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"smingol_warrior_4",
+				"smingol_warrior_5",
+				"smingol_warrior_6")));
+		generate("smingol/soldier", NpcModel.usingSkinPack(List.of(
+				"smingol_warrior_1",
+				"smingol_warrior_2",
+				"smingol_warrior_3")));
+		generate("smingol/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"smingol_mage_1",
+				"smingol_mage_2")));
+		generate("smingol/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"smingol_mage_3",
+				"smingol_mage_4")));
+		generate("smingol/spell_caster_3", NpcModel.usingSkinPack("smingol_spellcaster"));
+		generate("smingol/spell_caster_4", NpcModel.usingSkinPack("smingol_great_spellcaster"));
+		generate("smingol/spell_caster", NpcModel.usingSkinPack("smingol_mage_1"));
+		generate("smingol/trader", NpcModel.usingSkinPack(List.of(
+				"smingol_trader_1",
+				"smingol_trader_2")));
+		generate("undead/elite_archer", NpcModel.usingSkinPack(List.of(
+				"undead_lich_1",
+				"undead_lich_1",
+				"undead_lich_3",
+				"undead_lich_3",
+				"undead_lich_4",
+				"undead_lich_4",
+				"undead_lich_5",
+				"undead_lich_5",
+				"undead_lich_6",
+				"undead_lich_6",
+				"undead_lich_7",
+				"undead_lich_7")));
+		generate("undead/archer", NpcModel.usingSkinPack(List.of(
+				"undead_skeleton",
+				"undead_skeleton")));
+		generate("undead/bard", NpcModel.usingSkinPack(List.of(
+				"undead_ghost_lady",
+				"undead_ghost_lady")));
+		generate("undead/cavalry", NpcModel.usingSkinPack(List.of(
+				"undead_death_knight",
+				"undead_death_knight",
+				"undead_dread_knight",
+				"undead_dread_knight",
+				"undead_revenant_knight",
+				"undead_revenant_knight",
+				"undead_wraith_knight_1",
+				"undead_wraith_knight_1",
+				"undead_wraith_knight_2",
+				"undead_wraith_knight_2",
+				"undead_wraith_knight_3",
+				"undead_wraith_knight_3",
+				"undead_wraith_rider_1",
+				"undead_wraith_rider_1",
+				"undead_wraith_rider_2",
+				"undead_wraith_rider_2",
+				"undead_wraith_rider_3",
+				"undead_wraith_rider_3",
+				"undead_wraith_rider_4",
+				"undead_wraith_rider_4")));
+		generate("undead/elite_leader", NpcModel.usingSkinPack(List.of(
+				"undead_lich_lord_1",
+				"undead_lich_lord_1",
+				"undead_lich_lord_2",
+				"undead_lich_lord_2",
+				"undead_lich_lord_4",
+				"undead_lich_lord_4",
+				"undead_lich_lord_7",
+				"undead_lich_lord_7",
+				"undead_lich_lord_8",
+				"undead_lich_lord_8")));
+		generate("undead/leader", NpcModel.usingSkinPack(List.of(
+				"undead_death_knight",
+				"undead_death_knight",
+				"undead_death_knight_red",
+				"undead_death_knight_red",
+				"undead_death_knight_yellow",
+				"undead_death_knight_yellow",
+				"undead_dread_knight",
+				"undead_dread_knight",
+				"undead_revenant_knight",
+				"undead_revenant_knight",
+				"undead_warlord",
+				"undead_warlord")));
+		generate("undead/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"undead_ghost_1",
+				"undead_ghost_1",
+				"undead_ghost_2",
+				"undead_ghost_2",
+				"undead_ghost_3",
+				"undead_ghost_3",
+				"undead_ghost_6",
+				"undead_ghost_6",
+				"undead_ghost_7",
+				"undead_ghost_7",
+				"undead_ghost_8",
+				"undead_ghost_8")));
+		generate("undead/priest", NpcModel.usingSkinPack(List.of(
+				"undead_lich_priest_1",
+				"undead_lich_priest_1",
+				"undead_lich_priest_2",
+				"undead_lich_priest_2",
+				"undead_lich_priest_3",
+				"undead_lich_priest_3",
+				"undead_lich_priest_4",
+				"undead_lich_priest_4")));
+		generate("undead/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"undead_skeleton",
+				"undead_skeleton")));
+		generate("undead/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"undead_spectre_1",
+				"undead_spectre_1",
+				"undead_spectre_2",
+				"undead_spectre_2",
+				"undead_spectre_3",
+				"undead_spectre_3",
+				"undead_wraith_1",
+				"undead_wraith_1",
+				"undead_wraith_2",
+				"undead_wraith_2",
+				"undead_wraith_3",
+				"undead_wraith_3")));
+		generate("undead/soldier", NpcModel.usingSkinPack(List.of(
+				"undead_bloated_corpse",
+				"undead_bloated_corpse",
+				"undead_burned_corpse",
+				"undead_burned_corpse",
+				"undead_decaying_corpse",
+				"undead_decaying_corpse",
+				"undead_drowned_corpse",
+				"undead_drowned_corpse",
+				"undead_grave_zombie",
+				"undead_grave_zombie",
+				"undead_lynched-corpse",
+				"undead_lynched-corpse",
+				"undead_rotting_corpse",
+				"undead_rotting_corpse",
+				"undead_zombie",
+				"undead_zombie",
+				"undead_zombie_warrior",
+				"undead_zombie_warrior")));
+		generate("undead/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"undead_summoner",
+				"undead_summoner")));
+		generate("undead/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"undead_necromancer",
+				"undead_necromancer",
+				"undead_necromancer_2",
+				"undead_necromancer_2")));
+		generate("undead/spell_caster_3", NpcModel.usingSkinPack(List.of(
+				"undead_lich_2",
+				"undead_lich_2",
+				"undead_lich_4",
+				"undead_lich_4")));
+		generate("undead/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"undead_lich_lord_3",
+				"undead_lich_lord_3",
+				"undead_lich_lord_5",
+				"undead_lich_lord_5",
+				"undead_lich_lord_6",
+				"undead_lich_lord_6")));
+		generate("undead/spell_caster", NpcModel.usingSkinPack(List.of(
+				"undead_lich_lord_1",
+				"undead_lich_lord_1")));
+		generate("undead/trader", NpcModel.usingSkinPack(List.of(
+				"undead_death_trader",
+				"undead_death_trader",
+				"undead_wight",
+				"undead_wight")));
+		generate("vampire/elite_archer", NpcModel.usingSkinPack(List.of(
+				"szygany_day_guard_1",
+				"szygany_day_guard_1",
+				"szygany_day_guard_2",
+				"szygany_day_guard_2")));
+		generate("vampire/archer", NpcModel.usingSkinPack(List.of(
+				"szygany_guard_1",
+				"szygany_guard_1",
+				"szygany_guard_2",
+				"szygany_guard_2")));
+		generate("vampire/cavalry", NpcModel.usingSkinPack(List.of(
+				"vampire_death_dealer",
+				"vampire_death_dealer")));
+		generate("vampire/civilian_female", NpcModel.usingSkinPack(List.of(
+				"blood_slave_girl_1",
+				"blood_slave_girl_1",
+				"blood_slave_girl_2",
+				"blood_slave_girl_2")));
+		generate("vampire/civilian_male", NpcModel.usingSkinPack(List.of(
+				"vampire_thrall_1",
+				"vampire_thrall_1",
+				"vampire_thrall_2",
+				"vampire_thrall_2",
+				"vampire_thrall_3",
+				"vampire_thrall_3",
+				"vampire_thrall_4",
+				"vampire_thrall_4")));
+		generate("vampire/elite_leader", NpcModel.usingSkinPack(List.of(
+				"vampire_count_dracula",
+				"vampire_count_dracula",
+				"vampire_dracula_enraged",
+				"vampire_dracula_enraged",
+				"vampire_lord_1",
+				"vampire_lord_1",
+				"vampire_lord_2",
+				"vampire_lord_2",
+				"vampire_lord_dracula",
+				"vampire_lord_dracula",
+				"vampire_vlad_drakul",
+				"vampire_vlad_drakul")));
+		generate("vampire/leader", NpcModel.usingSkinPack(List.of(
+				"nosferatu_1",
+				"nosferatu_1",
+				"nosferatu_2",
+				"nosferatu_2",
+				"nosferatu_count_orlok",
+				"nosferatu_count_orlok",
+				"nosferatu_lord",
+				"nosferatu_lord")));
+		generate("vampire/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"szgany_guard_1",
+				"szgany_guard_1",
+				"szygany_day_guard_1",
+				"szygany_day_guard_1",
+				"szygany_day_guard_2",
+				"szygany_day_guard_2",
+				"szygany_guard_2",
+				"szygany_guard_2")));
+		generate("vampire/priest", NpcModel.usingSkinPack(List.of(
+				"undead_lich_1",
+				"undead_lich_1")));
+		generate("vampire/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"szygany_guard_1",
+				"szygany_guard_1",
+				"szygany_guard_2",
+				"szygany_guard_2")));
+		generate("vampire/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"vampire_bride_1",
+				"vampire_bride_1",
+				"vampire_bride_2",
+				"vampire_bride_2",
+				"vampire_bride_3",
+				"vampire_bride_3",
+				"vampire_lady",
+				"vampire_lady",
+				"vampire_queen",
+				"vampire_queen")));
+		generate("vampire/soldier", NpcModel.usingSkinPack(List.of(
+				"frankensteins_monster_1",
+				"frankensteins_monster_1",
+				"frankensteins_monster_2",
+				"frankensteins_monster_2",
+				"frankensteins_monster_3",
+				"frankensteins_monster_3",
+				"frankensteins_monster_4",
+				"frankensteins_monster_4",
+				"frankensteins_monster_5",
+				"frankensteins_monster_5")));
+		generate("vampire/spell_caster_1", NpcModel.usingSkinPack(List.of(
+				"vampire_count_dracula",
+				"vampire_lord_4")));
+		generate("vampire/spell_caster_2", NpcModel.usingSkinPack(List.of(
+				"vampire_lord_3",
+				"vampire_vlad_drakul")));
+		generate("vampire/spell_caster_3", NpcModel.usingSkinPack(List.of(
+				"vampire_blood_mage",
+				"vampire_blood_mage")));
+		generate("vampire/spell_caster_4", NpcModel.usingSkinPack(List.of(
+				"vampire_ancient",
+				"vampire_ancient")));
+		generate("vampire/spell_caster", NpcModel.usingSkinPack(List.of(
+				"custom_monster_vampire_count_alucard",
+				"vampire_count_dracula")));
+		generate("vampire/trader", NpcModel.usingSkinPack(List.of(
+				"undead_wight",
+				"undead_wight")));
+		generate("vyncan/elite_archer", NpcModel.usingSkinPack("vyncan_archer_2"));
+		generate("vyncan/archer", NpcModel.usingSkinPack(List.of(
+				"vyncan_archer_1",
+				"vyncan_hunter")));
+		generate("vyncan/civilian_female", NpcModel.usingSkinPack(List.of(
+				"vyncan_girl",
+				"vyncan_woman")));
+		generate("vyncan/civilian_male", NpcModel.usingSkinPack("vyncan_slave"));
+		generate("vyncan/elite_leader", NpcModel.usingSkinPack(List.of(
+				"vyncan_chieftain",
+				"vyncan_king")));
+		generate("vyncan/leader", NpcModel.usingSkinPack(List.of(
+				"vyncan_death_spirit",
+				"vyncan_guard_beast",
+				"vyncan_tomb_guardian")));
+		generate("vyncan/priest", NpcModel.usingSkinPack(List.of(
+				"vyncan_druid",
+				"vyncan_priest_1",
+				"vyncan_priest_2")));
+		generate("vyncan/elite_soldier", NpcModel.usingSkinPack("vyncan_blood_warrior"));
+		generate("vyncan/soldier", NpcModel.usingSkinPack(List.of(
+				"vyncan_warrior_1",
+				"vyncan_warrior_2")));
+		generate("vyncan/spell_caster_1", NpcModel.usingSkinPack("vyncan_mage_1"));
+		generate("vyncan/spell_caster_2", NpcModel.usingSkinPack("vyncan_mage_2"));
+		generate("vyncan/spell_caster_3", NpcModel.usingSkinPack("vyncan_mage_3"));
+		generate("vyncan/spell_caster_4", NpcModel.usingSkinPack("vyncan_mage_4"));
+		generate("vyncan/spell_caster", NpcModel.usingSkinPack("vyncan_mage"));
+		generate("vyncan/trader", NpcModel.usingSkinPack("vyncan_maiden"));
+		generate("witchbane/elite_archer", NpcModel.usingSkinPack(List.of(
+				"witchbane_1",
+				"witchbane_2",
+				"witchbane_3",
+				"witchbane_4",
+				"witchbane_5",
+				"witchbane_6")));
+		generate("witchbane/archer", NpcModel.usingSkinPack(List.of(
+				"witchbane_archer_1",
+				"witchbane_archer_2")));
+		generate("witchbane/bard", NpcModel.usingSkinPack("witchbane_hymn_singer"));
+		generate("witchbane/cavalry", NpcModel.usingSkinPack(List.of(
+				"witchbane_knight_1",
+				"witchbane_knight_10",
+				"witchbane_knight_2",
+				"witchbane_knight_3",
+				"witchbane_knight_4",
+				"witchbane_knight_5",
+				"witchbane_knight_6",
+				"witchbane_knight_7",
+				"witchbane_knight_8",
+				"witchbane_knight_9")));
+		generate("witchbane/civilian_female", NpcModel.usingSkinPack(List.of(
+				"witchbane_nun_1",
+				"witchbane_nun_2")));
+		generate("witchbane/civilian_male", NpcModel.usingSkinPack(List.of(
+				"witchbane_monk_1",
+				"witchbane_monk_2",
+				"witchbane_monk_3",
+				"witchbane_monk_4")));
+		generate("witchbane/elite_leader", NpcModel.usingSkinPack(List.of(
+				"witchbane_cardinal",
+				"witchbane_duke_1",
+				"witchbane_duke_2",
+				"witchbane_duke_3",
+				"witchbane_duke_4")));
+		generate("witchbane/leader", NpcModel.usingSkinPack(List.of(
+				"witchbane_abbot",
+				"witchbane_baron_1",
+				"witchbane_baron_2",
+				"witchbane_baron_3",
+				"witchbane_baron_4")));
+		generate("witchbane/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"witchbane_archer_1",
+				"witchbane_archer_2")));
+		generate("witchbane/priest", NpcModel.usingSkinPack(List.of(
+				"witchbane_priest_1",
+				"witchbane_priest_2",
+				"witchbane_priest_3",
+				"witchbane_priest_4",
+				"witchbane_priest_5",
+				"witchbane_priest_6")));
+		generate("witchbane/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"witchbane_1",
+				"witchbane_2",
+				"witchbane_3")));
+		generate("witchbane/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"witchbane_knight_1",
+				"witchbane_knight_10",
+				"witchbane_knight_2",
+				"witchbane_knight_3",
+				"witchbane_knight_4",
+				"witchbane_knight_5",
+				"witchbane_knight_6",
+				"witchbane_knight_7",
+				"witchbane_knight_8",
+				"witchbane_knight_9")));
+		generate("witchbane/soldier", NpcModel.usingSkinPack(List.of(
+				"witchbane_spearman_1",
+				"witchbane_spearman_2",
+				"witchbane_spearman_3",
+				"witchbane_spearman_4",
+				"witchbane_spearman_5",
+				"witchbane_spearman_6")));
+		generate("witchbane/spell_caster_1", NpcModel.usingSkinPack("custom_inquisitor_1"));
+		generate("witchbane/spell_caster_2", NpcModel.usingSkinPack("custom_inquisitor_2"));
+		generate("witchbane/spell_caster_3", NpcModel.usingSkinPack("custom_monty_python_spanish_inquisitor"));
+		generate("witchbane/spell_caster_4", NpcModel.usingSkinPack("custom_monty_python_cardinal_fang_spanish_inquisition"));
+		generate("witchbane/spell_caster", NpcModel.usingSkinPack("witchbane_nun_12"));
+		generate("witchbane/trader", NpcModel.usingSkinPack(List.of(
+				"witchbane_trader_1",
+				"witchbane_trader_2",
+				"witchbane_trader_3")));
+		generate("wizardly/elite_archer", NpcModel.usingSkinPack("wizard_archer_1"));
+		generate("wizardly/archer", NpcModel.usingSkinPack("wizard_archer_1"));
+		generate("wizardly/bard", NpcModel.usingSkinPack(List.of(
+				"wizards_doorkeeper",
+				"wizards_retainer")));
+		generate("wizardly/civilian_female", NpcModel.usingSkinPack(List.of(
+				"custom_hp_anne_oliphant",
+				"custom_hp_bellatrix_lestrange",
+				"custom_hp_ginny_weasely",
+				"custom_hp_hermione_granger",
+				"custom_hp_luna_lovegood")));
+		generate("wizardly/civilian_male", NpcModel.usingSkinPack(List.of(
+				"custom_hp_boy_ravenclaw",
+				"custom_hp_boy_slytherin",
+				"custom_hp_cedric_diggery",
+				"custom_hp_draco_malfoy",
+				"custom_hp_harry_potter",
+				"custom_hp_ron_weasley",
+				"custom_hp_scott_ravenclaw")));
+		generate("wizardly/elite_leader", NpcModel.usingSkinPack("custom_hp_rubeus_hagrid"));
+		generate("wizardly/leader", NpcModel.usingSkinPack(List.of(
+				"custom_dw_rincewind",
+				"custom_hp_alastor_moody",
+				"custom_hp_albus_dumbledore",
+				"custom_hp_dolores_umbridge",
+				"custom_hp_madam_hooch",
+				"custom_hp_professor_mcgonagall",
+				"custom_hp_professor_severus_snape",
+				"custom_hp_sirius_black")));
+		generate("wizardly/priest", NpcModel.usingSkinPack(List.of(
+				"good_guardian_wizard_1",
+				"good_guardian_wizard_2",
+				"good_guardian_wizard_3",
+				"wizards_potion_mixer")));
+		generate("wizardly/siege_engineer", NpcModel.usingSkinPack("custom_villager_town_ballistae_bowman"));
+		generate("wizardly/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"guardian_cat_1",
+				"guardian_cat_2",
+				"guardian_cat_3",
+				"guardian_cat_4",
+				"wizards_guardian",
+				"wizards_guardian_monkey",
+				"wizards_guardian_unicornus")));
+		generate("wizardly/soldier", NpcModel.usingSkinPack("wizard_guard_1"));
+		generate("wizardly/spell_caster_1", NpcModel.usingSkinPack("custom_hp_alastor_moody"));
+		generate("wizardly/spell_caster_2", NpcModel.usingSkinPack("custom_hp_sirius_black"));
+		generate("wizardly/spell_caster_3", NpcModel.usingSkinPack("custom_hp_professor_severus_snape"));
+		generate("wizardly/spell_caster_4", NpcModel.usingSkinPack("custom_hp_albus_dumbledore"));
+		generate("wizardly/spell_caster", NpcModel.usingSkinPack("custom_dw_rincewind"));
+		generate("wizardly/trader", NpcModel.usingSkinPack(List.of(
+				"wizards_apprentice_1",
+				"wizards_apprentice_2",
+				"wizards_apprentice_accident",
+				"wizards_apprentice_alchemist",
+				"wizards_apprentice_alchemist")));
+		generate("xoltec/elite_archer", NpcModel.usingSkinPack("xoltec_eagle_knight"));
+		generate("xoltec/archer", NpcModel.usingSkinPack(List.of(
+				"xoltec_1",
+				"xoltec_2",
+				"xoltec_3",
+				"xoltec_4",
+				"xoltec_5",
+				"xoltec_6")));
+		generate("xoltec/bard", NpcModel.usingSkinPack("xoltec_dancer"));
+		generate("xoltec/cavalry", NpcModel.usingSkinPack("xoltec_temple_guard"));
+		generate("xoltec/civilian_female", NpcModel.usingSkinPack(List.of(
+				"xoltec_girl",
+				"xoltec_woman_1",
+				"xoltec_woman_2",
+				"xoltec_woman_3",
+				"xoltec_woman_4",
+				"xoltec_woman_5")));
+		generate("xoltec/civilian_male", NpcModel.usingSkinPack(List.of(
+				"xoltec_1",
+				"xoltec_2",
+				"xoltec_3",
+				"xoltec_4",
+				"xoltec_5",
+				"xoltec_man")));
+		generate("xoltec/elite_leader", NpcModel.usingSkinPack(List.of(
+				"xoltec_king_1",
+				"xoltec_king_2",
+				"xoltec_king_3",
+				"xoltec_king_4",
+				"xoltec_king_5")));
+		generate("xoltec/leader", NpcModel.usingSkinPack(List.of(
+				"xoltec_lord_1",
+				"xoltec_lord_2",
+				"xoltec_lord_3",
+				"xoltec_lord_4",
+				"xoltec_lord_5",
+				"xoltec_noble")));
+		generate("xoltec/mounted_archer", NpcModel.usingSkinPack("xoltec_falcon_knight"));
+		generate("xoltec/priest", NpcModel.usingSkinPack(List.of(
+				"xoltec_priest_1",
+				"xoltec_priest_3",
+				"xoltec_priest_4",
+				"xoltec_priest_5",
+				"xoltec_priest_6")));
+		generate("xoltec/siege_engineer", NpcModel.usingSkinPack("xoltec_death_priest"));
+		generate("xoltec/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"xoltec_jaguar_knight",
+				"xoltec_jaguar_knight_2",
+				"xoltec_jaguar_knight_3",
+				"xoltec_jaguar_knight_4")));
+		generate("xoltec/soldier", NpcModel.usingSkinPack(List.of(
+				"xoltec_1",
+				"xoltec_2",
+				"xoltec_3",
+				"xoltec_4",
+				"xoltec_5",
+				"xoltec_6")));
+		generate("xoltec/spell_caster_1", NpcModel.usingSkinPack("xoltec_enchantress"));
+		generate("xoltec/spell_caster_2", NpcModel.usingSkinPack("xoltec_mage"));
+		generate("xoltec/spell_caster_3", NpcModel.usingSkinPack("xoltec_priest_1"));
+		generate("xoltec/spell_caster_4", NpcModel.usingSkinPack("xoltec_king_3"));
+		generate("xoltec/spell_caster", NpcModel.usingSkinPack("xoltec_heart_ripper"));
+		generate("xoltec/trader", NpcModel.usingSkinPack(List.of(
+				"xoltec_trader",
+				"xoltec_trader_2",
+				"xoltec_trader_3")));
+		generate("zamurai/elite_archer", NpcModel.usingSkinPack(List.of(
+				"zamurai_guard_1",
+				"zamurai_guard_2",
+				"zamurai_guard_3",
+				"zamurai_guard_4")));
+		generate("zamurai/archer", NpcModel.usingSkinPack(List.of(
+				"zamurai_retainer_1",
+				"zamurai_retainer_2")));
+		generate("zamurai/bard", NpcModel.usingSkinPack(List.of(
+				"zamurai_geisha_1",
+				"zamurai_geisha_2",
+				"zamurai_geisha_3")));
+		generate("zamurai/cavalry", NpcModel.usingSkinPack(List.of(
+				"zamurai_panda_monk",
+				"zamurai_ruby_warrior",
+				"zamurai_sapphire_warrior",
+				"zamurai_the_korean",
+				"zamurai_veteran_warrior",
+				"zamurai_veteran_warrior",
+				"zamurai_veteran_warrior")));
+		generate("zamurai/civilian_female", NpcModel.usingSkinPack(List.of(
+				"zamurai_geisha_1",
+				"zamurai_geisha_2",
+				"zamurai_geisha_3",
+				"zamurai_princess",
+				"zamurai_woman_1",
+				"zamurai_woman_2")));
+		generate("zamurai/civilian_male", NpcModel.usingSkinPack(List.of(
+				"zamurai_follower",
+				"zamurai_man",
+				"zamurai_peasant",
+				"zamurai_wrestler")));
+		generate("zamurai/elite_leader", NpcModel.usingSkinPack(List.of(
+				"zamurai_daimyo",
+				"zamurai_demon_shogun",
+				"zamurai_dread_shogun",
+				"zamurai_general",
+				"zamurai_shogun_1",
+				"zamurai_shogun_2")));
+		generate("zamurai/leader", NpcModel.usingSkinPack(List.of(
+				"zamurai_lord_1",
+				"zamurai_lord_2",
+				"zamurai_lord_3",
+				"zamurai_lord_4",
+				"zamurai_lord_5")));
+		generate("zamurai/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"zamurai_retainer_1",
+				"zamurai_retainer_2")));
+		generate("zamurai/priest", NpcModel.usingSkinPack(List.of(
+				"zamurai_priest",
+				"zamurai_warrior_monk")));
+		generate("zamurai/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"zamurai_golden_guard",
+				"zamurai_temple_guard")));
+		generate("zamurai/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"zamurai_jade_warrior",
+				"zamurai_ruby_warrior",
+				"zamurai_sapphire_warrior",
+				"zamurai_veteran_warrior")));
+		generate("zamurai/soldier", NpcModel.usingSkinPack(List.of(
+				"zamurai_warrior_1",
+				"zamurai_warrior_2",
+				"zamurai_warrior_3",
+				"zamurai_warrior_4",
+				"zamurai_warrior_5",
+				"zamurai_warrior_6",
+				"zamurai_warrior_7")));
+		generate("zamurai/spell_caster_1", NpcModel.usingSkinPack("zamurai_spellweaver"));
+		generate("zamurai/spell_caster_2", NpcModel.usingSkinPack("zamurai_undead_geisha"));
+		generate("zamurai/spell_caster_3", NpcModel.usingSkinPack("zamurai_sorceror"));
+		generate("zamurai/spell_caster_4", NpcModel.usingSkinPack("zamurai_oni"));
+		generate("zamurai/spell_caster", NpcModel.usingSkinPack("zamurai_wraith"));
+		generate("zamurai/trader", NpcModel.usingSkinPack(List.of(
+				"zamurai_girl",
+				"zamurai_merchant",
+				"zamurai_trader")));
+		generate("zimba/elite_archer", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8")));
+		generate("zimba/archer", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_10",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8")));
+		generate("zimba/bard", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5")));
+		generate("zimba/cavalry", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8")));
+		generate("zimba/civilian_female", NpcModel.usingSkinPack(List.of(
+				"zimba_woman_1",
+				"zimba_woman_2",
+				"zimba_woman_3",
+				"zimba_woman_4",
+				"zimba_woman_5",
+				"zimba_woman_6",
+				"zimba_woman_7")));
+		generate("zimba/civilian_male", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_10",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5")));
+		generate("zimba/elite_leader", NpcModel.usingSkinPack(List.of(
+				"zimba_chief_1",
+				"zimba_chief_2",
+				"zimba_chief_3",
+				"zimba_chief_4",
+				"zimba_chief_7")));
+		generate("zimba/leader", NpcModel.usingSkinPack(List.of(
+				"zimba_chief_1",
+				"zimba_chief_2",
+				"zimba_chief_5",
+				"zimba_chief_6",
+				"zimba_skeleton_hunter",
+				"zimba_wolf_hunter")));
+		generate("zimba/mounted_archer", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8")));
+		generate("zimba/priest", NpcModel.usingSkinPack(List.of(
+				"zimba_witchdoctor_1",
+				"zimba_witchdoctor_2",
+				"zimba_witchdoctor_3",
+				"zimba_witchdoctor_4",
+				"zimba_witchdoctor_5",
+				"zimba_witchdoctor_6")));
+		generate("zimba/siege_engineer", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5")));
+		generate("zimba/elite_soldier", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8")));
+		generate("zimba/soldier", NpcModel.usingSkinPack(List.of(
+				"zimba_1",
+				"zimba_10",
+				"zimba_2",
+				"zimba_3",
+				"zimba_4",
+				"zimba_5",
+				"zimba_6",
+				"zimba_7",
+				"zimba_8",
+				"zimba_9")));
+		generate("zimba/spell_caster_1", NpcModel.usingSkinPack("zimba_witchdoctor_7"));
+		generate("zimba/spell_caster_2", NpcModel.usingSkinPack("zimba_witchdoctor_8"));
+		generate("zimba/spell_caster_3", NpcModel.usingSkinPack("zimba_witchdoctor_9"));
+		generate("zimba/spell_caster_4", NpcModel.usingSkinPack("zimba_witchdoctor_10"));
+		generate("zimba/spell_caster", NpcModel.usingSkinPack("zimba_witchdoctor_11"));
+		generate("zimba/trader", NpcModel.usingSkinPack(List.of(
+				"zimba_trader_1",
+				"zimba_trader_2",
+				"zimba_trader_3",
+				"zimba_trader_4",
+				"zimba_trader_5",
+				"zimba_trader_6")));
+
+		return CompletableFuture.completedFuture(null);
+	}
+
+	private void generate(String idPath, NpcModel model) {
+		Path file = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve("ancientwarfare/npcs/"+ idPath + ".json");
+
+		var json = NpcModel.CODEC.encodeStart(JsonOps.INSTANCE, model)
+				.getOrThrow();
+		try {
+			Files.createDirectories(file.getParent());
+			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(json));
+		} catch (IOException e) {
+			System.out.println("Cannot save file for npc " + idPath);
+			log.error("exception: ", e);
+		}
+	}
+
+	@Override
+	public String getName() {
+		return "Ancient Warfare Npc Model registry";
+	}
+}

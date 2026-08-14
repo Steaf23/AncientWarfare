@@ -11,8 +11,7 @@ kanban-plugin: board
 
 ## TODO
 
-- [ ] Add Faction NPC skins
-	#Steven
+- [ ] Implement Faction NPC attributes (scale, health, etc) #Steven
 - [ ] Add Custom Models for some faction npcs (I.e. the large beasts or klown faction could be way more interesting with custom models)
 	#Steven
 - [ ] Player Kingdom system (Player faction). Player factions can be allied with other players and their players can utilize the allied player faction's npcs.
@@ -25,6 +24,8 @@ kanban-plugin: board
 
 ## Done
 
+- [ ] Add Faction NPC skins
+	#Steven
 - [ ] Add faction NPC names
 	#Steven
 

@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.client.npc.render.entity;
 import io.github.steaf23.ancientwarfare.client.core.registry.AWRenderer;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import io.github.steaf23.ancientwarfare.npc.entity.BaseNpc;
+import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
 import net.minecraft.client.renderer.entity.ArmorModelSet;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.HumanoidMobRenderer;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NpcEntityRenderer<T extends BaseNpc> extends HumanoidMobRenderer<T, NpcRenderState, NpcEntityModel> {
 
-	public static final Identifier TEXTURE = AncientWarfare.id("textures/entity/npc_default.png");
+	public static final Identifier FALLBACK = AncientWarfare.id("textures/entity/npc_default.png");
 
 	public NpcEntityRenderer(EntityRendererProvider.Context context) {
 		super(context, new NpcEntityModel(context.bakeLayer(AWRenderer.NPC), false), 0.5f);
@@ -27,7 +28,7 @@ public class NpcEntityRenderer<T extends BaseNpc> extends HumanoidMobRenderer<T,
 
 	@Override
 	public @NotNull Identifier getTextureLocation(NpcRenderState state) {
-		return TEXTURE;
+		return state.modelTexture;
 	}
 
 	@Override
@@ -41,5 +42,14 @@ public class NpcEntityRenderer<T extends BaseNpc> extends HumanoidMobRenderer<T,
 			return new Vec3(0.0, -.70, 0.0);
 		}
 		return super.getRenderOffset(state);
+	}
+
+	@Override
+	public void extractRenderState(T entity, NpcRenderState state, float partialTicks) {
+		super.extractRenderState(entity, state, partialTicks);
+
+		if (entity instanceof FactionNpc factionNpc) {
+			state.modelTexture = NpcModels.getSkinForFactionNpc(factionNpc);
+		}
 	}
 }

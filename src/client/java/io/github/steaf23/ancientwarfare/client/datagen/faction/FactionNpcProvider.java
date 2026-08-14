@@ -30,13 +30,10 @@ public class FactionNpcProvider implements DataProvider {
 		this.npcs = npcs;
 	}
 
-	public void generate(HolderLookup.Provider reg) {
-		npcs.forEach(this::saveNpc);
-	}
-
 	@Override
 	public CompletableFuture<?> run(CachedOutput cache) {
-		generate(registries.join());
+		registries.join();
+		npcs.forEach(this::saveNpc);
 		return CompletableFuture.completedFuture(null);
 	}
 

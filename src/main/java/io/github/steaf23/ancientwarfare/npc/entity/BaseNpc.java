@@ -1,28 +1,20 @@
 package io.github.steaf23.ancientwarfare.npc.entity;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.serialization.Dynamic;
 import io.github.steaf23.ancientwarfare.core.item.ItemConvertible;
 import io.github.steaf23.ancientwarfare.core.menu.EntityScreenData;
 import io.github.steaf23.ancientwarfare.core.menu.EntityScreenProvider;
 import io.github.steaf23.ancientwarfare.core.menu.ScreenData;
-import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWActivities;
-import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
-import io.github.steaf23.ancientwarfare.npc.entity.faction.FactionNpc;
-import io.github.steaf23.ancientwarfare.npc.entity.playerowned.PlayerOwnedNpcAi;
 import io.github.steaf23.ancientwarfare.npc.menu.NpcContainerMenu;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -34,24 +26,17 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.navigation.GroundPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.ai.village.poi.PoiManager;
-import net.minecraft.world.entity.ai.village.poi.PoiRecord;
-import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.TypedEntityData;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jspecify.annotations.NonNull;
-
-import java.util.List;
 
 public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvider, ItemConvertible {
 

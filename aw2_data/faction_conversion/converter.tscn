@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://su53ln2n5e5j" path="res://converter.gd" id="1_7strt"]
 [ext_resource type="Script" uid="uid://btxyg75j88mgu" path="res://faction_converter.gd" id="2_5sfxu"]
+[ext_resource type="Script" uid="uid://b2ho1dkwq80tl" path="res://skin_converter.gd" id="3_pu6j0"]
 
 [node name="Node" type="Node" unique_id=2063325393]
 
@@ -10,3 +11,6 @@ script = ExtResource("1_7strt")
 
 [node name="Faction" type="Node" parent="." unique_id=1409319891]
 script = ExtResource("2_5sfxu")
+
+[node name="Skins" type="Node" parent="." unique_id=431784107]
+script = ExtResource("3_pu6j0")

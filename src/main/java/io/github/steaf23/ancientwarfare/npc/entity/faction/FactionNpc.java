@@ -2,7 +2,6 @@ package io.github.steaf23.ancientwarfare.npc.entity.faction;
 
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.core.registry.AWResources;
-import io.github.steaf23.ancientwarfare.core.registry.Factions;
 import io.github.steaf23.ancientwarfare.core.registry.entity.AWEntities;
 import io.github.steaf23.ancientwarfare.core.util.FactionOwned;
 import io.github.steaf23.ancientwarfare.core.versioned.BrainFactory;
@@ -19,6 +18,9 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +39,12 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 public class FactionNpc extends BaseNpc implements FactionOwned {
+
+	private static final EntityDataAccessor<String> NPC_DATA = SynchedEntityData.defineId(FactionNpc.class, EntityDataSerializers.STRING);
+	private static final EntityDataAccessor<Integer> SKIN_VARIANT = SynchedEntityData.defineId(FactionNpc.class, EntityDataSerializers.INT);
 
 	private FactionNpcData npcData;
 	private boolean spawnCompleted;
@@ -48,12 +55,27 @@ public class FactionNpc extends BaseNpc implements FactionOwned {
 	}
 
 	@Override
+	protected void defineSynchedData(SynchedEntityData.Builder entityData) {
+		super.defineSynchedData(entityData);
+		entityData.define(NPC_DATA, "");
+		// cap it at 1000 to not have negative skin variants
+		entityData.define(SKIN_VARIANT, 0);
+	}
+
+	@Override
 	public BrainFactory<BaseNpc> initBrainMaker() {
 		return new BrainFactory<>(
 				PlayerOwnedNpcAi.MEMORY_MODULES,
 				PlayerOwnedNpcAi.SENSORS,
 				npc -> PlayerOwnedNpcAi.getActivities());
+	}
 
+	public void setSkinVariant(int variantId) {
+		entityData.set(SKIN_VARIANT, variantId);
+	}
+
+	public int skinVariant() {
+		return entityData.get(SKIN_VARIANT);
 	}
 
 	@Override
@@ -61,6 +83,7 @@ public class FactionNpc extends BaseNpc implements FactionOwned {
 		super.addAdditionalSaveData(values);
 		values.putBoolean("spawn_completed", spawnCompleted);
 		values.store("npc_data", Identifier.CODEC, npcData.id());
+		values.putInt("skin_variant", skinVariant());
 	}
 
 	@Override
@@ -69,6 +92,8 @@ public class FactionNpc extends BaseNpc implements FactionOwned {
 
 		spawnCompleted = values.getBooleanOr("spawn_completed", false);
 		npcData = AWResources.npc(values.read("npc_data", Identifier.CODEC).orElseThrow());
+		entityData.set(NPC_DATA, npcData == null ? "" : npcData.id().toString());
+		setSkinVariant(values.getIntOr("skin_variant", 0));
 
 		if (!spawnCompleted) {
 			spawnCompleted = true;
@@ -98,6 +123,7 @@ public class FactionNpc extends BaseNpc implements FactionOwned {
 
 	public void setupNpcFromData() {
 		equipNpc();
+		setSkinVariant(level().getRandom().nextInt(1000));
 
 		npcData.mount().ifPresent(this::addMount);
 	}
@@ -149,6 +175,10 @@ public class FactionNpc extends BaseNpc implements FactionOwned {
 		}
 
 		return "ancientwarfare:npc.faction." + npcData.faction().identifier().getPath() + "." + npcData.npcType().getPath();
+	}
+
+	public @Nullable Identifier getFullNpcId() {
+		return Identifier.parse(entityData.get(NPC_DATA));
 	}
 
 	@Override
