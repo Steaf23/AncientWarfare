@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.TemplateRuleBlock;
+import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
@@ -70,6 +71,8 @@ public class LegacyConverter {
 				}
 			}
 		}
+
+		writer.putInt("DataVersion", SharedConstants.getCurrentVersion().dataVersion().version());
 
 		try {
 			File folder = filePath.getParent().toFile();
