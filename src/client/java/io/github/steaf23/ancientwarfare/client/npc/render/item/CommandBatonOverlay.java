@@ -8,7 +8,6 @@ import io.github.steaf23.ancientwarfare.core.util.EntityHelper;
 import io.github.steaf23.ancientwarfare.npc.item.CommandBaton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -48,55 +47,39 @@ public class CommandBatonOverlay {
 			return;
 		}
 
-		//? if <=1.21.11 {
-		/*PoseStack poses = context.matrices();
-		Vec3 camPos = context.worldState().cameraRenderState.pos;
-
-		VertexConsumer buffer = context.consumers().getBuffer(RenderTypes.debugQuads());
-		*///?} else {
-		PoseStack poses = context.poseStack();
-		Vec3 camPos = context.levelState().cameraRenderState.pos;
-
-		MultiBufferSource.BufferSource immediate = context.bufferSource();
-		VertexConsumer buffer = immediate.getBuffer(RenderTypes.debugQuads());
-		//?}
-
-
-
-		HitResult hoveringHit = CommandBaton.playerRaycast(player, 50, 1.0f, 0.5f, false);
-		switch (hoveringHit.getType()) {
-			case MISS:
-				break;
-			case BLOCK:
-				BlockHitResult blockHit = (BlockHitResult) hoveringHit;
-				BlockPos blockPos = blockHit.getBlockPos();
-				renderBlockBoxOutline(blockPos, poses, buffer, camPos, 1f, 1f, 1f, .5f);
-				break;
-			case ENTITY:
-				renderEntityBoxOutline(((EntityHitResult) hoveringHit).getEntity(), poses, buffer, camPos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), 1f, 1f, 1f, .5f);
-		}
-
-		List<UUID> entities = CommandBaton.getSelectedEntities(baton);
-		if (entities.isEmpty()) {
-			return;
-		}
-
-		for (UUID id : entities) {
-			Entity entity = world.getEntity(id);
-			if (entity == null || entity.isRemoved()) {
-				continue;
+		RenderHelper.customGeometry(context, RenderTypes.debugQuads(), (buffer, poses, cameraPos) -> {
+			Vec3 camPos = context.levelState().cameraRenderState.pos;
+			HitResult hoveringHit = CommandBaton.playerRaycast(player, 50, 1.0f, 0.5f, false);
+			switch (hoveringHit.getType()) {
+				case MISS:
+					break;
+				case BLOCK:
+					BlockHitResult blockHit = (BlockHitResult) hoveringHit;
+					BlockPos blockPos = blockHit.getBlockPos();
+					renderBlockBoxOutline(blockPos, poses, buffer, camPos, 1f, 1f, 1f, .5f);
+					break;
+				case ENTITY:
+					renderEntityBoxOutline(((EntityHitResult) hoveringHit).getEntity(), poses, buffer, camPos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), 1f, 1f, 1f, .5f);
 			}
-			renderEntityBoxOutline(entity, poses, buffer, camPos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), 0f, 1f, 0f, .5f);
-		}
 
-		//?if >1.21.11 {
-		immediate.endBatch();
-		//?}
+			List<UUID> entities = CommandBaton.getSelectedEntities(baton);
+			if (entities.isEmpty()) {
+				return;
+			}
+
+			for (UUID id : entities) {
+				Entity entity = world.getEntity(id);
+				if (entity == null || entity.isRemoved()) {
+					continue;
+				}
+				renderEntityBoxOutline(entity, poses, buffer, camPos, Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true), 0f, 1f, 0f, .5f);
+			}
+		});
 	}
 
 	private static void renderBlockBoxOutline(BlockPos pos, PoseStack poses, VertexConsumer buffer,
 											  Vec3 camPos, float r, float g, float b, float a) {
-		Vec3 cameraDir = camPos.subtract(pos.getCenter()).normalize();
+		Vec3 cameraDir = camPos.subtract(Vec3.atCenterOf(pos)).normalize();
 
 		BlockState blockState = Minecraft.getInstance().level.getBlockState(pos);
 

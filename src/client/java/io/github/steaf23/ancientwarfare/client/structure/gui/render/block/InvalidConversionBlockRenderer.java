@@ -43,7 +43,7 @@ public class InvalidConversionBlockRenderer implements BlockEntityRenderer<Inval
 
 			@Override
 			public Vec3 position() {
-				return blockEntity.getBlockPos().getCenter();
+				return Vec3.atCenterOf(blockEntity.getBlockPos());
 			}
 
 			@Override
@@ -57,7 +57,7 @@ public class InvalidConversionBlockRenderer implements BlockEntityRenderer<Inval
 	public void submit(InvalidConversionBlockRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera) {
 		poseStack.pushPose();
 		poseStack.translate(0.5, 0.5, 0.5);
-		poseStack.mulPose(camera.orientation);
+		poseStack.rotate(camera.orientation);
 
 		state.infoStackState.submit(poseStack, submitNodeCollector, state.lightCoords, OverlayTexture.NO_OVERLAY, 0);
 

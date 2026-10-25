@@ -1,8 +1,7 @@
 package io.github.steaf23.ancientwarfare.structure.block.wardedblock;
 
-import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
-import io.github.steaf23.ancientwarfare.structure.block.advancedspawner.AdvancedSpawnerBlock;
+import io.github.steaf23.ancientwarfare.core.util.SimpleEntityBlock;
 import io.github.steaf23.ancientwarfare.structure.component.CapturedBlockInfo;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -11,7 +10,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -24,15 +22,10 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
-public class WardedBlock extends BaseEntityBlock {
+public class WardedBlock extends SimpleEntityBlock {
 
 	public WardedBlock(Properties properties) {
-		super(properties);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return simpleCodec(AdvancedSpawnerBlock::new);
+		super(properties, WardedBlockEntity::new);
 	}
 
 	@Override

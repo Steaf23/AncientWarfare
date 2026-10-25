@@ -9,6 +9,7 @@ import net.minecraft.world.entity.EntityType;
 //? if <= 1.21.11 {
 /*import io.github.steaf23.ancientwarfare.core.versioned.backport.ActivityData;
 *///?} else {
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.ActivityData;
 //?}
 import net.minecraft.world.entity.ai.behavior.AcquirePoi;
@@ -59,7 +60,7 @@ public class PlayerOwnedNpcAi {
 						new MoveToTargetSink(),
 						InteractWithDoor.create(),
 						NpcTaskUpkeep.create(),
-						SetEntityLookTarget.create(EntityType.PLAYER, 10),
+						SetEntityLookTarget.create(EntityTypes.PLAYER, 10),
 						ValidateNearbyPoi.create(p -> p.is(PoiTypes.ARMORER), MemoryModuleType.JOB_SITE),
 						AcquirePoi.create(p -> p.is(PoiTypes.ARMORER), MemoryModuleType.JOB_SITE, true, Optional.empty())));
 

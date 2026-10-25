@@ -7,6 +7,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.function.Consumer;
 
@@ -111,6 +112,6 @@ public class BoundedArea {
 	}
 
 	public AABB asBox() {
-		return new AABB(minPos.getCenter(), maxPos.getCenter()).inflate(0.5);
+		return new AABB(Vec3.atCenterOf(minPos), Vec3.atCenterOf(maxPos)).inflate(0.5);
 	}
 }

@@ -6,8 +6,8 @@ import net.minecraft.world.entity.schedule.Activity;
 
 public class AWActivities {
 
-	public static Activity FOLLOW_COMMAND = register("follow_command");
-	public static Activity UPKEEP = register("upkeep");
+	public static final Activity FOLLOW_COMMAND = register("follow_command");
+	public static final Activity UPKEEP = register("upkeep");
 
 	public static Activity register(String id) {
 		return Registry.register(BuiltInRegistries.ACTIVITY, id, new Activity(id));

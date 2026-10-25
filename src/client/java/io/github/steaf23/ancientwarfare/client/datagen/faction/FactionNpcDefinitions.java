@@ -3,6 +3,7 @@ package io.github.steaf23.ancientwarfare.client.datagen.faction;
 import io.github.steaf23.ancientwarfare.core.AncientWarfare;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jspecify.annotations.NonNull;
 
@@ -165,7 +166,7 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.soundSet(AncientWarfare.id("coven_puppet")));
 		register(FactionNpcBuilder.buildCavalry(coven).name("Coven Headless Horseman")
 				.equipment(Identifier.parse("ancientwarfarenpc:death_scythe"), null)
-				.simpleMount(EntityType.SKELETON_HORSE)
+				.simpleMount(EntityTypes.SKELETON_HORSE)
 				.soundSet(AncientWarfare.id("coven_puppetd")));
 		register(FactionNpcBuilder.buildLeader(coven).name("Coven Familiar")
 				.soundSet(AncientWarfare.id("coven_familiar"))
@@ -585,10 +586,10 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
 				.experienceDropped(20)
-				.simpleMount(EntityType.CHICKEN));
+				.simpleMount(EntityTypes.CHICKEN));
 		register(FactionNpcBuilder.buildMountedArcher(gnome).name("Gnome Chicken Chassuer")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
-				.simpleMount(EntityType.CHICKEN));
+				.simpleMount(EntityTypes.CHICKEN));
 		register(FactionNpcBuilder.buildLeader(gnome).name("Gnome Mole Beast")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
@@ -676,11 +677,11 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.equipment(Identifier.parse("minecraft:iron_axe"), null)
 				.experienceDropped(20)
-				.simpleMount(EntityType.SPIDER));
+				.simpleMount(EntityTypes.SPIDER));
 		register(FactionNpcBuilder.buildMountedArcher(gremlin).name("Gremlin Raider")
 				.addAttribute(Attributes.MAX_HEALTH, 20)
 				.experienceDropped(20)
-				.simpleMount(EntityType.SPIDER));
+				.simpleMount(EntityTypes.SPIDER));
 		register(FactionNpcBuilder.buildLeader(gremlin).name("Gremlin Stripey")
 				.addAttribute(Attributes.MAX_HEALTH, 30)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
@@ -755,7 +756,7 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.addAttribute(Attributes.ATTACK_DAMAGE, 3));
 		register(FactionNpcBuilder.buildCavalry(icelord).name("Icelord Revenant")
 				.equipment(Identifier.parse("ancientwarfarenpc:ice_spear"), Identifier.parse("ancientwarfarenpc:iron_shield"))
-				.simpleMount(EntityType.SKELETON_HORSE));
+				.simpleMount(EntityTypes.SKELETON_HORSE));
 		register(FactionNpcBuilder.buildLeader(icelord).name("Icelord Beast")
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
@@ -814,14 +815,14 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 		register(FactionNpcBuilder.buildCavalry(klown).name("Klown Harlequin")
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_cleaver"), null)
-				.simpleMount(EntityType.ZOMBIE_HORSE)
+				.simpleMount(EntityTypes.ZOMBIE_HORSE)
 				.soundSet(AncientWarfare.id("norska")));
 		register(FactionNpcBuilder.buildMountedArcher(klown).name("Klown Monkey")
 				.addAttribute(Attributes.MAX_HEALTH, 6)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
 				.addAttribute(Attributes.ATTACK_DAMAGE, 1)
 				.equipment(Identifier.parse("minecraft:bow"), null)
-				.simpleMount(EntityType.PIG));
+				.simpleMount(EntityTypes.PIG));
 		register(FactionNpcBuilder.buildLeader(klown).name("Klown Strongman")
 				.addAttribute(Attributes.MAX_HEALTH, 100)
 				.addAttribute(Attributes.MOVEMENT_SPEED, 0)
@@ -1102,7 +1103,7 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.experienceDropped(50));
 		register(FactionNpcBuilder.buildCavalry(norska).name("Norska Bear Master")
 				.equipment(Identifier.parse("ancientwarfarenpc:iron_spear"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
-				.simpleMount(EntityType.POLAR_BEAR));
+				.simpleMount(EntityTypes.POLAR_BEAR));
 		register(FactionNpcBuilder.buildLeader(norska).name("Norska Jarl")
 				.addAttribute(Attributes.MAX_HEALTH, 70)
 				.equipment(Identifier.parse("minecraft:diamond_axe"), Identifier.parse("ancientwarfarenpc:shield_round_3"))
@@ -1594,11 +1595,11 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 		register(FactionNpcBuilder.buildCavalry(undead).name("Undead Wraith Rider")
 				.burnsInSun(true)
 				.undead(true)
-				.simpleMount(EntityType.SKELETON_HORSE));
+				.simpleMount(EntityTypes.SKELETON_HORSE));
 		register(FactionNpcBuilder.buildMountedArcher(undead).name("Undead Ghost Rider")
 				.burnsInSun(true)
 				.undead(true)
-				.simpleMount(EntityType.SKELETON_HORSE));
+				.simpleMount(EntityTypes.SKELETON_HORSE));
 		register(FactionNpcBuilder.buildLeader(undead).name("Undead Death Knight")
 				.burnsInSun(true)
 				.undead(true));
@@ -1916,9 +1917,9 @@ public class FactionNpcDefinitions implements Iterable<FactionNpcBuilder> {
 				.addAttribute(Attributes.MAX_HEALTH, 60)
 				.equipment(Identifier.parse("ancientwarfarenpc:obsidian_spear"), Identifier.parse("ancientwarfarenpc:gold_shield"))
 				.experienceDropped(60)
-				.simpleMount(EntityType.LLAMA));
+				.simpleMount(EntityTypes.LLAMA));
 		register(FactionNpcBuilder.buildMountedArcher(xoltec).name("Xoltec Falcon Knight")
-				.simpleMount(EntityType.LLAMA));
+				.simpleMount(EntityTypes.LLAMA));
 		register(FactionNpcBuilder.buildLeader(xoltec).name("Xoltec Warlord")
 				.equipment(Identifier.parse("ancientwarfarenpc:macuahuitl"), null));
 		register(FactionNpcBuilder.buildEliteLeader(xoltec).name("Xoltec Noble")

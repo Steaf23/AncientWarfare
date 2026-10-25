@@ -23,6 +23,8 @@ public class NpcModelProvider implements DataProvider {
 	private final FabricPackOutput output;
 	private final CompletableFuture<HolderLookup.Provider> registries;
 
+	private CachedOutput cache;
+
 	public NpcModelProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
@@ -32,6 +34,7 @@ public class NpcModelProvider implements DataProvider {
 	public CompletableFuture<?> run(CachedOutput cache) {
 		registries.join();
 
+		this.cache = cache;
 		generate("worker/researcher", NpcModel.usingSkinPack(List.of(
 				"po_worker_researcher_1",
 				"po_worker_researcher_2",
@@ -3126,7 +3129,7 @@ public class NpcModelProvider implements DataProvider {
 				.getOrThrow();
 		try {
 			Files.createDirectories(file.getParent());
-			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(json));
+			DataProvider.saveStable(cache, json, file);
 		} catch (IOException e) {
 			System.out.println("Cannot save file for npc " + idPath);
 			log.error("exception: ", e);

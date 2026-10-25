@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.animal.equine.AbstractHorse;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.Map;
 
@@ -95,7 +96,7 @@ public class PlayerCommandTask extends NpcTask<PlayerOwnedNpc> {
 		if (moveTargetPos == null || moveTargetPos != command.pos) {
 			moveTargetPos = command.pos;
 		}
-		double sqDist = npc.distanceToSqr(moveTargetPos.getCenter());
+		double sqDist = npc.distanceToSqr(Vec3.atCenterOf(moveTargetPos));
 		if (sqDist > BaseNpc.MIN_MOVE_RANGE_SQUARED) {
 			//FIXME: IMPLEMENT
 //			moveToPosition(moveTargetPos, sqDist);//not finished moving...move along path (or at least try)

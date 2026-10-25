@@ -46,7 +46,7 @@ dependencies {
 
     modImplementation("net.fabricmc:fabric-loader:${property("deps.fabric_loader")}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${property("deps.fabric_api")}")
-    if (stonecutter.current.version == "26.1.2") {
+    if (stonecutter.current.version >= "26.1.2") {
         modImplementation("eu.pb4:trinkets:${property("deps.trinkets")}")
     }
 }
@@ -148,5 +148,9 @@ stonecutter {
         replace("ExtendedMenuType", "ExtendedScreenHandlerType")
         replace("makeBrain(Brain.@NonNull Packed", "makeBrain(Dynamic<?>")
         replace("ModelLayerRegistry", "EntityModelLayerRegistry")
+    }
+    replacements.string(current.parsed <= "26.1") {
+        replace("TextureModel.CUBE_TOP_BOTTOM", "TextureModel.CUBE_BOTTOM_TOP")
+        replace("setScreenAndShow", "setScreen")
     }
 }

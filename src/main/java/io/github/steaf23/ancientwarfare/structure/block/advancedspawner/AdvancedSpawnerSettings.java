@@ -259,42 +259,22 @@ public record AdvancedSpawnerSettings(
 			SpawnGroup.CODEC.listOf().fieldOf("groups").forGetter(AdvancedSpawnerSettings::groups)
 	).apply(i, AdvancedSpawnerSettings::new));
 
-	public static final StreamCodec<ByteBuf, AdvancedSpawnerSettings> STREAM_CODEC = StreamCodec.of(
-			(buf, s) -> {
-				FriendlyByteBuf friendly = new FriendlyByteBuf(buf);
-				friendly.writeBoolean(s.debugMode());
-				friendly.writeBoolean(s.transparent());
-				friendly.writeBoolean(s.redstoneSensitive());
-				friendly.writeBoolean(s.lightSensitive());
-
-				friendly.writeInt(s.playerRange());
-				friendly.writeInt(s.mobRange());
-				friendly.writeInt(s.spawnRange());
-				friendly.writeInt(s.minDelayTicks());
-				friendly.writeInt(s.maxDelayTicks());
-				friendly.writeInt(s.maximumAllowedNearbyEntities());
-				friendly.writeInt(s.xpToDrop());
-				friendly.writeInt(s.spawnYOffset());
-				friendly.writeCollection(s.groups(), SpawnGroup.STREAM_CODEC);
-			},
-			buf -> {
-				FriendlyByteBuf friendly = new FriendlyByteBuf(buf);
-				return new AdvancedSpawnerSettings(
-						friendly.readBoolean(),
-						friendly.readBoolean(),
-						friendly.readBoolean(),
-						friendly.readBoolean(),
-
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readInt(),
-						friendly.readCollection(ArrayList::new, SpawnGroup.STREAM_CODEC));
-			});
+	public static final StreamCodec<ByteBuf, AdvancedSpawnerSettings> STREAM_CODEC = StreamCodec.composite(
+			ByteBufCodecs.BOOL, AdvancedSpawnerSettings::debugMode,
+			ByteBufCodecs.BOOL, AdvancedSpawnerSettings::transparent,
+			ByteBufCodecs.BOOL, AdvancedSpawnerSettings::redstoneSensitive,
+			ByteBufCodecs.BOOL, AdvancedSpawnerSettings::lightSensitive,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::playerRange,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::mobRange,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::spawnRange,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::minDelayTicks,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::maxDelayTicks,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::maximumAllowedNearbyEntities,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::xpToDrop,
+			ByteBufCodecs.INT, AdvancedSpawnerSettings::spawnYOffset,
+			ByteBufCodecs.collection(i -> new ArrayList<SpawnGroup>(), SpawnGroup.STREAM_CODEC), AdvancedSpawnerSettings::groups,
+			AdvancedSpawnerSettings::new
+	);
 
 	public record SpawnGroup(int weight, List<SpawnEntry> entries) {
 

@@ -25,8 +25,7 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 	public static final Identifier EMPTY_SWORD_BACKGROUND_TEXTURE = Identifier.withDefaultNamespace("container/slot/sword");
 	public static final Identifier EMPTY_UPKEEP_BACKGROUND_TEXTURE = AncientWarfare.id("upkeep_background");
 	public static final Identifier EMPTY_ORDER_BACKGROUND_TEXTURE = AncientWarfare.id("order_background");
-	public static final int UPKEEP_SLOT_INDEX = 0;
-	public static final int ORDER_SLOT_INDEX = 1;
+	public static final int ORDER_SLOT_INDEX = 0;
 
 
 	private static final DataApplier<NpcContainerMenu, String> NPC_NAME = new DataApplier<>(
@@ -46,9 +45,9 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 			(context, action) -> {
 				BaseNpc npc = context.receiver().getNpc();
 				switch (action) {
-					case SetHome -> npc.getHome().setHomePosAndRange(npc.blockPosition(), npc.getHome().getHomeRange());
-					case ClearHome -> npc.getHome().clear();
-					case Recall -> npc.recall(context.player());
+					case SET_HOME -> npc.getHome().setHomePosAndRange(npc.blockPosition(), npc.getHome().getHomeRange());
+					case CLEAR_HOME -> npc.getHome().clear();
+					case RECALL -> npc.recall(context.player());
 				}
 			}, (clientCtx, data) -> {},
 			MenuAction.STREAM_CODEC, MenuAction.class);
@@ -66,21 +65,14 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 		super(AWContainerMenus.NPC, containerId, playerInventory);
 		this.npc = npc;
 
-		addEquipmentSlot(npc, EquipmentSlot.MAINHAND, 20, 34, EMPTY_SWORD_BACKGROUND_TEXTURE);
-		addEquipmentSlot(npc, EquipmentSlot.OFFHAND, 20, 53, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
-		addEquipmentSlot(npc, EquipmentSlot.HEAD, 50, 31, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
-		addEquipmentSlot(npc, EquipmentSlot.CHEST, 50, 58, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
-		addEquipmentSlot(npc, EquipmentSlot.LEGS, 104, 31, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
-		addEquipmentSlot(npc, EquipmentSlot.FEET, 104, 58, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
+		addEquipmentSlot(npc, EquipmentSlot.MAINHAND, 47, 30, EMPTY_SWORD_BACKGROUND_TEXTURE);
+		addEquipmentSlot(npc, EquipmentSlot.OFFHAND, 47, 58, InventoryMenu.EMPTY_ARMOR_SLOT_SHIELD);
+		addEquipmentSlot(npc, EquipmentSlot.HEAD, 12, 24, InventoryMenu.EMPTY_ARMOR_SLOT_HELMET);
+		addEquipmentSlot(npc, EquipmentSlot.CHEST, 12, 43, InventoryMenu.EMPTY_ARMOR_SLOT_CHESTPLATE);
+		addEquipmentSlot(npc, EquipmentSlot.LEGS, 12, 62, InventoryMenu.EMPTY_ARMOR_SLOT_LEGGINGS);
+		addEquipmentSlot(npc, EquipmentSlot.FEET, 12, 81, InventoryMenu.EMPTY_ARMOR_SLOT_BOOTS);
 
-		addSlot(new Slot(npc.getItems(), UPKEEP_SLOT_INDEX, 137, 42)
-		{
-			@Override
-			public Identifier getNoItemIcon() {
-				return EMPTY_UPKEEP_BACKGROUND_TEXTURE;
-			}
-		});
-		addSlot(new Slot(npc.getItems(), ORDER_SLOT_INDEX, 137, 61)
+		addSlot(new Slot(npc.getItems(), ORDER_SLOT_INDEX, 47, 86)
 		{
 			@Override
 			public Identifier getNoItemIcon() {
@@ -88,7 +80,7 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 			}
 		});
 
-		addStandardInventorySlots(playerInventory, 12, 134);
+		addStandardInventorySlots(playerInventory, 8, 153);
 	}
 
 	public void setNpcName(String name) {
@@ -101,15 +93,15 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 	}
 
 	public void setHome() {
-		sendDataToServer("action", MenuAction.SetHome);
+		sendDataToServer("action", MenuAction.SET_HOME);
 	}
 
 	public void clearHome() {
-		sendDataToServer("action", MenuAction.ClearHome);
+		sendDataToServer("action", MenuAction.CLEAR_HOME);
 	}
 
 	public void recall() {
-		sendDataToServer("action", MenuAction.Recall);
+		sendDataToServer("action", MenuAction.RECALL);
 	}
 
 	public String getNpcName() {
@@ -145,9 +137,9 @@ public class NpcContainerMenu extends ExtendedContainerMenu {
 	}
 
 	public enum MenuAction {
-		SetHome,
-		ClearHome,
-		Recall,
+		SET_HOME,
+		CLEAR_HOME,
+		RECALL,
 		;
 
 		private static final StreamCodec<ByteBuf, MenuAction> STREAM_CODEC = StreamCodec.of(

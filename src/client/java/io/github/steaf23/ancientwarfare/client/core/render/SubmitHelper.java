@@ -43,7 +43,6 @@ public class SubmitHelper {
 					c,
 					true,
 					light,
-					camera.pos.distanceToSqr(pos.getCenter()),
 					camera
 			);
 			tagAttachment = tagAttachment.add(0.0, 0.2, 0.0);

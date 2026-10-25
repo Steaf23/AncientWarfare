@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 
@@ -53,7 +54,7 @@ public class TownHallBlockEntity extends BaseContainerBlockEntity implements Blo
 	}
 
 	public void broadcastUpkeep() {
-		for (PlayerOwnedNpc npc : level.getEntitiesOfClass(PlayerOwnedNpc.class, AABB.ofSize(getBlockPos().getCenter(), 30.0, 30.0, 30.0))) {
+		for (PlayerOwnedNpc npc : level.getEntitiesOfClass(PlayerOwnedNpc.class, AABB.ofSize(Vec3.atCenterOf(getBlockPos()), 30.0, 30.0, 30.0))) {
 			npc.setAutoUpkeepBlock(getBlockPos());
 		}
 	}

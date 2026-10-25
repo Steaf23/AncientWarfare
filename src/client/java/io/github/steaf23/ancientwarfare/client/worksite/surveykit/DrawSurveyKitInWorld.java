@@ -1,7 +1,5 @@
 package io.github.steaf23.ancientwarfare.client.worksite.surveykit;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.steaf23.ancientwarfare.client.core.render.RenderHelper;
 import io.github.steaf23.ancientwarfare.core.registry.AWComponents;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
@@ -9,7 +7,6 @@ import io.github.steaf23.ancientwarfare.core.util.EntityHelper;
 import io.github.steaf23.ancientwarfare.worksite.marker.SurveyArea;
 import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
@@ -26,31 +23,25 @@ public class DrawSurveyKitInWorld {
 			return;
 		}
 
-		PoseStack poses = context.poseStack();
-		Vec3 camPos = context.levelState().cameraRenderState.pos;
-
-		MultiBufferSource.BufferSource immediate = context.bufferSource();
-		VertexConsumer buffer = immediate.getBuffer(RenderTypes.debugQuads());
-
-		for (int i = 0; i < stakes.size(); i++) {
-			Vec3 stake = stakes.get(i);
-			// If this is the last position, don't draw a line.
-			Vec3 cameraDir = camPos.subtract(stake).normalize();
-			if (i < stakes.size() - 1) {
-				Vec3 other = stakes.get(i + 1);
-				stake = stake.add(camPos.multiply(new Vec3(-1, -1, -1)));
-				other = other.add(camPos.multiply(new Vec3(-1, -1, -1)));
-				RenderHelper.drawThickLine(
-						buffer, poses.last().pose(),
-						stake.x, stake.y, stake.z,
-						other.x, other.y, other.z,
-						0.15f,
-						cameraDir,
-						1.0f, 1.0f, 1.0f, 1.0f);
+		RenderHelper.customGeometry(context, RenderTypes.debugQuads(), (consumer, poses, cameraPos) -> {
+			for (int i = 0; i < stakes.size(); i++) {
+				Vec3 stake = stakes.get(i);
+				// If this is the last position, don't draw a line.
+				Vec3 cameraDir = cameraPos.subtract(stake).normalize();
+				if (i < stakes.size() - 1) {
+					Vec3 other = stakes.get(i + 1);
+					stake = stake.add(cameraPos.multiply(new Vec3(-1, -1, -1)));
+					other = other.add(cameraPos.multiply(new Vec3(-1, -1, -1)));
+					RenderHelper.drawThickLine(
+							consumer, poses.last().pose(),
+							stake.x, stake.y, stake.z,
+							other.x, other.y, other.z,
+							0.15f,
+							cameraDir,
+							1.0f, 1.0f, 1.0f, 1.0f);
+				}
 			}
-		}
-
-//		Vec3 last = stakes.getLast();
+		});
 
 	}
 
@@ -68,7 +59,7 @@ public class DrawSurveyKitInWorld {
 
 		List<BlockPos> stakes = kit.getOrDefault(AWComponents.SURVEY_STAKES, SurveyArea.EMPTY).stakes();
 		return stakes.stream()
-				.map(BlockPos::getCenter)
+				.map(Vec3::atCenterOf)
 				.toList();
 	}
 

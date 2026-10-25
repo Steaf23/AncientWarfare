@@ -35,14 +35,17 @@ import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.densityfunction.SamplerContext;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public class StructureDebugGenerator extends ChunkGenerator {
@@ -53,7 +56,7 @@ public class StructureDebugGenerator extends ChunkGenerator {
 	private static final Identifier test = AncientWarfare.id("portal_test_5");
 
 	public StructureDebugGenerator(Holder.Reference<Biome> plains) {
-		//~ if <= 1.21.11 'BuiltInResourceKeys.biomeHolderGetter()' -> 'BuiltInRegistryKeys.biomeRegistryWrapper()'
+		//~ if <=1.21.11 'BuiltInResourceKeys.biomeHolderGetter()' -> 'BuiltInRegistryKeys.biomeRegistryWrapper()'
 		super(new FixedBiomeSource(plains));
 	}
 
@@ -93,28 +96,21 @@ public class StructureDebugGenerator extends ChunkGenerator {
 
 			StructureStart start = new StructureStart(opt.get(), centerChunk.getPos(), 0, pieces);
 
-			structureManager.setStartForStructure(
+			//? if < 26.3 {
+			/*structureManager.setStartForStructure(
 					pos,
 					opt.get(),
 					start,
 					centerChunk);
+			*///?} else {
+			structureManager.setStartForStructure(opt.get(), start, centerChunk);
+			//? }
 		}
 	}
 
 	@Override
 	protected MapCodec<? extends ChunkGenerator> codec() {
 		return CODEC;
-	}
-
-	@Override
-	public void buildSurface(final WorldGenRegion level, final StructureManager structureManager, final RandomState randomState, final ChunkAccess protoChunk) {
-	}
-
-	@Override
-	public CompletableFuture<ChunkAccess> fillFromNoise(
-			final Blender blender, final RandomState randomState, final StructureManager structureManager, final ChunkAccess centerChunk
-	) {
-		return CompletableFuture.completedFuture(centerChunk);
 	}
 
 	@Override
@@ -125,21 +121,6 @@ public class StructureDebugGenerator extends ChunkGenerator {
 	@Override
 	public NoiseColumn getBaseColumn(final int x, final int z, final LevelHeightAccessor heightAccessor, final RandomState randomState) {
 		return new NoiseColumn(0, new BlockState[0]);
-	}
-
-	@Override
-	public void addDebugScreenInfo(final List<String> result, final RandomState randomState, final BlockPos feetPos) {
-	}
-
-	@Override
-	public void applyCarvers(
-			final WorldGenRegion region,
-			final long seed,
-			final RandomState randomState,
-			final BiomeManager biomeManager,
-			final StructureManager structureManager,
-			final ChunkAccess chunk
-	) {
 	}
 
 	@Override
@@ -160,4 +141,44 @@ public class StructureDebugGenerator extends ChunkGenerator {
 	public int getSeaLevel() {
 		return 63;
 	}
+
+//? if <26.3 {
+
+	/*@Override
+	public void buildSurface(final WorldGenRegion level, final StructureManager structureManager, final RandomState randomState, final ChunkAccess protoChunk) {
+	}
+
+	@Override
+	public CompletableFuture<ChunkAccess> fillFromNoise(
+			final Blender blender, final RandomState randomState, final StructureManager structureManager, final ChunkAccess centerChunk
+	) {
+		return CompletableFuture.completedFuture(centerChunk);
+	}
+
+	@Override
+	public void addDebugScreenInfo(final List<String> result, final RandomState randomState, final BlockPos feetPos) {
+	}
+
+	@Override
+	public void applyCarvers(
+			final WorldGenRegion region,
+			final long seed,
+			final RandomState randomState,
+			final BiomeManager biomeManager,
+			final StructureManager structureManager,
+			final ChunkAccess chunk
+	) {
+	}
+*///?} else {
+
+	@Override
+	public CompletableFuture<ChunkAccess> buildTerrain(ChunkAccess chunk, Blender blender, RandomState randomState, StructureManager structureManager, BiomeManager biomeManager, @Nullable WorldGenRegion carverBiomeRegion, Set<Holder<Biome>> possibleBiomes) {
+		return CompletableFuture.completedFuture(chunk);
+	}
+
+	@Override
+	public void addDebugScreenInfo(List<String> result, RandomState randomState, BlockPos feetPos, SamplerContext samplerContext) {
+
+	}
+//?}
 }

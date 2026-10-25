@@ -54,7 +54,7 @@ public class AWModelProvider extends FabricModelProvider {
 		blockModels.createAirLikeBlock(AWBlocks.INVALID_CONVERSION, new Material(AncientWarfare.id("block/invalid_conversion")));
 		blockModels.registerSimpleFlatItemModel(AWBlocks.INVALID_CONVERSION);
 		blockModels.createTrivialBlock(AWBlocks.ADVANCED_SPAWNER, TexturedModel.CUBE_INNER_FACES);
-		blockModels.createTrivialBlock(AWBlocks.TOWN_HALL, TexturedModel.CUBE_TOP_BOTTOM);
+		blockModels.createTrivialBlock(AWBlocks.TOWN_HALL, TexturedModel.CUBE_BOTTOM_TOP);
 		blockModels.createNonTemplateModelBlock(AWBlocks.WARDED_BLOCK);
 		blockModels.createCoinStack();
 		blockModels.createRotatableWorksite(AWBlocks.ANIMAL_FARM);

@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.datagen.structure;
 
+import com.google.common.hash.Hashing;
 import com.mojang.serialization.Codec;
 import io.github.steaf23.ancientwarfare.structure.template.StructureEntry;
 import io.github.steaf23.ancientwarfare.structure.template.legacy.ParsedStructure;
@@ -8,6 +9,7 @@ import net.minecraft.SharedConstants;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
+import net.minecraft.data.CachedOutput;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.ProblemReporter;
@@ -17,13 +19,22 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueOutput;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 public class LegacyConverter {
+
+	private final CachedOutput output;
+
+	public LegacyConverter(CachedOutput output) {
+		this.output = output;
+	}
+
 	public StructureEntry convertToTemplate(HolderLookup.Provider registries, HolderGetter<Block> blockLookup, ParsedStructure structure, Path filePath) {
 
 		TagValueOutput writer = TagValueOutput.createWithoutContext(ProblemReporter.DISCARDING);
@@ -79,7 +90,11 @@ public class LegacyConverter {
 			if (!folder.exists()) {
 				folder.mkdirs();
 			}
-			NbtIo.writeCompressed(writer.buildResult(), folder.toPath().resolve(filePath.getFileName() + ".nbt"));
+			Path outputPath = folder.toPath().resolve(filePath.getFileName() + ".nbt");
+			ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+			byte[] data = bytes.toByteArray();
+			NbtIo.writeCompressed(writer.buildResult(), bytes);
+			output.writeIfNeeded(outputPath, bytes.toByteArray(), Hashing.sha256().hashBytes(data));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

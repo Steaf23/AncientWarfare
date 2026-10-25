@@ -40,7 +40,7 @@ public class WorksiteBlockEntityRenderer implements BlockEntityRenderer<Abstract
 		AABB box = blockEntityRenderState.bounds.asBox().move(-blockEntityRenderState.blockPos.getX(), -blockEntityRenderState.blockPos.getY(), -blockEntityRenderState.blockPos.getZ());
 
 		submitNodeCollector.submitCustomGeometry(poseStack, RenderTypes.debugQuads(), (pose, buffer) -> {
-			Vec3 camDir = cameraRenderState.pos.subtract(blockEntityRenderState.blockPos.getCenter()).normalize();
+			Vec3 camDir = cameraRenderState.pos.subtract(Vec3.atCenterOf(blockEntityRenderState.blockPos)).normalize();
 			RenderHelper.renderBoxOutline(pose.pose(), buffer, box, 1.0f, 1.0f, 1.0f, 1.0f, camDir);
 		});
 	}

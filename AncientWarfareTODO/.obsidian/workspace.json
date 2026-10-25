@@ -11,21 +11,17 @@
             "id": "1cfa870e05632882",
             "type": "leaf",
             "state": {
-              "type": "kanban",
+              "type": "canvas",
               "state": {
-                "file": "TODO.md",
-                "kanbanViewState": {
-                  "kanban-plugin": "board",
-                  "list-collapse": [
-                    false,
-                    false,
-                    false,
-                    false
-                  ]
+                "file": "Buildings.canvas",
+                "viewState": {
+                  "x": 15,
+                  "y": -123,
+                  "zoom": 0
                 }
               },
-              "icon": "lucide-trello",
-              "title": "TODO"
+              "icon": "lucide-layout-dashboard",
+              "title": "Buildings"
             }
           }
         ]
@@ -195,9 +191,9 @@
   },
   "active": "1cfa870e05632882",
   "lastOpenFiles": [
-    "Settlement.canvas",
-    "Mod support.md",
     "Factions.canvas",
+    "Mod support.md",
+    "Settlement.canvas",
     "Buildings.canvas",
     "TODO.md",
     "Vehicle creation.canvas",

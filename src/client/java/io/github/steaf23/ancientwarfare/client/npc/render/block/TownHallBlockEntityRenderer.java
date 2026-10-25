@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
 import io.github.steaf23.ancientwarfare.npc.block.entity.TownHallBlockEntity;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -12,7 +11,7 @@ import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.state./*?if >1.21.11 {*/level./*?}*/CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.world.entity.ItemOwner;
+import net.minecraft.util.LightCoordsUtil;import net.minecraft.world.entity.ItemOwner;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -38,7 +37,7 @@ public class TownHallBlockEntityRenderer implements BlockEntityRenderer<TownHall
 		BlockEntityRenderer.super.extractRenderState(blockEntity, state, delta, vec3, crumblingOverlay);
 		state.keyRotation = (blockEntity.keyRotationDegrees + delta) * 5.0f % 360.0f;
 		//~ if <= 1.21.11 'getLightCoords' -> 'getLightColor'
-		state.lightCoords = blockEntity.getLevel() != null ? LevelRenderer.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 0xF000F0;
+		state.lightCoords = blockEntity.getLevel() != null ? LightCoordsUtil.getLightCoords(blockEntity.getLevel(), blockEntity.getBlockPos().above()) : 0xF000F0;
 		state.keyState = new ItemStackRenderState();
 
 		context.itemModelResolver().updateForTopItem(state.keyState, new ItemStack(AWItems.TOWN_HALL_KEY_DUMMY), ItemDisplayContext.FIXED, blockEntity.getLevel(), new ItemOwner() {
@@ -49,7 +48,7 @@ public class TownHallBlockEntityRenderer implements BlockEntityRenderer<TownHall
 
 			@Override
 			public Vec3 position() {
-				return blockEntity.getBlockPos().getCenter();
+				return Vec3.atCenterOf(blockEntity.getBlockPos());
 			}
 
 			@Override
@@ -63,7 +62,7 @@ public class TownHallBlockEntityRenderer implements BlockEntityRenderer<TownHall
 	public void submit(TownHallRenderState state, PoseStack poses, SubmitNodeCollector collector, CameraRenderState cameraRenderState) {
 		poses.pushPose();
 		poses.translate(0.5, 1.001, 0.5);
-		poses.mulPose(Axis.YP.rotationDegrees(state.keyRotation));
+		poses.rotate(Axis.YP.rotationDegrees(state.keyRotation));
 
 		poses.pushPose();
 		poses.translate(0.0, 0.5, 0.0);

@@ -29,6 +29,8 @@ public class StructureConversionProvider implements DataProvider {
 	private final FabricPackOutput output;
 	private final CompletableFuture<HolderLookup.Provider> registries;
 
+	private LegacyConverter converter;
+
 	public StructureConversionProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
@@ -38,7 +40,8 @@ public class StructureConversionProvider implements DataProvider {
 	public CompletableFuture<?> run(CachedOutput cache) {
 		HolderLookup.Provider lookup = this.registries.join();
 
-		Path structureList = Paths.get("../aw2_data/assets/ancientwarfare/template/all_structures.txt");
+		converter = new LegacyConverter(cache);
+		Path structureList = Paths.get("../aw2_data/assets/ancientwarfare/template/empire_town.txt");
 		Path base = structureList.getParent();
 
 		try {
@@ -88,7 +91,7 @@ public class StructureConversionProvider implements DataProvider {
 		outputPathStr = outputPathStr.toLowerCase().substring(0, outputPathStr.length() - 4);
 		Path outputPath = this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(outputPathStr);
 
-		StructureEntry entry = new LegacyConverter().convertToTemplate(lookup, BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
+		StructureEntry entry = converter.convertToTemplate(lookup, BuiltInRegistries.BLOCK, structure.get().getData(), outputPath);
 
 	}
 }

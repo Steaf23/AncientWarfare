@@ -16,6 +16,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentTable;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -210,7 +211,7 @@ public class FactionNpcBuilder {
 		tag.put("equipment", saddleSlot);
 		saddleSlot.put("saddle", saddle);
 
-		this.mount = TypedEntityData.of(EntityType.HORSE, tag);
+		this.mount = TypedEntityData.of(EntityTypes.HORSE, tag);
 		return this;
 	}
 

@@ -24,6 +24,8 @@ public class FactionNpcProvider implements DataProvider {
 	private final CompletableFuture<HolderLookup.Provider> registries;
 	private final FactionNpcDefinitions npcs;
 
+	private CachedOutput cache;
+
 	public FactionNpcProvider(FactionNpcDefinitions npcs, FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
@@ -33,6 +35,7 @@ public class FactionNpcProvider implements DataProvider {
 	@Override
 	public CompletableFuture<?> run(CachedOutput cache) {
 		registries.join();
+		this.cache = cache;
 		npcs.forEach(this::saveNpc);
 		return CompletableFuture.completedFuture(null);
 	}
@@ -55,7 +58,7 @@ public class FactionNpcProvider implements DataProvider {
 				.getOrThrow();
 		try {
 			Files.createDirectories(file.getParent());
-			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(json));
+			DataProvider.saveStable(cache, json, file);
 		} catch (IOException e) {
 			System.out.println("Cannot save file for npc " + name);
 			log.error("exception: ", e);

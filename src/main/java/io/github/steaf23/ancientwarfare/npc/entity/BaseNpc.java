@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Prediction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleContainer;
@@ -171,7 +172,7 @@ public abstract class BaseNpc extends PathfinderMob implements EntityScreenProvi
 	public void recall(@NotNull ServerPlayer toPlayer) {
 		ItemStack item = item();
 		if (!toPlayer.addItem(item)) {
-			toPlayer.drop(item, true);
+			toPlayer.drop(item, true, Prediction.PREDICTED);
 		}
 		toPlayer.closeContainer();
 

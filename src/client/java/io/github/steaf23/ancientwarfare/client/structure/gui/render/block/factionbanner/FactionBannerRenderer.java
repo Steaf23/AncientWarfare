@@ -146,8 +146,8 @@ public class FactionBannerRenderer implements BlockEntityRenderer<FactionBannerB
 			final int outlineColor
 	) {
 		SpriteId sprite = Sheets.BANNER_MAPPER.apply(bannerImage);
-		submitNodeCollector.submitModel(model, Unit.INSTANCE, poseStack, lightCoords, overlayCoords, -1, sprite, sprites, outlineColor, breakProgress);
-		submitNodeCollector.submitModel(flagModel, phase, poseStack, lightCoords, overlayCoords, -1, sprite, sprites, outlineColor, breakProgress);
+		submitNodeCollector.submitModel(model, Unit.INSTANCE, poseStack, lightCoords, overlayCoords, -1, sprite, sprites, outlineColor);
+		submitNodeCollector.submitModel(flagModel, phase, poseStack, lightCoords, overlayCoords, -1, sprite, sprites, outlineColor);
 	}
 
 	private BannerModel bannerModel(final BannerBlock.AttachmentType type) {

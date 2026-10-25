@@ -1,6 +1,12 @@
 package io.github.steaf23.ancientwarfare.client.core.render;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+//? if <= 26.1 {
+/*import net.minecraft.client.renderer.MultiBufferSource;
+ *///?}
+import net.fabricmc.fabric.api.client.rendering.v1.level.LevelRenderContext;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -29,10 +35,10 @@ public class RenderHelper {
 	}
 
 	public static void drawThickLine(VertexConsumer buffer, Matrix4f matrix,
-									  double x1, double y1, double z1,
-									  double x2, double y2, double z2,
-									  float width, Vec3 cameraDir,
-									  float r, float g, float b, float a) {
+	                                 double x1, double y1, double z1,
+	                                 double x2, double y2, double z2,
+	                                 float width, Vec3 cameraDir,
+	                                 float r, float g, float b, float a) {
 		Vec3 start = new Vec3(x1, y1, z1);
 		Vec3 end = new Vec3(x2, y2, z2);
 		Vec3 dir = end.subtract(start).normalize();
@@ -58,8 +64,8 @@ public class RenderHelper {
 	}
 
 	public static void emitQuad(VertexConsumer buffer, Matrix4f matrix,
-								 Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4,
-								 float r, float g, float b, float a) {
+	                            Vec3 p1, Vec3 p2, Vec3 p3, Vec3 p4,
+	                            float r, float g, float b, float a) {
 		emit(buffer, matrix, p1, r, g, b, a);
 		emit(buffer, matrix, p2, r, g, b, a);
 		emit(buffer, matrix, p3, r, g, b, a);
@@ -67,10 +73,40 @@ public class RenderHelper {
 	}
 
 	public static void emit(VertexConsumer buffer, Matrix4f matrix,
-							 Vec3 pos, float r, float g, float b, float a) {
+	                        Vec3 pos, float r, float g, float b, float a) {
 
 		buffer.addVertex(matrix, (float) pos.x, (float) pos.y, (float) pos.z)
 				.setColor(r, g, b, a)
 				.setNormal(0f, 1f, 0f);
+	}
+
+	//? if <26.3 {
+	/*public static void customGeometry(LevelRenderContext renderContext, RenderType renderType, RenderCustomGeometry renderer) {
+		PoseStack poses = renderContext.poseStack();
+		Vec3 camPos = renderContext.levelState().cameraRenderState.pos;
+
+		MultiBufferSource.BufferSource immediate = renderContext.bufferSource();
+		VertexConsumer buffer = immediate.getBuffer(renderType);
+
+		renderer.submit(buffer, poses, camPos);
+		//? if < 26.1.2 {
+		/^immediate.endBatch();
+		^///?}
+	}
+	*///?} else {
+
+	public static void customGeometry(LevelRenderContext renderContext, RenderType renderType, RenderCustomGeometry renderer) {
+		PoseStack poses = renderContext.poseStack();
+
+		renderContext.submitNodeCollector().submitCustomGeometry(poses, renderType, (pose, buffer) -> {
+			Vec3 camPos = renderContext.levelState().cameraRenderState.pos;
+			renderer.submit(buffer, poses, camPos);
+		});
+	}
+	//?}
+
+	@FunctionalInterface
+	public interface RenderCustomGeometry {
+		void submit(VertexConsumer consumer, PoseStack poses, Vec3 cameraPos);
 	}
 }

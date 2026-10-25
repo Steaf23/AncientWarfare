@@ -1,5 +1,6 @@
 package io.github.steaf23.ancientwarfare.client.datagen;
 
+import com.mojang.datafixers.util.Pair;
 import io.github.steaf23.ancientwarfare.client.datagen.faction.FactionNpcDefinitions;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlocks;
 import io.github.steaf23.ancientwarfare.core.registry.AWItems;
@@ -13,7 +14,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -107,9 +107,9 @@ public class AWLanguageProvider extends FabricLanguageProvider {
 			return this;
 		}
 
-		public AWTranslationBuilder customPair(Tuple<MutableComponent, MutableComponent> pair, String left, String right) {
-			translationBuilder.add(((TranslatableContents) pair.getA().getContents()).getKey(), left);
-			translationBuilder.add(((TranslatableContents) pair.getB().getContents()).getKey(), right);
+		public AWTranslationBuilder customPair(Pair<MutableComponent, MutableComponent> pair, String left, String right) {
+			translationBuilder.add(((TranslatableContents) pair.getFirst().getContents()).getKey(), left);
+			translationBuilder.add(((TranslatableContents) pair.getSecond().getContents()).getKey(), right);
 			return this;
 		}
 

@@ -4,8 +4,8 @@ mod.name = "AncientWarfare"
 mod.group = "io.github.steaf23"
 mod.version = "0.1.0"
 
-deps.fabric_loader = "0.19.2"
-loomx.loom_version = "1.16-SNAPSHOT"
+deps.fabric_loader = "0.19.5"
+loomx.loom_version = "1.17-SNAPSHOT"
 
 ["1.21.1"]
 mod.mc_compat = ">=1.21 <=1.21.1"
@@ -26,3 +26,10 @@ mod.mc_releases = ["26.1.2"]
 
 deps.fabric_api = "0.145.3+26.1.1"
 deps.trinkets = "4.0.0-beta.3+26.1"
+
+["26.3"]
+mod.mc_compat = "~26.3"
+mod.mc_releases = ["26.3"]
+
+deps.fabric_api = "0.163.0+26.3"
+deps.trinkets = "4.2.1+26.3"

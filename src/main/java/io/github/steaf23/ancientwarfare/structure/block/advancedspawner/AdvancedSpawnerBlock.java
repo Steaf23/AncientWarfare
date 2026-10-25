@@ -1,13 +1,12 @@
 package io.github.steaf23.ancientwarfare.structure.block.advancedspawner;
 
-import com.mojang.serialization.MapCodec;
 import io.github.steaf23.ancientwarfare.core.registry.AWBlockEntities;
+import io.github.steaf23.ancientwarfare.core.util.SimpleEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,23 +19,18 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class AdvancedSpawnerBlock extends BaseEntityBlock {
+public class AdvancedSpawnerBlock extends SimpleEntityBlock {
 
 	public static final BooleanProperty TRANSPARENT = BooleanProperty.create("transparent");
 
 	public AdvancedSpawnerBlock(Properties settings) {
-		super(settings);
+		super(settings, AdvancedSpawnerBlockEntity::new);
 		registerDefaultState(defaultBlockState().setValue(TRANSPARENT, false));
 	}
 
 	@Override
 	public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
 		return createTickerHelper(type, AWBlockEntities.ADVANCED_SPAWNER, world.isClientSide() ? AdvancedSpawnerBlockEntity::clientTick : AdvancedSpawnerBlockEntity::serverTick);
-	}
-
-	@Override
-	protected MapCodec<? extends BaseEntityBlock> codec() {
-		return simpleCodec(AdvancedSpawnerBlock::new);
 	}
 
 	@Override

@@ -172,7 +172,7 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 					List.of(AdvancedSpawnerSettings.SpawnEntry.standard()));
 
 			newSettingsBuilder.addGroup(group);
-			minecraft.setScreen(this);
+			minecraft.setScreenAndShow(this);
 		})
 				.size(100, 12)
 				.build(), LayoutSettings.defaults().paddingHorizontal(5).paddingBottom(5));
@@ -224,7 +224,7 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 
 			listLayout.addChild(Button.builder(Component.literal("-"), (btn) -> {
 								newSettingsBuilder.removeGroupEntry(groupIndex, indexToEdit);
-								minecraft.setScreen(this);
+								minecraft.setScreenAndShow(this);
 							})
 							.size(12, 12)
 							.build()
@@ -233,7 +233,7 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 		}
 		listLayout.addChild(Button.builder(Component.literal("+"), (btn) -> {
 					newSettingsBuilder.addGroupEntry(groupIndex, AdvancedSpawnerSettings.SpawnEntry.standard());
-					minecraft.setScreen(this);
+					minecraft.setScreenAndShow(this);
 				})
 				.size(50, 12)
 				.build(), entryIndex + 1, 0);
@@ -311,9 +311,9 @@ public class AdvancedSpawnerScreen extends SubScreen implements MenuAccess<Advan
 
 			OptionList newScreen = new OptionList(allEntityOptions(), (clickedId) -> {
 				onSelected.accept(btn, clickedId);
-				minecraft.setScreen(current);
+				minecraft.setScreenAndShow(current);
 			});
-			minecraft.setScreen(newScreen);
+			minecraft.setScreenAndShow(newScreen);
 		})
 				.size(50, 12)
 				.build();

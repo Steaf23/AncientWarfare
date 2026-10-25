@@ -1,6 +1,7 @@
 package io.github.steaf23.ancientwarfare.core.util;
 
-import com.mojang.serialization.MapCodec;
+//? if < 26.3
+//import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,10 +18,12 @@ public class SimpleEntityBlock extends BaseEntityBlock {
 		this.factory = factory;
 	}
 
-	@Override
+	//? if < 26.3 {
+	/*@Override
 	protected MapCodec<? extends BaseEntityBlock> codec() {
 		return simpleCodec(p -> new SimpleEntityBlock(p, this.factory));
 	}
+	*///?}
 
 	@Override
 	public @Nullable BlockEntity newBlockEntity(BlockPos worldPosition, BlockState blockState) {

@@ -24,6 +24,8 @@ public class FactionProvider implements DataProvider {
 	private final CompletableFuture<HolderLookup.Provider> registries;
 	private final FactionDefinitions factions;
 
+	private CachedOutput cache;
+
 	public FactionProvider(FactionDefinitions factions, FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		this.output = output;
 		this.registries = registries;
@@ -34,6 +36,7 @@ public class FactionProvider implements DataProvider {
 	public CompletableFuture<?> run(CachedOutput cache) {
 		registries.join();
 
+		this.cache = cache;
 		factions.forEach(this::saveFaction);
 
 		return CompletableFuture.completedFuture(null);
@@ -47,7 +50,7 @@ public class FactionProvider implements DataProvider {
 				.getOrThrow();
 		try {
 			Files.createDirectories(file.getParent());
-			Files.writeString(file, new GsonBuilder().setPrettyPrinting().create().toJson(json));
+			DataProvider.saveStable(cache, json, file);
 		} catch (IOException e) {
 			System.out.println("Cannot save file for faction " + name);
 			log.error("exception: ", e);
